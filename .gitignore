@@ -1,0 +1,9 @@
+# Mac Spotlight
+.DS_Store
+
+# Build Folders
+/bin
+/build
+compile_commands.json
+/Cad
+
