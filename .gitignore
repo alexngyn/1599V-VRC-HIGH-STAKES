@@ -1,9 +1,7 @@
 # Mac Spotlight
-.DS_Store
+*.DS_Store
 
-# Build Folders
-/bin
-/build
-compile_commands.json
+#render
+*.bip
+*.stp
 /Cad
-
