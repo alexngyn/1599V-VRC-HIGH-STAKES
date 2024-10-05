@@ -10,7 +10,7 @@ float driveCurve(float input, float scale) {
 }
 
 std::pair<float, float> arcade(int throttle, int turn, float curveGain = 0) {
-    turn *= 0.8;
+    turn *= 1;
     float leftPower = driveCurve(throttle + turn, curveGain);
     float rightPower = driveCurve(throttle - turn, curveGain);
     return std::make_pair(leftPower, rightPower);
@@ -34,13 +34,11 @@ std::pair<float, float> curvature(int throttle, int turn, float curveGain) {
 
 void drive() {
 	while (true) {
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) { reverse_mode = !reverse_mode; }
-
-		double power = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        double power = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
 		double turn = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-	    
-        if (reverse_mode){power *= -1;}
 
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) { reverse_mode = !reverse_mode; }
+        if (reverse_mode){power *= -1;}
 
 		auto [left, right] = arcade(power, turn, 7.2);
         // auto [left, right] = curvature(power, turn, 7.2);
@@ -48,11 +46,11 @@ void drive() {
 	    dt_left.move(left);
 	    dt_right.move(right);
 
-		pros::delay(10 ? CONTROLLER_MODE == bluetooth : 50);
+		pros::delay(20 ? CONTROLLER_MODE == bluetooth : 50);
 	}
 }
 
-bool fix = true;
+//bool fix = true;
 
 void intake () {
     while (true) {

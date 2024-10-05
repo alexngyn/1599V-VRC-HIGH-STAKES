@@ -32,7 +32,7 @@
  *
  * For instance, you can do `4_mtr = 50` to set motor 4's target velocity to 50
  */
-#define PROS_USE_LITERALS
+// #define PROS_USE_LITERALS
 
 // IWYU pragma:  begin_keep
 #include "api.h" 

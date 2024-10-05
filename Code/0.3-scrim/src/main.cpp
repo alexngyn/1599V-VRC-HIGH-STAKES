@@ -1,8 +1,7 @@
-#include "main.h"
-#include "setup.h"
+#include "main.h" 
 
 void initialize() {
-    pros::delay(1000);
+    led led1(LED_1_PORT, LED_1_LENGTH); 
     chassis.calibrate(); // calibrate the chassis
     chassis.setPose(0, 0, 0); // X: 0, Y: 0, Heading: 0
     pros::lcd::initialize(); // initialize brain screen
@@ -16,10 +15,12 @@ void initialize() {
         }
     });
     pros::delay(1000);
-    lemlib::Pose testpose = chassis.getPose();
-    if (testpose.theta == testpose.theta) {indicator_g.set_value(true);};
+    //lemlib::Pose testpose = chassis.getPose();
+    //if (testpose.theta != testpose.theta) {VIBRATE;};
 	printf("init");
 }
+
+//pros::Task lights([&] { led1.rotate(); pros::delay(100); });
 
 void disabled() {}
 void competition_initialize() {}

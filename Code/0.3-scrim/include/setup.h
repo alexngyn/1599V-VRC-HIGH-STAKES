@@ -19,7 +19,12 @@ enum protocol { bluetooth, vexnet};
 
 #define CLAMP_SOLENOID_PORT 'H'
 
-#define INDICATOR_G_PORT 'B'
+//#define INDICATOR_G_PORT 'B'
+
+#define LED_1_PORT 'A'
+//#define LED_2_PORT 'H'
+#define LED_1_LENGTH 64
+//#define LED_2_LENGTH 64
 
 #define INTAKE_PORT -11
 

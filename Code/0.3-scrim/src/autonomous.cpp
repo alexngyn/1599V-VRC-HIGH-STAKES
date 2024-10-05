@@ -1,8 +1,4 @@
-#include "lemlib/chassis/chassis.hpp"
-#include "lemlib/chassis/trackingWheel.hpp"
-#include "lemlib/pose.hpp"
-#include "pros/rtos.hpp"
-#include "setup.h"
+#include "setup.h" 
 
 // ASSET(path_txt);
 

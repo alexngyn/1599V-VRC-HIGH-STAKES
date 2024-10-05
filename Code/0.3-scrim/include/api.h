@@ -16,6 +16,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+// IWYU pragma: begin_keep
+
 #ifndef _PROS_API_H_
 #define _PROS_API_H_
 
@@ -77,6 +79,8 @@
 #include "pros/screen.hpp"
 #include "pros/vision.hpp"
 #include "pros/motor_group.hpp" 
+
+
 
 
 #include "lemlib/api.hpp" // IWYU pragma: keep
