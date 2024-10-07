@@ -57,10 +57,6 @@ void autonomous() {
 }
 
 void opcontrol() {
-    // rd_view_t *view = rd_view_create("custom view"); // create view
-    // lv_obj_t *label = lv_label_create(rd_view_obj(view));
-    // lv_label_set_text(label, "example");
-    // lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
     img.focus();
 
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
@@ -68,4 +64,6 @@ void opcontrol() {
 	pros::Task drive_thread(drive);
 	pros::Task intake_thread(intake);
     pros::Task clamp_thread(clamp);
+
+    //Task t(update_ui);
 }

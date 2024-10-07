@@ -80,3 +80,13 @@ void clamp() {
         pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
     }
 }
+
+
+// PTO
+        if (master.get_digital_new_press(DIGITAL_Y)) robot::setPTO(!isPtoActive);
+
+// Arm
+        if (master.get_digital_new_press(DIGITAL_B)) {
+            arm.changeAngle(-9);
+        } else if (partner.get_digital(DIGITAL_X)) arm.moveToAngle(50);
+        else if (partner.get_digital(DIGITAL_A)) arm.moveToAngle(9);
