@@ -1,20 +1,47 @@
 #include "setup.h"
 
+int sgn (float number) { return 1 ? number >= 0 : -1 ; }
+
 bool reverse_mode = false;
 
 float driveCurve(float input, float scale) {
     if (scale != 0) {
-        return (powf(2.718, -(scale / 10)) + powf(2.718, (fabs(input) - 127) / 10) * (1 - powf(2.718, -(scale / 10)))) * input;
+        return int(powf(2.718, -(scale / 10) + powf(2.718, (fabs(input) - 127) / 10) * (1 - powf(2.718, -(scale / 10)))) * input);
     }
-    return input;
+    return std::round(input);
 }
 
+std::pair<float, float> arcade(int throttle, int turn, float curveGain = 0, float desaturateBias = 0.75) {
+    throttle = driveCurve(throttle, curveGain);
+    turn = driveCurve(turn, curveGain);
+
+    // desaturate motors based on joyBias
+    if (std::abs(throttle) + std::abs(turn) > 127) {
+        int oldThrottle = throttle;
+        int oldTurn = turn;
+        throttle *= (1 - desaturateBias * std::abs(oldTurn / 127.0));
+        turn *= (1 - (1 - desaturateBias) * std::abs(oldThrottle / 127.0));
+        // ensure the sum of the two values is equal to 127
+        // this check is necessary because of integer division
+        if (std::abs(turn) + std::abs(throttle) == 126) {
+            if (desaturateBias < 0.5) throttle += sgn(throttle);
+            else turn += sgn(turn);
+        }
+    }
+    
+    float leftPower = driveCurve(throttle + turn, curveGain);
+    float rightPower = driveCurve(throttle - turn, curveGain);
+    return std::make_pair(leftPower, rightPower);
+}
+
+/*
 std::pair<float, float> arcade(int throttle, int turn, float curveGain = 0) {
     turn *= 1;
     float leftPower = driveCurve(throttle + turn, curveGain);
     float rightPower = driveCurve(throttle - turn, curveGain);
     return std::make_pair(leftPower, rightPower);
 }
+*/
 
 /*
 std::pair<float, float> curvature(int throttle, int turn, float curveGain) {
