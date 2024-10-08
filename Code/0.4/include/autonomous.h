@@ -9,3 +9,4 @@ void auton_red_non_rush();
 void auton_blue_rush();
 void auton_blue_non_rush();
 void pidtune();
+void skills();

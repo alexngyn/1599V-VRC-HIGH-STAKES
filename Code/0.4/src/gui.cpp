@@ -1,12 +1,16 @@
+#include "gui.h"
+#include "setup.h"
+
 // Robodash selector initialization...
-Selector selector({{"Red Left", &red_Rush},
-				   {"Red Right", &red_right},
-				   {"Blue Left", &blue_Rush},
-				   {"Blue Right", &blue_right},
+rd::Selector selector({{"Red Left", &pidtune},
+				   {"Red Right", &auton_red_non_rush},
+				   {"Blue Left", &auton_red_non_rush},
 				   {"Skills", &skills}});
 
+rd::Image img("logo");
+
 // Robodash console initialization...
-Console console;
+rd::Console console;
 
 // Creates the custom pages
 rd_view_t *view = rd_view_create("Info");
@@ -37,7 +41,7 @@ int update_ui()
 		if (lv_event_get_code(e) == LV_EVENT_CLICKED)			// If the button is clicked
 		{
 			rd_view_alert(view, "Calibrating IMU..."); // Alert the user.
-			imu.reset();							   // Calibrate IMU.
+			inertial_sensor.reset();							   // Calibrate IMU.
 		}
 	},
 						LV_EVENT_ALL, NULL);
@@ -83,16 +87,15 @@ int update_ui()
 	while (true)
 	{
 		// Updates the labels to show the most recent data.
-		lv_label_set_text(imu_heading_label, ("IMU Heading: " + to_string(round(imu.get_heading()))).c_str());
-		lv_label_set_text(drive_temp_label, ("Average drive temp: " + to_string((left_motor_group.get_temperature() + right_motor_group.get_temperature()) / 2)).c_str());
+		lv_label_set_text(imu_heading_label, ("IMU Heading: " + std::to_string(round(inertial_sensor.get_heading()))).c_str());
+		lv_label_set_text(drive_temp_label, ("Average drive temp: " + std::to_string((dt_left.get_temperature() + dt_right.get_temperature()) / 2)).c_str());
 		
-				lv_label_set_text(intake_temp_label, ("Intake temp: " + to_string(intake.get_temperature(0))).c_str());
-		lv_label_set_text(lift_temp_label, ("Average lift temp: " + to_string((lift.get_temperature(0) + lift.get_temperature(1))/2)).c_str());
-		lv_label_set_text(lem_label, ("X: " + to_string(chassis.getPose().x) + "\nY: " + to_string(chassis.getPose().y) + "\nTheta: " + to_string(chassis.getPose().theta)).c_str());
-		lv_label_set_text(horizontal_one_label, ("Horizontal tracking 1: " + to_string(horizontal_tracking_wheel.getDistanceTraveled())).c_str());
-				lv_label_set_text(lift_encoder_label, ("Lift encoder ANGLE: " + to_string((lift_encoder.get_position() / 100) * 0.2)).c_str());
+		lv_label_set_text(intake_temp_label, ("Intake temp: " + std::to_string(intake_motor.get_temperature(0))).c_str());
+		lv_label_set_text(lift_temp_label, ("Average lift temp: " + std::to_string(arm_motor.get_temperature(0))).c_str());
+		//lv_label_set_text(horizontal_one_label, ("Horizontal tracking 1: " + std::to_string(horizontal_tracking_wheel.getDistanceTraveled())).c_str());
+		//lv_label_set_text(lift_encoder_label, ("Lift encoder ANGLE: " + std::to_string((lift_encoder.get_position() / 100) * 0.2)).c_str());
 		master.print(0, 0, "Connection:%d ", master.is_connected());
-		delay(100); // Waits 100ms before updating again to make it readable.
+		pros::delay(100); // Waits 100ms before updating again to make it readable.
 	}
 	// Update Loop
 }

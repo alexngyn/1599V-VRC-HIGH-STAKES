@@ -1,13 +1,4 @@
 #include "main.h" 
-#include "robodash/views/image.hpp"
-#include "robodash/views/selector.hpp"
-
-rd::Console console;
-rd::Image img("logo");
-rd::Selector selector({
-   {"Auton 0", &auton_red_non_rush},
-   {"Auton 1", &auton_blue_non_rush}
-});
 
 void initialize() {
     console.println("Initializing robot...");
@@ -32,13 +23,15 @@ void initialize() {
     lemlib::Pose testpose = chassis.getPose();
     if (testpose.theta != testpose.theta) {
         console.println("Initializing failed...");
-        rd_view_alert(selector, "Initializing failed...");
+        rd_view_alert(getSelectorView(selector), "Initializing failed...");
     } else {
         console.println("Initializing successful...");
     }
-}
 
-//pros::Task lights([&] { led1.rotate(); pros::delay(100); });
+    //Task t(update_ui);
+    //pros::Task lights([&] { led1.rotate(); pros::delay(100); });
+
+}
 
 void disabled() {}
 void competition_initialize() {selector.focus();}
@@ -64,6 +57,4 @@ void opcontrol() {
 	pros::Task drive_thread(drive);
 	pros::Task intake_thread(intake);
     pros::Task clamp_thread(clamp);
-
-    //Task t(update_ui);
 }

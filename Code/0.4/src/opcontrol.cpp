@@ -109,6 +109,7 @@ void clamp() {
 }
 
 
+/*
 // PTO
         if (master.get_digital_new_press(DIGITAL_Y)) robot::setPTO(!isPtoActive);
 
@@ -117,3 +118,4 @@ void clamp() {
             arm.changeAngle(-9);
         } else if (partner.get_digital(DIGITAL_X)) arm.moveToAngle(50);
         else if (partner.get_digital(DIGITAL_A)) arm.moveToAngle(9);
+*/

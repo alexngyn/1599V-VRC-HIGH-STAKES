@@ -55,6 +55,8 @@ extern pros::adi::DigitalOut indicator_g;
 
 extern pros::Motor intake_motor;
 
+extern pros::Motor arm_motor;
+
 extern pros::IMU inertial_sensor;
 
 //extern lemlib::ControllerSettings angularController;

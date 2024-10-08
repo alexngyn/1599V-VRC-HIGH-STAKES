@@ -5,7 +5,7 @@
  */
 
 #pragma once
-#include "robodash/api.h"
+#include "robodash/api.h" // IWYU pragma: keep
 #include <functional>
 #include <string>
 #include <vector>
@@ -66,6 +66,8 @@ class Selector {
 
 	/// @}
 
+	friend rd_view_t* getSelectorView(const Selector& selector); // Add this friend function
+
   private:
 	rd_view_t *view;
 
@@ -82,5 +84,9 @@ class Selector {
 
 	static void select_cb(lv_event_t *event);
 };
+
+inline rd_view_t* getSelectorView(const Selector& selector) {
+    return selector.view;
+}
 
 } // namespace rd

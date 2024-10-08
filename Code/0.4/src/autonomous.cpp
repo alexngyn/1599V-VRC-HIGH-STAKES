@@ -26,9 +26,9 @@ void pidtune() {
     // increase kp until the robot oscillates then add kd until it stops
     //chassis.moveToPoint(0, 16, 10000);
     chassis.moveToPose(8, 24,0, 10000);
-    chassisPrintPose();
+    //chassisPrintPose();
     chassis.turnToHeading(90, 100000);
-    robot::chassisPrintPose();
+    //robot::chassisPrintPose();
 }
 
 void auton_red_non_rush() {

@@ -1,3 +1,4 @@
+#pragma once
 /**
  * \file main.h
  *
@@ -44,6 +45,7 @@
 #include "pros/apix.h" 
 #include "robodash/api.h"
 #include "liblvgl/lvgl.h"
+#include "gui.h"
 // IWYU pragma:  end_kepp
 
 /**

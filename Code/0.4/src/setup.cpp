@@ -1,5 +1,5 @@
 #include "setup.h"
-#include "arm.h" 
+//#include "arm.h" 
 
 pros::Controller master (pros::E_CONTROLLER_MASTER);
 //pros::Controller partner (pros::E_CONTROLLER_PARTNER);
@@ -24,7 +24,11 @@ pros::adi::Pneumatics clamp_solenoid (CLAMP_SOLENOID_PORT, true);
 
 pros::Motor intake_motor (INTAKE_PORT, pros::MotorGearset::blue, pros::MotorEncoderUnits::degrees);
 
+pros::Motor arm_motor (ARM_PORT, pros::MotorGearset::green, pros::MotorEncoderUnits::degrees);
+
 pros::IMU inertial_sensor (INERTIAL_SENSOR_PORT);
+
+/*
 
 Arm arm(
     std::make_unique<pros::Motor>(3, pros::v5::MotorGears::blue),
@@ -55,6 +59,8 @@ void setPTO(bool state) {
         arm.disconnect();
     }
 }
+
+*/
 
 
 // drivetrain settings
