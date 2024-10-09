@@ -1,5 +1,5 @@
 #include "setup.h"
-//#include "arm.h" 
+#include "pros/motor_group.hpp"
 
 pros::Controller master (pros::E_CONTROLLER_MASTER);
 //pros::Controller partner (pros::E_CONTROLLER_PARTNER);
@@ -26,41 +26,23 @@ pros::Motor intake_motor (INTAKE_PORT, pros::MotorGearset::blue, pros::MotorEnco
 
 pros::Motor arm_motor (ARM_PORT, pros::MotorGearset::green, pros::MotorEncoderUnits::degrees);
 
-pros::IMU inertial_sensor (INERTIAL_SENSOR_PORT);
+//pros::MotorGroup arm_motors (arm_motor);
 
-/*
+//arm_motors += dt_left;
+
+//pros::MotorGroup arm_motors ({arm_motor, dt_left});
+
+
+pros::IMU inertial_sensor (INERTIAL_SENSOR_PORT);
 
 Arm arm(
     std::make_unique<pros::Motor>(3, pros::v5::MotorGears::blue),
     std::make_unique<pros::Rotation>(6),
+    1,
+    10,
     -0.25,
-    lemlib::PID {10, 0, 20, 20, true},
-    -20
+    lemlib::PID {10, 0, 20, 20, true}
 );
-
-Arm ptoArm(
-    std::make_unique<pros::Motor>(3, pros::v5::MotorGears::blue),
-    std::make_unique<pros::Rotation>(6),
-    -0.25,
-    lemlib::PID {10, 0, 20, 20, true},
-    -20
-);
-
-void setPTO(bool state) {
-    isPtoActive = state;
-    if (state) {
-        ptoPiston.extend();
-        activeArm = &ptoArm;
-        arm.connect();
-        arm.moveToAngle(arm.getAngle());
-    } else {
-        ptoPiston.retract();
-        activeArm = &arm;
-        arm.disconnect();
-    }
-}
-
-*/
 
 
 // drivetrain settings

@@ -2,6 +2,7 @@
 
 #include "api.h" // IWYU pragma: keep
 #include "lemlib/chassis/chassis.hpp"
+#include "arm.h" 
 
 enum protocol { bluetooth, vexnet}; 
 
@@ -62,6 +63,8 @@ extern pros::IMU inertial_sensor;
 //extern lemlib::ControllerSettings angularController;
 
 extern lemlib::Chassis chassis;
+
+extern Arm arm;
 
 //extern pros::Gps gps_main;
 //extern pros::Gps gps_secondary;

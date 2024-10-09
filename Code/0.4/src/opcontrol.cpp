@@ -108,14 +108,106 @@ void clamp() {
     }
 }
 
+void topmech() {
+    while (true) {
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {arm.changeAngle(-9);}
+        else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {arm.changeAngle(9);}
+        else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {arm.home();};
+        pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
+    }
+}
 
 /*
-// PTO
-        if (master.get_digital_new_press(DIGITAL_Y)) robot::setPTO(!isPtoActive);
 
-// Arm
-        if (master.get_digital_new_press(DIGITAL_B)) {
-            arm.changeAngle(-9);
-        } else if (partner.get_digital(DIGITAL_X)) arm.moveToAngle(50);
-        else if (partner.get_digital(DIGITAL_A)) arm.moveToAngle(9);
+
+
+
+void colorSort() {
+    static bool colorDetected = false;
+
+    if(sortState == 1) {
+        if(optical.get_hue() < 18 && optical.get_hue() > 12) { //red!
+            if(!colorDetected) {
+                colorDetected = true;
+                intakeState = 3;
+                pros::Task::delay(50);
+                intake.move_voltage(0);
+                pros::Task::delay(200);
+                intake.move_voltage(-12000);
+                intakeState = 1;
+            }
+        } else {
+            colorDetected = false;
+        }
+    } else if(sortState == 2) {
+        if(optical.get_hue() < 216 && optical.get_hue() > 210) { //blue!
+            if(!colorDetected) {
+                colorDetected = true;
+                intakeState = 3;
+                pros::Task::delay(50); //TODO: is the task delay working
+                intake.move_voltage(0);
+                pros::Task::delay(200);
+                intake.move_voltage(-12000);
+                intakeState = 1;
+            }
+        } else {
+            colorDetected = false;
+        }
+    }
+}
+
+Arm ptoArm(
+    std::make_unique<pros::Motor>(3, pros::v5::MotorGears::blue),
+    std::make_unique<pros::Rotation>(6),
+    -0.25,
+    lemlib::PID {10, 0, 20, 20, true},
+    -20
+);
+
+void setPTO(bool state) {
+    isPtoActive = state;
+    if (state) {
+        ptoPiston.extend();
+        activeArm = &ptoArm;
+        arm.connect();
+        arm.moveToAngle(arm.getAngle());
+    } else {
+        ptoPiston.retract();
+        activeArm = &arm;
+        arm.disconnect();
+    }
+}
+
+void pto() {
+    while (true) {
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+            isPtoActive = !isPtoActive;
+            if (isPtoActive) {
+                ptoPiston.extend();
+                activeArm = &ptoArm;
+                arm.connect();
+                arm.moveToAngle(arm.getAngle());
+            } else {
+                ptoPiston.retract();
+                activeArm = &arm;
+                arm.disconnect();
+            }
+        }
+        pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
+    }
+
+}
+
+int slewControl(int desiredVoltage, int previousVoltage, int slewRate, int timestep){
+    if(desiredVoltage != previousVoltage){
+        if (desiredVoltage - previousVoltage > slewRate * timestep) {
+            return previousVoltage + slewRate * timestep;
+        }
+        if (desiredVoltage - previousVoltage < -slewRate * timestep)
+        {
+            return previousVoltage - slewRate * timestep;
+        }
+    }
+    return desiredVoltage;
+}
 */
