@@ -1,17 +1,39 @@
 #include "gui.h"
 #include "setup.h"
+//#include "assets/imageTest.c"
+//#include "assets/fieldResized.c"
+//#include "assets/license.c"
 
 // Robodash selector initialization...
-rd::Selector selector({{"Red Left", &pidtune},
-				   {"Red Right", &auton_red_non_rush},
-				   {"Blue Left", &auton_red_non_rush},
-				   {"Skills", &skills}});
+// rd::Selector selector({{"Red Left", &pidtune},
+// 				   {"Red Right", &auton_red_non_rush},
+// 				   {"Blue Left", &auton_red_non_rush},
+// 					   {"Skills", &skills}});
 
-rd::Image img("logo");
+//rd::Image img("assets/license.c");
+
+// void imageTest() {
+// 	rd_view_t *view = rd_view_create("imageTest");
+// 	lv_obj_t *image = lv_img_create(view->obj);
+// 	lv_img_set_src(image, &fieldResized);
+
+//    //lv_label_t *label = lv_label_create(rd_view_obj(view));
+//    //lv_label_set_text(label, "example");
+//    //lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+// }
+
+
+
+
+
+// void rd::imageTest::focus(){
+//     rd_view_focus(this->view);
+// }
 
 // Robodash console initialization...
 rd::Console console;
 
+/*
 // Creates the custom pages
 rd_view_t *view = rd_view_create("Info");
 rd_view_t *auto_override = rd_view_create("Override");
@@ -99,6 +121,8 @@ int update_ui()
 	}
 	// Update Loop
 }
+
+*/
 
 /*
 void graph_pid() {

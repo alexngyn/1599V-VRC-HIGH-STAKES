@@ -1,11 +1,13 @@
 #pragma once
+
 #include "api.h"  // IWYU pragma: keep
+//#include "setup.h"
 
 class Arm {
     public:
-        Arm(std::unique_ptr<pros::Motor> motor,
-            std::unique_ptr<pros::Rotation> rotSensor, double ratio,
-            double length, double heightOffset,
+        Arm(pros::Motor motor,
+            pros::Rotation rotSensor, double ratio,
+            double length, double heightOffsset,
             lemlib::PID pid);
         ~Arm() {this->task.remove();};
         //double angleOffset = 0;
@@ -33,21 +35,23 @@ class Arm {
 
     private:
 
-        std::unique_ptr<pros::Motor> motor;
-        std::unique_ptr<pros::Rotation> rotSensor;
+        pros::Motor motor;
+        pros::Rotation rotSensor;
         double ratio;
 
         lemlib::PID PID;
-        double targetAngle = 0;
+        double targetAngle = -200;
+        float UpwardGain = 1.5;
+        float DownwardGain = 0.5;
 
         Arm::state currState = Arm::state::HOLD;
 
         pros::Task task = pros::Task {[&] {
-            while (true) {
+            while (true) {                                                                                                                                                              
                 pros::delay(10);
-                double error = lemlib::angleError(this->getAngle(), this->targetAngle, false);
+                double error = lemlib::angleError(this->targetAngle, this->getAngle(), false);
 
-//                std::printf("Arm: %f | %f\n", this->getAngle(), this->targetAngle);
+                //std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, error);
 
                 if (std::fabs(error) <= 4) {
                     this->currState = Arm::state::HOLD;
@@ -57,9 +61,16 @@ class Arm {
 
                 if (this->currState == Arm::state::MOVING) {
                     double vel = this->PID.update(error);
-                    this->motor->move(vel);
+
+                    if (vel > 0) { vel *= UpwardGain; } else {vel *= DownwardGain; }
+
+                    std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, vel);
+
+                    //printf("%f %f %f \n", vel, targetAngle, getAngle());
+                    this->motor.move(vel);
                 } else if (this->currState == Arm::state::HOLD) {
-                    this->motor->move(0);
+                    //printf("%f %f %f \n", 0.0, targetAngle, getAngle());
+                    this->motor.move(0);
                 }
             }
         }};;

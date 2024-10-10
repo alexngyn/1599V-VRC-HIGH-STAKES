@@ -1,8 +1,10 @@
 #include "setup.h"
 #include "pros/motor_group.hpp"
+#include "pros/optical.hpp"
+#include "pros/rotation.hpp"
 
 pros::Controller master (pros::E_CONTROLLER_MASTER);
-//pros::Controller partner (pros::E_CONTROLLER_PARTNER);
+pros::Controller partner (pros::E_CONTROLLER_PARTNER);
 
 // pros::Motor dt_motor_lf (DT_WHEEL_LF_PORT, pros::MotorGearset::blue, pros::MotorEncoderUnits::degrees);
 // pros::Motor dt_motor_lm (DT_WHEEL_LM_PORT, pros::MotorGearset::blue, pros::MotorEncoderUnits::degrees);
@@ -26,6 +28,8 @@ pros::Motor intake_motor (INTAKE_PORT, pros::MotorGearset::blue, pros::MotorEnco
 
 pros::Motor arm_motor (ARM_PORT, pros::MotorGearset::green, pros::MotorEncoderUnits::degrees);
 
+pros::Optical optical_sensor (OPTICAL_SENSOR_PORT);
+
 //pros::MotorGroup arm_motors (arm_motor);
 
 //arm_motors += dt_left;
@@ -35,13 +39,15 @@ pros::Motor arm_motor (ARM_PORT, pros::MotorGearset::green, pros::MotorEncoderUn
 
 pros::IMU inertial_sensor (INERTIAL_SENSOR_PORT);
 
-Arm arm(
-    std::make_unique<pros::Motor>(3, pros::v5::MotorGears::blue),
-    std::make_unique<pros::Rotation>(6),
+pros::Rotation arm_rotational_sensor (ARM_ROTATIONAL_SENSOR_PORT);
+
+Arm arm_controller(
+    arm_motor,
+    arm_rotational_sensor,
     1,
     10,
     -0.25,
-    lemlib::PID {10, 0, 20, 20, true}
+    lemlib::PID {2, 0, 0, 20, true}
 );
 
 

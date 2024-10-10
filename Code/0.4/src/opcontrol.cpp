@@ -1,4 +1,7 @@
+#include "pros/motors.h"
 #include "setup.h"
+#include "gui.h"
+#include "arm.h"
 
 int sgn (float number) { return 1 ? number >= 0 : -1 ; }
 
@@ -6,31 +9,20 @@ bool reverse_mode = false;
 
 float driveCurve(float input, float scale) {
     if (scale != 0) {
-        return int(powf(2.718, -(scale / 10) + powf(2.718, (fabs(input) - 127) / 10) * (1 - powf(2.718, -(scale / 10)))) * input);
+        return int((powf(2.718, -(scale / 10)) + powf(2.718, (fabs(input) - 127) / 10) * (1 - powf(2.718, -(scale / 10)))) * input);
     }
     return std::round(input);
 }
 
 std::pair<float, float> arcade(int throttle, int turn, float curveGain = 0, float desaturateBias = 0.75) {
     throttle = driveCurve(throttle, curveGain);
-    turn = driveCurve(turn, curveGain);
+    turn = driveCurve(turn, 7.2);
 
-    // desaturate motors based on joyBias
-    if (std::abs(throttle) + std::abs(turn) > 127) {
-        int oldThrottle = throttle;
-        int oldTurn = turn;
-        throttle *= (1 - desaturateBias * std::abs(oldTurn / 127.0));
-        turn *= (1 - (1 - desaturateBias) * std::abs(oldThrottle / 127.0));
-        // ensure the sum of the two values is equal to 127
-        // this check is necessary because of integer division
-        if (std::abs(turn) + std::abs(throttle) == 126) {
-            if (desaturateBias < 0.5) throttle += sgn(throttle);
-            else turn += sgn(turn);
-        }
-    }
+    //printf("%d %d %d %d \n", throttle, turn, newThrottle, newTurn);
+
     
-    float leftPower = driveCurve(throttle + turn, curveGain);
-    float rightPower = driveCurve(throttle - turn, curveGain);
+    float leftPower = throttle + turn;
+    float rightPower = throttle - turn;
     return std::make_pair(leftPower, rightPower);
 }
 
@@ -67,27 +59,58 @@ void drive() {
         if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) { reverse_mode = !reverse_mode; }
         if (reverse_mode){power *= -1;}
 
-		auto [left, right] = arcade(power, turn, 7.2);
+		auto [left, right] = arcade(power, turn, 4.2);
         // auto [left, right] = curvature(power, turn, 7.2);
 
+        //printf("Hello %f %f \n", left, right);
 	    dt_left.move(left);
 	    dt_right.move(right);
 
 		pros::delay(20 ? CONTROLLER_MODE == bluetooth : 50);
+
+        
+        // printf("%f %f %f %f %f %f \n", dt_left.get_temperature(0), 
+        //                                dt_left.get_temperature(1),
+        //                                dt_left.get_temperature(2), 
+        //                                dt_right.get_temperature(0), 
+        //                                dt_right.get_temperature(1),
+        //                                dt_right.get_temperature(2));
+       //if (clamp_solenoid.is_extended())
 	}
 }
 
 //bool fix = true;
 
+void colorSort() {
+    const int sortState = 1; //0 = off, 1 = blue, 2 = red
+
+    if (((sortState == 1 && optical_sensor.get_hue() < 40 && optical_sensor.get_hue() > 0) || //red
+         (sortState == 2 && optical_sensor.get_hue() < 225 && optical_sensor.get_hue() > 160)) && optical_sensor.get_proximity() > 100 ) { //blue
+        //pros::delay(200);
+        intake_motor.move_velocity(600);
+        intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        while (optical_sensor.get_proximity() > 200   )
+           pros::delay(10); 
+        while (optical_sensor.get_proximity() > 75   )
+           pros::delay(2); 
+        intake_motor.move_velocity(0);
+        pros::delay(1000);
+        intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    } 
+    
+}
+
 void intake () {
     while (true) {
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
             intake_motor.move_velocity(600);
+            colorSort();
         } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
             intake_motor.move_velocity(-400);
         } else {
             intake_motor.move_velocity(0);
         }
+        //printf("%f \n", optical_sensor.get_hue() );
         //if (intake_motor.get_efficiency() < 10 && fix) {
             //intake_motor.move_relative(-360, 200);
             //pros::delay(500); //300ms per 360deg
@@ -110,51 +133,17 @@ void clamp() {
 
 void topmech() {
     while (true) {
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {arm.changeAngle(-9);}
-        else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {arm.changeAngle(9);}
-        else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {arm.home();};
+        //printf("%f \n", arm_rotational_sensor.get_position()*0.01);
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {arm_controller.changeAngle(-10);}
+        else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {arm_controller.changeAngle(10);}
+        else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {arm_controller.home();};
+        //double power = partner.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+        //arm_motor.move(power);
         pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
     }
 }
 
 /*
-
-
-
-
-void colorSort() {
-    static bool colorDetected = false;
-
-    if(sortState == 1) {
-        if(optical.get_hue() < 18 && optical.get_hue() > 12) { //red!
-            if(!colorDetected) {
-                colorDetected = true;
-                intakeState = 3;
-                pros::Task::delay(50);
-                intake.move_voltage(0);
-                pros::Task::delay(200);
-                intake.move_voltage(-12000);
-                intakeState = 1;
-            }
-        } else {
-            colorDetected = false;
-        }
-    } else if(sortState == 2) {
-        if(optical.get_hue() < 216 && optical.get_hue() > 210) { //blue!
-            if(!colorDetected) {
-                colorDetected = true;
-                intakeState = 3;
-                pros::Task::delay(50); //TODO: is the task delay working
-                intake.move_voltage(0);
-                pros::Task::delay(200);
-                intake.move_voltage(-12000);
-                intakeState = 1;
-            }
-        } else {
-            colorDetected = false;
-        }
-    }
-}
 
 Arm ptoArm(
     std::make_unique<pros::Motor>(3, pros::v5::MotorGears::blue),

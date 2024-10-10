@@ -3,6 +3,7 @@
 #include "api.h" // IWYU pragma: keep
 #include "lemlib/chassis/chassis.hpp"
 #include "arm.h" 
+#include "pros/optical.hpp"
 
 enum protocol { bluetooth, vexnet}; 
 
@@ -30,12 +31,15 @@ enum protocol { bluetooth, vexnet};
 
 #define INTAKE_PORT -11
 
-#define ARM_PORT -19
+#define ARM_PORT -20
+#define ARM_ROTATIONAL_SENSOR_PORT -21
 
 #define INERTIAL_SENSOR_PORT 14
 
+#define OPTICAL_SENSOR_PORT 6
+
 extern pros::Controller master;
-//extern pros::Controller partner;
+extern pros::Controller partner;
 
 // extern pros::Motor dt_motor_lf;
 // extern pros::Motor dt_motor_lm;
@@ -64,7 +68,11 @@ extern pros::IMU inertial_sensor;
 
 extern lemlib::Chassis chassis;
 
-extern Arm arm;
+extern Arm arm_controller;
+
+extern pros::Rotation arm_rotational_sensor;
+
+extern pros::Optical optical_sensor;
 
 //extern pros::Gps gps_main;
 //extern pros::Gps gps_secondary;
