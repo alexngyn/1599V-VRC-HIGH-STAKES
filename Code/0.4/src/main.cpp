@@ -25,6 +25,7 @@ void check_device_plugged_in(int port, std::string deviceName)
 
 void initialize() {
     console.println("Initializing robot...");
+    partner.print(0, 0, "current status: init start"); // 0-2 0-14
     led led1(LED_1_PORT, LED_1_LENGTH); 
     chassis.calibrate(); // calibrate the chassis
     arm_rotational_sensor.reset(); // reset the arm sensor
@@ -46,17 +47,15 @@ void initialize() {
     chassis.setPose(0, 0, 0); // X: 0, Y: 0, Heading: 0
     //pros::lcd::initialize(); // initialize brain screen
 
-    /*
-    pros::Task screen([&]() {
+    
+    pros::Task positionprint([&]() {
         while (true) {
             lemlib::Pose pose = chassis.getPose(); // get chassis position
-            pros::lcd::print(0, "X: %f", pose.x);
-            pros::lcd::print(1, "Y: %f", pose.y);
-            pros::lcd::print(2, "Theta: %f", pose.theta);
+            partner.print(2, 0, "X: %f Y: %f Theta: %f", pose.x, pose.y, pose.theta); // 0-2 0-14
             pros::delay(50);
         }
     });
-    */
+
     pros::delay(1000);
 
     lemlib::Pose testpose = chassis.getPose();
@@ -71,6 +70,7 @@ void initialize() {
     //pros::Task lights([&] { led1.rotate(); pros::delay(100); });
     //imageTest();
 
+    partner.print(0, 0, "current status: init done"); // 0-2 0-14
 }
 
 void disabled() {}
@@ -78,6 +78,7 @@ void competition_initialize() {}
 
 void autonomous() {
     console.println("Running auton...");
+    partner.print(0, 0, "current status: auton start"); // 0-2 0-14
 
     //pros::Task logger_thread(loginator);
 
@@ -85,10 +86,12 @@ void autonomous() {
     arm_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     auton_blue_non_rush();
     //selector.run_auton();
+    partner.print(0, 0, "current status: auton done"); // 0-2 0-14
 }
 
 void opcontrol() {
     console.println("Running op...");
+    partner.print(0, 0, "current status: op start"); // 0-2 0-14
 
     arm_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 

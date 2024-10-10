@@ -1,6 +1,6 @@
 #include "pros/motors.h"
 #include "setup.h"
-#include "gui.h"
+//#include "gui.h"
 #include "arm.h"
 
 int sgn (float number) { return 1 ? number >= 0 : -1 ; }
@@ -85,13 +85,14 @@ void colorSort() {
     const int sortState = 1; //0 = off, 1 = blue, 2 = red
 
     if (((sortState == 1 && optical_sensor.get_hue() < 40 && optical_sensor.get_hue() > 0) || //red
-         (sortState == 2 && optical_sensor.get_hue() < 225 && optical_sensor.get_hue() > 160)) && optical_sensor.get_proximity() > 100 ) { //blue
+         (sortState == 2 && optical_sensor.get_hue() < 225 && optical_sensor.get_hue() > 160)) 
+         && optical_sensor.get_proximity() > 100 && arm_controller.getAngle() < -200) { //blue
         //pros::delay(200);
         intake_motor.move_velocity(600);
         intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        while (optical_sensor.get_proximity() > 200   )
+        while (optical_sensor.get_proximity() > 200)
            pros::delay(10); 
-        while (optical_sensor.get_proximity() > 75   )
+        while (optical_sensor.get_proximity() > 75)
            pros::delay(2); 
         intake_motor.move_velocity(0);
         pros::delay(1000);
@@ -102,14 +103,30 @@ void colorSort() {
 
 void intake () {
     while (true) {
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+            if (arm_controller.getAngle() > -200) {arm_controller.moveToAngle(-220); 
+                while (arm_controller.getAngle() > -220) { pros::delay(50); }}
+
+            intake_motor.move_velocity(600);
+            while (optical_sensor.get_proximity() < 255 && master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+                pros::delay(10); 
+            }
+            if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+                pros::delay(20); 
+                intake_motor.move_velocity(-600);
+                pros::delay(100); 
+            }
+        }
+
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
             intake_motor.move_velocity(600);
             colorSort();
         } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-            intake_motor.move_velocity(-400);
+            intake_motor.move_velocity(-600);
         } else {
             intake_motor.move_velocity(0);
         }
+
         //printf("%f \n", optical_sensor.get_hue() );
         //if (intake_motor.get_efficiency() < 10 && fix) {
             //intake_motor.move_relative(-360, 200);
