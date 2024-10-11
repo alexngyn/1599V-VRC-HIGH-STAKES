@@ -40,9 +40,9 @@ class Arm {
         double ratio;
 
         lemlib::PID PID;
-        double targetAngle = -200;
-        float UpwardGain = 1.5;
-        float DownwardGain = 0.5;
+        double targetAngle = -215;
+        float UpwardGain = 2;
+        float DownwardGain = 1.5;
 
         Arm::state currState = Arm::state::HOLD;
 

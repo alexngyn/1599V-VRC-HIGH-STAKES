@@ -6,8 +6,12 @@
 #include "pros/optical.hpp"
 
 enum protocol { bluetooth, vexnet}; 
+enum color { red, blue };
+enum side { left, right };
 
 #define CONTROLLER_MODE vexnet
+#define sideColor red // what side we on
+#define autonSide right
 
 #define RIGHT_MOTOR_PORTS { 1, 2, 3 }
 #define LEFT_MOTOR_PORTS { -16, -17, -18 }

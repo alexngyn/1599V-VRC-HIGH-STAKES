@@ -1,7 +1,6 @@
 #include "main.h" 
 
 void initialize() {
-    led led1(LED_1_PORT, LED_1_LENGTH); 
     chassis.calibrate(); // calibrate the chassis
     chassis.setPose(0, 0, 0); // X: 0, Y: 0, Heading: 0
     pros::lcd::initialize(); // initialize brain screen

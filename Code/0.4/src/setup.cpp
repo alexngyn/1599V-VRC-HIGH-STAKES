@@ -47,11 +47,11 @@ Arm arm_controller(
     1,
     10,
     -0.25,
-    lemlib::PID {2, 0, 0, 20, true}
+    lemlib::PID {0.9, 0, 0, 50, true}
 );
 
 
-// drivetrain settings
+// drivetrain settingss
 lemlib::Drivetrain drivetrain {
     &dt_left, // left drivetrain motors
     &dt_right, // right drivetrain motors
