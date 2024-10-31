@@ -34,8 +34,8 @@ void Arm::changeHeight(double deltaHeight) {
 }
 
 void Arm::home() {
-    if (getAngle() > -180) {this->moveToAngle(-215);}
-    else {this->moveToAngle(-125);};
+    if (getAngle() > 30) {this->moveToAngle(90);}
+    else {this->moveToAngle(10);};
 }
 
 double Arm::getAngle() {
