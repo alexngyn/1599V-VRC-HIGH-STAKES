@@ -29,7 +29,7 @@ enum side { left, right };
 #define INTAKE_PORT -11
 
 #define ARM_PORT -20
-#define ARM_ROTATIONAL_SENSOR_PORT 22
+#define ARM_ROTATIONAL_SENSOR_PORT 21
 
 #define INERTIAL_SENSOR_PORT 14
 
