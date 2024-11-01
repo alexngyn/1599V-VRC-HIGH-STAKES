@@ -9,7 +9,6 @@ VBF Robotics
 */
 
 #include "main.h" 
-#include "gui.h"
 #include "pros/motors.h"
 #include "setup.h"
 
@@ -19,13 +18,11 @@ void check_device_plugged_in(int port, std::string deviceName)
 		pros::v5::Device::get_plugged_type(port) == pros::v5::DeviceType::undefined)
 	{
 		master.rumble("---");
-		// console.println((deviceName + " not plugged in!").c_str());
 	}
 }
 
 void initialize() {
-    // console.println("Initializing robot...");
-    partner.clear();
+    // partner.clear();
     //partner.print(0, 0, "init start"); // 0-2 0-14
     led led1(LED_1_PORT, LED_1_LENGTH); 
     chassis.calibrate(); // calibrate the chassis
@@ -69,7 +66,7 @@ void initialize() {
     //     }
     // });
 
-    pros::lcd::print(0, "%s %s auton", sideColor == red ? "red" : "blue", autonSide == left ? "left" : "right"); // 0-2 0-14
+    pros::lcd::print(0, "%s %s auton", sideColor == red ? "red" : "blue"); // 0-2 0-14
 
     pros::delay(500);
 
@@ -92,19 +89,11 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous() {
-    // console.println("Running auton...");
-    //partner.print(0, 0, "auton start"); // 0-2 0-14
-
-    //pros::Task logger_thread(loginator);
-
+    // partner.print(0, 0, "auton start"); // 0-2 0-14
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     arm_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    if (autonSide == left) {
-        auton_left();
-    } else {
-        auton_right();
-    }
     //partner.print(0, 0, "auton done"); // 0-2 0-14
+
 }
 
 void opcontrol() {
@@ -118,4 +107,5 @@ void opcontrol() {
 	pros::Task intake_thread(intake);
     pros::Task clamp_thread(clamp);
     pros::Task topmech_thread(topmech);
-}
+
+

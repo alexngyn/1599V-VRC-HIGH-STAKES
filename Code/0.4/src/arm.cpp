@@ -15,26 +15,15 @@ Arm::Arm(pros::Motor motor,
 void Arm::reset() {}
 
 void Arm::moveToAngle(double angle) {
-    double height = angleToHeight(angle);
-//    if (height > 30.25 + 4.5 || height < 8 || this->currState == Arm::state::INACTIVE) return;
-    //if (angle > 55 || angle < -55) return;
     this->targetAngle = angle;
-}
-
-void Arm::moveToHeight(double height) {
-    this->moveToAngle(heightToAngle(height));
 }
 
 void Arm::changeAngle(double deltaAngle) {
     this->moveToAngle(this->targetAngle + deltaAngle);
 }
 
-void Arm::changeHeight(double deltaHeight) {
-    this->moveToHeight(angleToHeight(this->targetAngle) + deltaHeight);
-}
-
 void Arm::home() {
-    if (getAngle() > 30) {this->moveToAngle(90);}
+    if (getAngle() < 30) {this->moveToAngle(90);}
     else {this->moveToAngle(10);};
 }
 

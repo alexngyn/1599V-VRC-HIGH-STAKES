@@ -20,15 +20,9 @@ class Arm {
 
         void reset();
 
-        double angleToHeight(double angle) { return 18.5 + 12.5*std::sin(angle); }
-        double heightToAngle(double height) { return std::asin((height - 18.5) / 12.5); }
-
-        double getHeight() { return angleToHeight(this->getAngle()); }
         void moveToAngle(double angle);
-        void moveToHeight(double height);
-        void changeAngle(double deltaAngle);
-        void changeHeight(double deltaHeight);
         void home();
+        void changeAngle(double deltaAngle);
 
         double getAngle();
         bool isInPosition() { return this->currState == Arm::state::HOLD; }
@@ -67,7 +61,7 @@ class Arm {
                     std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, vel);
 
                     //printf("%f %f %f \n", vel, targetAngle, getAngle());
-                    this->motor.move(vel);
+                     this->motor.move(vel);
                 } else if (this->currState == Arm::state::HOLD) {
                     //printf("%f %f %f \n", 0.0, targetAngle, getAngle());
                     this->motor.move(0);

@@ -27,31 +27,6 @@ std::pair<float, float> arcade(int throttle, int turn, float curveGain = 0, floa
     return std::make_pair(leftPower, rightPower);
 }
 
-/*
-std::pair<float, float> arcade(int throttle, int turn, float curveGain = 0) {
-    turn *= 1;
-    float leftPower = driveCurve(throttle + turn, curveGain);
-    float rightPower = driveCurve(throttle - turn, curveGain);
-    return std::make_pair(leftPower, rightPower);
-}
-*/
-
-/*
-std::pair<float, float> curvature(int throttle, int turn, float curveGain) {
-    if (abs(throttle) < 4) {
-        return arcade(throttle, turn, curveGain);;
-    }
-
-    float leftPower = throttle + (std::abs(throttle) * turn) / 127.0;
-    float rightPower = throttle - (std::abs(throttle) * turn) / 127.0;
-
-    leftPower = driveCurve(leftPower, curveGain);
-    rightPower = driveCurve(rightPower, curveGain);
-
-	return std::make_pair(leftPower, rightPower);
-}
-*/
-
 void drive() {
 	while (true) {
         double power = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
@@ -68,15 +43,6 @@ void drive() {
 	    dt_right.move(right);
 
 		pros::delay(20 ? CONTROLLER_MODE == bluetooth : 50);
-
-        
-        // printf("%f %f %f %f %f %f \n", dt_left.get_temperature(0), 
-        //                                dt_left.get_temperature(1),
-        //                                dt_left.get_temperature(2), 
-        //                                dt_right.get_temperature(0), 
-        //                                dt_right.get_temperature(1),
-        //                                dt_right.get_temperature(2));
-       //if (clamp_solenoid.is_extended())
 	}
 }
 
@@ -102,24 +68,6 @@ void colorSort() {
 
 void intake () {
     while (true) {
-        // if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-        //     if (arm_controller.getAngle() > -200) {arm_controller.moveToAngle(-220); 
-        //         while (arm_controller.getAngle() > -220) { pros::delay(50); }}
-
-        //     intake_motor.move_velocity(600);
-        //     while (optical_sensor.get_proximity() < 100 && master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
-        //         pros::delay(10); 
-        //     }
-        //     while (optical_sensor.get_proximity() < 200 && master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
-        //         pros::delay(2); 
-        //     }
-        //     pros::delay(20);
-        //     // if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
-        //     //     pros::delay(20); 
-        //     //     intake_motor.move_velocity(-600);
-        //     //     pros::delay(100); 
-        //     // }
-        // }
         if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
             ejectEnabled = !ejectEnabled;
         }
@@ -132,15 +80,6 @@ void intake () {
         } else {
             intake_motor.move_velocity(0);
         }
-
-        //printf("%f \n", optical_sensor.get_hue() );
-        //if (intake_motor.get_efficiency() < 10 && fix) {
-            //intake_motor.move_relative(-360, 200);
-            //pros::delay(500); //300ms per 360deg
-        //}
-        // if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
-        //     fix = !fix;
-        // }
         pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
     }
 }
@@ -156,70 +95,12 @@ void clamp() {
 
 void topmech() {
     while (true) {
-        //printf("%f \n", arm_rotational_sensor.get_position()*0.01);
         if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {arm_controller.changeAngle(-10);}
         else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {arm_controller.changeAngle(10);}
         else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {arm_controller.home();};
+        pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
+         //on vexnet: 30ms, on bluetooth, delay 50ms
         //double power = partner.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
         //arm_motor.move(power);
-        pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
     }
 }
-
-/*
-
-Arm ptoArm(
-    std::make_unique<pros::Motor>(3, pros::v5::MotorGears::blue),
-    std::make_unique<pros::Rotation>(6),
-    -0.25,
-    lemlib::PID {10, 0, 20, 20, true},
-    -20
-);
-
-void setPTO(bool state) {
-    isPtoActive = state;
-    if (state) {
-        ptoPiston.extend();
-        activeArm = &ptoArm;
-        arm.connect();
-        arm.moveToAngle(arm.getAngle());
-    } else {
-        ptoPiston.retract();
-        activeArm = &arm;
-        arm.disconnect();
-    }
-}
-
-void pto() {
-    while (true) {
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-            isPtoActive = !isPtoActive;
-            if (isPtoActive) {
-                ptoPiston.extend();
-                activeArm = &ptoArm;
-                arm.connect();
-                arm.moveToAngle(arm.getAngle());
-            } else {
-                ptoPiston.retract();
-                activeArm = &arm;
-                arm.disconnect();
-            }
-        }
-        pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
-    }
-
-}
-
-int slewControl(int desiredVoltage, int previousVoltage, int slewRate, int timestep){
-    if(desiredVoltage != previousVoltage){
-        if (desiredVoltage - previousVoltage > slewRate * timestep) {
-            return previousVoltage + slewRate * timestep;
-        }
-        if (desiredVoltage - previousVoltage < -slewRate * timestep)
-        {
-            return previousVoltage - slewRate * timestep;
-        }
-    }
-    return desiredVoltage;
-}
-*/
