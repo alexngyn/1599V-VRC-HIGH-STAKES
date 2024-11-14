@@ -6,50 +6,31 @@
 pros::Controller master (pros::E_CONTROLLER_MASTER);
 pros::Controller partner (pros::E_CONTROLLER_PARTNER);
 
-// pros::Motor dt_motor_lf (DT_WHEEL_LF_PORT, pros::MotorGearset::blue, pros::MotorEncoderUnits::degrees);
-// pros::Motor dt_motor_lm (DT_WHEEL_LM_PORT, pros::MotorGearset::blue, pros::MotorEncoderUnits::degrees);
-// pros::Motor dt_motor_lb (DT_WHEEL_LB_PORT, pros::MotorGearset::blue, pros::MotorEncoderUnits::degrees);
-
-// pros::Motor dt_motor_rf (DT_WHEEL_RF_PORT, pros::MotorGearset::blue, pros::MotorEncoderUnits::degrees);
-// pros::Motor dt_motor_rm (DT_WHEEL_RM_PORT, pros::MotorGearset::blue, pros::MotorEncoderUnits::degrees);
-// pros::Motor dt_motor_rb (DT_WHEEL_RB_PORT, pros::MotorGearset::blue, pros::MotorEncoderUnits::degrees);
-
 pros::MotorGroup dt_left (LEFT_MOTOR_PORTS, pros::MotorGearset::blue, pros::MotorEncoderUnits::degrees);
 pros::MotorGroup dt_right (RIGHT_MOTOR_PORTS, pros::MotorGearset::blue, pros::MotorEncoderUnits::degrees);
-
 pros::MotorGroup dt_motors (DT_MOTOR_PORTS, pros::MotorGearset::blue, pros::MotorEncoderUnits::degrees);
 
-//pros::MotorGroup pto_motors (PTO_MOTOR_PORTS, pros::MotorGearset::blue, pros::MotorEncoderUnits::degrees);
-
 pros::adi::Pneumatics clamp_solenoid (CLAMP_SOLENOID_PORT, true);
+pros::adi::Pneumatics doinker_solenoid(DOINKER_PORT, false);
 //pros::adi::DigitalOut indicator_g (INDICATOR_G_PORT);
 
 pros::Motor intake_motor (INTAKE_PORT, pros::MotorGearset::blue, pros::MotorEncoderUnits::degrees);
-
 pros::Motor arm_motor (ARM_PORT, pros::MotorGearset::green, pros::MotorEncoderUnits::degrees);
 
 pros::Optical optical_sensor (OPTICAL_SENSOR_PORT);
-
-//pros::MotorGroup arm_motors (arm_motor);
-
-//arm_motors += dt_left;
-
-//pros::MotorGroup arm_motors ({arm_motor, dt_left});
-
 
 pros::IMU inertial_sensor (INERTIAL_SENSOR_PORT);
 
 pros::Rotation arm_rotational_sensor (ARM_ROTATIONAL_SENSOR_PORT);
 
+color sideColor = sideColorInit;
+
 Arm arm_controller(
     arm_motor,
     arm_rotational_sensor,
     1,
-    10,
-    -0.25,
-    lemlib::PID {0.9, 0, 0, 50, true}
+    lemlib::PID {3.0, 20, 0.155, true}
 );
-
 
 // drivetrain settingss
 lemlib::Drivetrain drivetrain {
@@ -100,3 +81,12 @@ lemlib::OdomSensors sensors {
 
 // create the chassis
 lemlib::Chassis chassis(drivetrain, linearController, angularController, sensors);
+
+//converts color (enum) to a string
+std::string colorToString(color color) {
+    switch (color) {
+        case red: return "red";
+        case blue: return "blue";
+        default: return "unknown";
+    }
+}

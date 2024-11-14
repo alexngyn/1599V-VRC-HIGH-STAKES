@@ -2,10 +2,15 @@
 
 void loginator();
 double meter_to_in (double meter);
-void auton_right_awp(); 
-void auton_left_awp();
-void auton_left_rush();
+void spitFirstDonut();
+// void auton_left();
+// void auton_right();
+void soloAWP_R();
+void soloAWP_L();
+void old_R();
+void old_L();
 void pidtune();
 void skills();
+void eat_second_donut();
 
 extern bool ejectEnabled;

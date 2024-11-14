@@ -3,15 +3,14 @@
 #include "api.h"  // IWYU pragma: keep
 //#include "setup.h"
 
+#define targetAngleInit 12
+
 class Arm {
     public:
         Arm(pros::Motor motor,
             pros::Rotation rotSensor, double ratio,
-            double length, double heightOffsset,
             lemlib::PID pid);
         ~Arm() {this->task.remove();};
-        //double angleOffset = 0;
-        double length, heightOffset;
 
         enum class state {
             MOVING,
@@ -23,6 +22,7 @@ class Arm {
         void moveToAngle(double angle);
         void home();
         void changeAngle(double deltaAngle);
+        void apartment();
 
         double getAngle();
         bool isInPosition() { return this->currState == Arm::state::HOLD; }
@@ -34,8 +34,8 @@ class Arm {
         double ratio;
 
         lemlib::PID PID;
-        double targetAngle = -215;
-        float UpwardGain = 2;
+        double targetAngle = targetAngleInit;
+        float UpwardGain = 2.0;
         float DownwardGain = 1.5;
 
         Arm::state currState = Arm::state::HOLD;

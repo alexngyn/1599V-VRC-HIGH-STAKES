@@ -4,12 +4,16 @@
 #include "lemlib/chassis/chassis.hpp"
 #include "arm.h" 
 #include "pros/optical.hpp"
+#include <string>
 
 enum protocol { bluetooth, vexnet}; 
-enum color { red, blue };
+enum color { red, blue, unknown };
+
+std::string colorToString(color color);
 
 #define CONTROLLER_MODE vexnet
-color sideColor = red; // what side we on
+#define sideColorInit red
+extern color sideColor; // what side we on
 
 //controllers
 extern pros::Controller master;
@@ -30,6 +34,10 @@ extern pros::IMU inertial_sensor;
 //mogo clamp
 #define CLAMP_SOLENOID_PORT 'H'
 extern pros::adi::Pneumatics clamp_solenoid;
+
+//doinker
+#define DOINKER_PORT 'G'
+extern pros::adi::Pneumatics doinker_solenoid;
 
 //LEDs
 //#define INDICATOR_G_PORT 'B'

@@ -9,6 +9,7 @@ VBF Robotics
 */
 
 #include "main.h" 
+#include "autonomous.h"
 #include "pros/motors.h"
 #include "setup.h"
 
@@ -50,23 +51,25 @@ void initialize() {
             pros::delay(50);
             partner.print(1, 0, "%.1f %s", arm_controller.getAngle(), arm_controller.isInPosition() ? "stopped" : " moving"); // 0-2 0-14
             pros::delay(50);
-            partner.print(2, 0, "%s %s ej:%s", sideColor == red ? "red" : "blue", autonSide == left ? "left" : "right", ejectEnabled ? "on" : "off"); // 0-2 0-14
+            partner.print(2, 0, "%s %s ej:%s", sideColor == red ? "red" : "blue", ejectEnabled ? "on" : "off"); // 0-2 0-14
             pros::delay(50);
+            pros::lcd::print(3,"opotical distance: %i", optical_sensor.get_proximity());
+            pros::delay(500);
         }
     });
     
     pros::lcd::initialize(); // initialize brain screen
-    // pros::Task screen([&]() {
-    //     while (true) {
-    //         lemlib::Pose pose = chassis.getPose(); // get chassis position
-    //         pros::lcd::print(0, "X: %f", pose.x);
-    //         pros::lcd::print(1, "Y: %f", pose.y);
-    //         pros::lcd::print(2, "Theta: %f", pose.theta);
-    //         pros::delay(50);
-    //     }
-    // });
+    pros::Task screen([&]() {
+        while (true) {
+            lemlib::Pose pose = chassis.getPose(); // get chassis position
+            pros::lcd::print(0, "X: %f", pose.x);
+            pros::lcd::print(1, "Y: %f", pose.y);
+            pros::lcd::print(2, "Theta: %f", pose.theta);
+            pros::delay(50);
+        }
+    });
 
-    pros::lcd::print(0, "%s %s auton", sideColor == red ? "red" : "blue"); // 0-2 0-14
+    // pros::lcd::print(0, "%s %s auton", sideColor == red ? "red" : "blue"); // 0-2 0-14
 
     pros::delay(500);
 
@@ -89,23 +92,32 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous() {
+    
     // partner.print(0, 0, "auton start"); // 0-2 0-14
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     arm_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     //partner.print(0, 0, "auton done"); // 0-2 0-14
+    skills();
 
 }
 
-void opcontrol() {
-    // console.println("Running op...");
-    //partner.print(0, 0, "op start"); // 0-2 0-14
+void printDistance(){
+    while (true){
+        pros::lcd::print(0,"distance: %i", optical_sensor.get_proximity());
+        pros::delay(500);
+    }
+}
 
+void opcontrol() {
+    master.clear();
+    // console.println("Running op...");
+    partner.print(0, 0, "op start"); // 0-2 0-14
+    arm_controller.moveToAngle(12);
     arm_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-
 	pros::Task drive_thread(drive);
 	pros::Task intake_thread(intake);
     pros::Task clamp_thread(clamp);
     pros::Task topmech_thread(topmech);
-
-
+    pros::Task doinker_thread(doinker);
+}

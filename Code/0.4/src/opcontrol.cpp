@@ -1,4 +1,7 @@
+#include "liblvgl/llemu.hpp"
+#include "pros/misc.h"
 #include "pros/motors.h"
+#include "pros/rtos.hpp"
 #include "setup.h"
 //#include "gui.h"
 #include "arm.h"
@@ -49,32 +52,43 @@ void drive() {
 //bool fix = true;
 
 void colorSort() {
-    if (((sideColor == blue && optical_sensor.get_hue() < 40 && optical_sensor.get_hue() > 0) || //red
-         (sideColor == red && optical_sensor.get_hue() < 225 && optical_sensor.get_hue() > 160)) 
-         && optical_sensor.get_proximity() > 100 && arm_controller.getAngle() < -200 && ejectEnabled) { //blue
-        //pros::delay(200);
+    if (((sideColor == color::blue && optical_sensor.get_hue() < 40) || //red
+        (sideColor == color::red && optical_sensor.get_hue() > 70)) //blue
+        && optical_sensor.get_proximity() > 100 && arm_controller.getAngle() < 15 && ejectEnabled) {
+        
         intake_motor.move_velocity(600);
         intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        while (optical_sensor.get_proximity() > 200)
-           pros::delay(10); 
-        while (optical_sensor.get_proximity() > 75)
-           pros::delay(2); 
+        
+        while (optical_sensor.get_proximity() < 240){
+            pros::delay(10);
+            if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true) {break;}
+            }
+        
+        pros::delay(100);
+        intake_motor.brake();
         intake_motor.move_velocity(0);
-        pros::delay(1000);
+        pros::delay(500);
         intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     } 
-    
 }
 
 void intake () {
+    intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     while (true) {
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+        if(ejectEnabled == false){master.print(0,0, "Color sort: off");}
+        else {master.print(0, 0, "Color sort: %s", colorToString(sideColor));}
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+            master.clear_line(0);
             ejectEnabled = !ejectEnabled;
         }
-
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+            master.clear_line(0);
+            if (sideColor == red) {sideColor = color::blue;}
+            else {sideColor = color::red;}
+        }
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
             intake_motor.move_velocity(600);
-            colorSort();
+            if (ejectEnabled) {colorSort();}
         } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
             intake_motor.move_velocity(-400);
         } else {
@@ -93,13 +107,22 @@ void clamp() {
     }
 }
 
+void doinker(){
+    while (true) {
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+            doinker_solenoid.toggle();
+        }
+    }
+}
+
 void topmech() {
     while (true) {
         if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {arm_controller.changeAngle(-10);}
         else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {arm_controller.changeAngle(10);}
-        else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {arm_controller.home();};
+        else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {arm_controller.home();}
+        else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {arm_controller.apartment();}
         pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
-         //on vexnet: 30ms, on bluetooth, delay 50ms
+        //on vexnet: 30ms, on bluetooth, delay 50ms
         //double power = partner.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
         //arm_motor.move(power);
     }

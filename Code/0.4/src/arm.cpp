@@ -2,13 +2,11 @@
 
 Arm::Arm(pros::Motor motor,
          pros::Rotation rotSensor, double ratio,
-         double length, double heightOffset,
          lemlib::PID pid)
     : motor(std::move(motor)),
       rotSensor(std::move(rotSensor)),
       ratio(ratio),
-      PID(pid),
-      heightOffset(heightOffset) {
+      PID(pid) {
     this->reset();
 }
 
@@ -24,9 +22,14 @@ void Arm::changeAngle(double deltaAngle) {
 
 void Arm::home() {
     if (getAngle() < 30) {this->moveToAngle(90);}
-    else {this->moveToAngle(10);};
+    else {this->moveToAngle(12);};
 }
 
 double Arm::getAngle() {
     return this->rotSensor.get_position() * this->ratio * 0.01;
+}
+
+void Arm::apartment() {
+    if (getAngle()<30) {this->moveToAngle(120);}
+    else {this->moveToAngle(12);}
 }
