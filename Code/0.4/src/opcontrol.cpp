@@ -1,9 +1,4 @@
-#include "liblvgl/llemu.hpp"
-#include "pros/misc.h"
-#include "pros/motors.h"
-#include "pros/rtos.hpp"
 #include "setup.h"
-//#include "gui.h"
 #include "arm.h"
 
 int sgn (float number) { return 1 ? number >= 0 : -1 ; }

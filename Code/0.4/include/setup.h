@@ -5,6 +5,7 @@
 #include "arm.h" 
 #include "pros/optical.hpp"
 #include <string>
+#include "led.h"
 
 enum protocol { bluetooth, vexnet}; 
 enum color { red, blue, unknown };
@@ -42,10 +43,13 @@ extern pros::adi::Pneumatics doinker_solenoid;
 //LEDs
 //#define INDICATOR_G_PORT 'B'
 extern pros::adi::DigitalOut indicator_g;
-#define LED_1_PORT 'A'
-//#define LED_2_PORT 'H'
-#define LED_1_LENGTH 64
-//#define LED_2_LENGTH 64
+#define LED_1_PORT 'E'
+#define LED_2_PORT 'F'
+#define LED_1_LENGTH 55
+#define LED_2_LENGTH 55
+
+extern led led_1;
+extern led led_2;
 
 //intake
 #define INTAKE_PORT -11
