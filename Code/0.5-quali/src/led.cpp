@@ -1,22 +1,16 @@
 #include "led.h"
+#include "setup.h"
 
-led::led(const char port, int length)
-    : port(port), length(length), ledbuffer_v(length), ledbuffer(new uint32_t[length]) {
-    pros::c::adi_led_t ledstrip = pros::c::adi_led_init(port);
-    pros::delay(1000);
-    gradient(0xFFDA29, 0xC40233, length);
-    update();
-}
+uint32_t ledbuffer[LED_1_LENGTH];
+std::vector<uint32_t> ledbuffer_v;
+uint32_t ledbuffer2[LED_2_LENGTH];
+std::vector<uint32_t> ledbuffer2_v;
 
-led::~led() {
-    delete[] ledbuffer;
-}
-
-std::uint32_t led::rgb_to_hex(int r, int g, int b) {
+std::uint32_t rgb_to_hex(int r, int g, int b) {
     return (((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff));
 }
 
-led::rgb led::hex_to_rgb(std::uint32_t color) {
+rgb hex_to_rgb(std::uint32_t color) {
     rgb in;
     in.r = (color >> 16) & 0xff;
     in.g = (color >> 8) & 0xff;
@@ -24,7 +18,8 @@ led::rgb led::hex_to_rgb(std::uint32_t color) {
     return in;
 }
 
-uint32_t led::interpolate_rgb(std::uint32_t start_color, std::uint32_t end_color, int step, int fade_width) {
+uint32_t interpolate_rgb(std::uint32_t start_color, std::uint32_t end_color, int step,
+                                       int fade_width) {
     rgb startComponents = hex_to_rgb(start_color);
     rgb endComponents = hex_to_rgb(end_color);
 
@@ -44,28 +39,52 @@ uint32_t led::interpolate_rgb(std::uint32_t start_color, std::uint32_t end_color
     return rgb_to_hex(solved.r, solved.g, solved.b);
 }
 
-void led::gradient(std::uint32_t start_color, std::uint32_t end_color, int fade_width) {
-    for (int i = 0; i < fade_width / 2; i++) {
-        ledbuffer_v[i] = interpolate_rgb(start_color, end_color, i, fade_width / 2);
+void gradient(std::uint32_t start_color, std::uint32_t end_color, int fade_width, std::vector<uint32_t>* ledbufferv) {
+    for (int i = 0; i < fade_width; i++) {
+        (*ledbufferv)[i] = interpolate_rgb(start_color, end_color, i, fade_width);
     }
-    for (int i = fade_width / 2; i <= fade_width; i++) {
-        ledbuffer_v[i] = interpolate_rgb(end_color, start_color, i, fade_width / 2);
+    for (int i = fade_width; i < fade_width * 2; i++) {
+        (*ledbufferv)[i] = interpolate_rgb(end_color, start_color, i - fade_width, fade_width);
     }
 }
 
-void led::update() {
-    std::copy(ledbuffer_v.begin(), ledbuffer_v.end(), ledbuffer);
-    pros::c::adi_led_set(ledstrip, ledbuffer, length);
+
+
+void ledsetup() {
+    for(int i = 0;i<LED_1_LENGTH;i++){
+		ledbuffer_v.push_back(0x00FF00);
+	}
+	pros::c::adi_led_t led = pros::c::adi_led_init(LED_1_PORT);
+
+    for(int i = 0;i<LED_2_LENGTH;i++){
+		ledbuffer2_v.push_back(0x00FF00);
+	}
+	pros::c::adi_led_t led2 = pros::c::adi_led_init(LED_2_PORT);
+	pros::delay(500);
+
+	gradient(0xFFDA29, 0xC40233, 30, &ledbuffer_v);
+    gradient(0xFFDA29, 0xC40233, 30, &ledbuffer2_v);
+    //std::vector<uint32_t> ledbuffer2_v(ledbuffer_v);
+
+	std::copy(ledbuffer_v.begin(), ledbuffer_v.end(), ledbuffer);
+	pros::c::adi_led_set(led, ledbuffer, LED_1_LENGTH);
+
+    pros::delay(100);
+
+    std::copy(ledbuffer2_v.begin(), ledbuffer2_v.end(), ledbuffer2);
+	pros::c::adi_led_set(led2, ledbuffer2, LED_2_LENGTH);
+
+    pros::delay(100);
+
+	while (true) {
+		std::rotate(ledbuffer_v.begin(), ledbuffer_v.begin() + 1, ledbuffer_v.end());
+		std::copy(ledbuffer_v.begin(), ledbuffer_v.end(), ledbuffer);
+		pros::c::adi_led_set(led, ledbuffer, LED_1_LENGTH);
+		pros::delay(100);
+
+        std::rotate(ledbuffer2_v.begin(), ledbuffer2_v.begin() + 1, ledbuffer2_v.end());
+		std::copy(ledbuffer2_v.begin(), ledbuffer2_v.end(), ledbuffer2);
+		pros::c::adi_led_set(led2, ledbuffer2, LED_2_LENGTH);
+		pros::delay(100);
+    }
 }
-
-void led::rotate() {
-    std::rotate(ledbuffer_v.begin(), ledbuffer_v.begin() + 1, ledbuffer_v.end());
-    update();
-}
-
-/* Example usage
-
-void opcontrol() {
-    led led1('f', 64); 
-    pros::Task lights([&] { led1.rotate(); pros::delay(100); });
-}*/

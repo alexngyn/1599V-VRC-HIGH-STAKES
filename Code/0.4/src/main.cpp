@@ -25,8 +25,6 @@ void check_device_plugged_in(int port, std::string deviceName)
 void initialize() {
     // partner.clear();
     //partner.print(0, 0, "init start"); // 0-2 0-14
-    led led_1 (LED_1_PORT, LED_1_LENGTH);
-    led led_2 (LED_2_PORT, LED_2_LENGTH);
     chassis.calibrate(); // calibrate the chassis
     arm_rotational_sensor.reset(); // reset the arm sensor
 
@@ -108,6 +106,87 @@ void printDistance(){
         pros::delay(500);
     }
 }
+struct rgb {
+  double r;
+  double g;
+  double b;
+};
+
+uint32_t ledbuffer[LED_1_LENGTH];
+std::vector<uint32_t> ledbuffer_v;
+
+std::uint32_t rgb_to_hex(int r, int g, int b) {
+    return (((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff));
+}
+
+rgb hex_to_rgb(std::uint32_t color) {
+    rgb in;
+    in.r = (color >> 16) & 0xff;
+    in.g = (color >> 8) & 0xff;
+    in.b = color & 0xff;
+    return in;
+}
+
+uint32_t interpolate_rgb(std::uint32_t start_color, std::uint32_t end_color, int step,
+                                       int fade_width) {
+    rgb startComponents = hex_to_rgb(start_color);
+    rgb endComponents = hex_to_rgb(end_color);
+
+    double red_diff = endComponents.r - startComponents.r;
+    double green_diff = endComponents.g - startComponents.g;
+    double blue_diff = endComponents.b - startComponents.b;
+
+    double red_step = red_diff / fade_width;
+    double green_step = green_diff / fade_width;
+    double blue_step = blue_diff / fade_width;
+
+    rgb solved;
+
+    solved.r = (startComponents.r + red_step * step);
+    solved.g = (startComponents.g + green_step * step);
+    solved.b = (startComponents.b + blue_step * step);
+    return rgb_to_hex(solved.r, solved.g, solved.b);
+}
+
+void gradient(std::uint32_t start_color, std::uint32_t end_color, int fade_width) {
+    for (int i = 0; i < fade_width; i++) {
+    	ledbuffer_v[i] = interpolate_rgb(start_color, end_color, i, fade_width);
+    }
+	for (int i = fade_width; i < fade_width*2; i++) {
+    	ledbuffer_v[i] = interpolate_rgb(end_color, start_color, i, fade_width);
+    }
+}
+
+void ledsetup() {
+
+    // for(int i = 0;i<LED_1_LENGTH;i++){
+	// 	ledbuffer_v.push_back(0x00FF00);
+	// }
+	// pros::c::adi_led_t led = pros::c::adi_led_init(LED_1_PORT);
+	// pros::delay(500);
+
+	// gradient(0xFFDA29, 0xC40233, 30);
+
+	// std::copy(ledbuffer_v.begin(), ledbuffer_v.end(), ledbuffer);
+	// pros::c::adi_led_set(led, ledbuffer, LED_1_LENGTH);
+	// while (true) {
+	// 	// std::rotate(ledbuffer.begin(), ledbuffer.end() - 1, ledbuffer.end());
+	// 	std::rotate(ledbuffer_v.begin(), ledbuffer_v.begin() + 1, ledbuffer_v.end());
+	// 	std::copy(ledbuffer_v.begin(), ledbuffer_v.end(), ledbuffer);
+	// 	pros::c::adi_led_set(led, ledbuffer, LED_1_LENGTH);
+	// 	pros::delay(200);
+
+    // }
+    led led_1 (LED_1_PORT, LED_1_LENGTH);
+    //pros::delay(1000);
+    //led led_2 (LED_2_PORT, LED_2_LENGTH);
+
+    // pros::Task lights([&] { 
+    //     led_1.rotate(); 
+    //     //led_2.rotate(); 
+    //     pros::delay(200);
+    // });
+}
 
 void opcontrol() {
     master.clear();
@@ -121,5 +200,5 @@ void opcontrol() {
     pros::Task clamp_thread(clamp);
     pros::Task topmech_thread(topmech);
     pros::Task doinker_thread(doinker);
-    pros::Task lights([&] { led_1.rotate(); led_2.rotate(); pros::delay(200);});
+    ledsetup();
 }

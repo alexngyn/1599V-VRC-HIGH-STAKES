@@ -1,10 +1,7 @@
 #pragma once
 
 #include "api.h" // IWYU pragma: keep
-#include "lemlib/chassis/chassis.hpp"
 #include "arm.h" 
-#include "pros/optical.hpp"
-#include <string>
 #include "led.h"
 
 enum protocol { bluetooth, vexnet}; 
@@ -47,9 +44,6 @@ extern pros::adi::DigitalOut indicator_g;
 #define LED_2_PORT 'F'
 #define LED_1_LENGTH 55
 #define LED_2_LENGTH 55
-
-extern led led_1;
-extern led led_2;
 
 //intake
 #define INTAKE_PORT -11

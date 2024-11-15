@@ -25,8 +25,6 @@ void check_device_plugged_in(int port, std::string deviceName)
 void initialize() {
     // partner.clear();
     //partner.print(0, 0, "init start"); // 0-2 0-14
-    led led_1 (LED_1_PORT, LED_1_LENGTH);
-    led led_2 (LED_2_PORT, LED_2_LENGTH);
     chassis.calibrate(); // calibrate the chassis
     arm_rotational_sensor.reset(); // reset the arm sensor
 
@@ -121,5 +119,5 @@ void opcontrol() {
     pros::Task clamp_thread(clamp);
     pros::Task topmech_thread(topmech);
     pros::Task doinker_thread(doinker);
-    pros::Task lights([&] { led_1.rotate(); led_2.rotate(); pros::delay(200);});
+    ledsetup();
 }

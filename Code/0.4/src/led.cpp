@@ -1,9 +1,9 @@
 #include "led.h"
 
 led::led(const char port, int length)
-    : port(port), length(length), ledbuffer_v(length), ledbuffer(new uint32_t[length]) {
+    : port(port), length(length), ledbuffer_v(length, 0x00FF00), ledbuffer(new uint32_t[length]) {
     pros::c::adi_led_t ledstrip = pros::c::adi_led_init(port);
-    pros::delay(1000);
+    pros::delay(500);
     gradient(0xFFDA29, 0xC40233, length);
     update();
 }
