@@ -10,7 +10,7 @@ pros::MotorGroup dt_left (LEFT_MOTOR_PORTS, pros::MotorGearset::blue, pros::Moto
 pros::MotorGroup dt_right (RIGHT_MOTOR_PORTS, pros::MotorGearset::blue, pros::MotorEncoderUnits::degrees);
 pros::MotorGroup dt_motors (DT_MOTOR_PORTS, pros::MotorGearset::blue, pros::MotorEncoderUnits::degrees);
 
-pros::adi::Pneumatics clamp_solenoid (CLAMP_SOLENOID_PORT, true);
+pros::adi::Pneumatics clamp_solenoid (CLAMP_SOLENOID_PORT, false);
 pros::adi::Pneumatics doinker_solenoid(DOINKER_PORT, false);
 //pros::adi::DigitalOut indicator_g (INDICATOR_G_PORT);
 

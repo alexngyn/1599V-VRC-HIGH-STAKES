@@ -24,7 +24,7 @@ void spitFirstDonut(){
     intake_motor.move_velocity(600);
     intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     while (optical_sensor.get_proximity() < 240){pros::delay(10);}
-    pros::delay(90);
+    pros::delay(80);
     intake_motor.brake();
     intake_motor.move_velocity(0);
     pros::delay(500);
@@ -92,7 +92,6 @@ void soloAWP_R(){
 
     //move to ladder
     chassis.moveToPose(awp3.x, awp3.y, awp3.theta, 5000, {.forwards = true, .maxSpeed = 127}, false);
-    
 }
 
 void soloAWP_L(){
@@ -134,7 +133,7 @@ void soloAWP_L(){
     //eat second donut
     pros::delay(1500);
 
-    pros::Task spinIntake (intake_motor.move_velocity(600));
+    pros::Task spinIntakeTask(spinIntake);
     arm_controller.moveToAngle(50);
 
     //move to ladder
