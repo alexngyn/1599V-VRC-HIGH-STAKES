@@ -29,7 +29,7 @@ Arm arm_controller(
     arm_motor,
     arm_rotational_sensor,
     1,
-    lemlib::PID {3.0, 20, 0.155, true}
+    lemlib::PID {3.0, 30, 0.155, true}
 );
 
 // drivetrain settingss

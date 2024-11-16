@@ -3,7 +3,7 @@
 #include "api.h"  // IWYU pragma: keep
 //#include "setup.h"
 
-#define targetAngleInit 12
+#define targetAngleInit 16
 
 class Arm {
     public:

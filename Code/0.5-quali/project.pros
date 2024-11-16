@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "skills",
+    "project_name": "new sAWP - Right",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -467,8 +467,8 @@
     },
     "upload_options": {
       "after": "screen",
-      "icon": "planet",
-      "slot": 5,
+      "icon": "pizza",
+      "slot": 1,
       "description": "bananas!"
     },
     "use_early_access": false

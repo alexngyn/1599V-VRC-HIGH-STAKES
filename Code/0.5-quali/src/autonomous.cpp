@@ -16,7 +16,7 @@ void pidtune() {
     //chassis.moveToPoint(0, 16, 10000);
     chassis.moveToPose(8, 24,0, 10000);
     //chassisPrintPose();
-    chassis.turnToHeading(90, 100000);
+    chassis.turnToHeading(95, 100000);
     //robot::chassisPrintPose();
 }
 
@@ -24,12 +24,19 @@ void spitFirstDonut(){
     intake_motor.move_velocity(600);
     intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     while (optical_sensor.get_proximity() < 240){pros::delay(10);}
-    pros::delay(150); //changed 100 -> 110
+    pros::delay(90);
     intake_motor.brake();
     intake_motor.move_velocity(0);
     pros::delay(500);
     intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     intake_motor.move_velocity(600);
+}
+
+void spinIntake(){
+    while(true){
+        intake_motor.move_velocity(600);
+        pros::delay(10);
+    }
 }
 
 //======================= awp autons =======================
@@ -47,7 +54,7 @@ void soloAWP_R(){
     dt_left.move_relative(1.5, 150);
     dt_right.move_relative(1.5, 150);
     pros::delay(2000);
-    arm_controller.moveToAngle(15);
+    arm_controller.moveToAngle(16);
     pros::delay(500);
     dt_left.move(0);
     dt_right.move(0);
@@ -62,24 +69,25 @@ void soloAWP_R(){
     chassis.moveToPose(awp1.x, awp1.y, awp1.theta, 2000, {.forwards = false, .maxSpeed = 125}, false);
 
     //grab mogo
-    pros::delay(500);
+    pros::delay(300);
     clamp_solenoid.toggle();
     
     intake_motor.move_velocity(600);
     pros::delay(200);
 
-    chassis.moveToPoint(awpe.x, awpe.y, 2000, {.forwards = true, .maxSpeed = 125}, false);
+    chassis.moveToPoint(awpe.x, awpe.y, 2000, {.forwards = true, .maxSpeed = 127}, false);
     pros::delay(1200); //changed 1000 -> 800
 
     pros::Task spitFirstDonutTask(spitFirstDonut);
 
     //move to donut pile
-    chassis.moveToPose(awp2.x, awp2.y, awp2.theta, 3000, {.forwards = true, .maxSpeed = 125}, false);
+    chassis.moveToPose(awp2.x, awp2.y, awp2.theta, 3000, {.forwards = true, .maxSpeed = 127}, false);
 
     //eat second donut
     pros::delay(1500);
 
     intake_motor.move_velocity(600);
+    pros::Task spinIntakeTask(spinIntake);
     arm_controller.moveToAngle(50);
 
     //move to ladder
@@ -94,7 +102,7 @@ void soloAWP_L(){
     dt_left.move_relative(1.5, 150);
     dt_right.move_relative(1.5, 150);
     pros::delay(2000);
-    arm_controller.moveToAngle(15);
+    arm_controller.moveToAngle(16);
     pros::delay(500);
     dt_left.move(0);
     dt_right.move(0);
@@ -102,11 +110,11 @@ void soloAWP_L(){
     dt_right.move_relative(-1.5, 300);
 
     //set position, open clamp
-    chassis.setPose(-1 * awp0.x, awp0.y, -1 * awp0.theta);
+    chassis.setPose(awp0.x, -awp0.y, -awp0.theta + 180);
     clamp_solenoid.toggle();
     
     //move to mogo
-    chassis.moveToPose(-1 * awp1.x, awp1.y, -1 * awp1.theta, 2000, {.forwards = false, .maxSpeed = 125}, false);
+    chassis.moveToPose(awp1.x, -awp1.y, -awp1.theta + 180, 2000, {.forwards = false, .maxSpeed = 125}, false);
 
     //grab mogo
     pros::delay(500);
@@ -115,22 +123,22 @@ void soloAWP_L(){
     intake_motor.move_velocity(600);
     pros::delay(200);
 
-    chassis.moveToPoint(-1 * awpe.x, awpe.y, 2000, {.forwards = true, .maxSpeed = 125}, false);
+    chassis.moveToPoint(awpe.x, -awpe.y, 2000, {.forwards = true, .maxSpeed = 125}, false);
     pros::delay(1200); //changed 1000 -> 800
 
     pros::Task spitFirstDonutTask(spitFirstDonut);
 
     //move to donut pile
-    chassis.moveToPose(-1 * awp2.x +10, awp2.y + 5, -1 * awp2.theta, 3000, {.forwards = true, .maxSpeed = 125}, false);
+    chassis.moveToPose(awp2.x, -awp2.y, -awp2.theta + 180, 3000, {.forwards = true, .maxSpeed = 125}, false);
 
     //eat second donut
     pros::delay(1500);
 
-    intake_motor.move_velocity(600);
+    pros::Task spinIntake (intake_motor.move_velocity(600));
     arm_controller.moveToAngle(50);
 
     //move to ladder
-    chassis.moveToPose(-1 * awp3.x, awp3.y, -1 * awp3.theta, 5000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPose(awp3.x, -awp3.y, -awp3.theta + 180, 5000, {.forwards = true, .maxSpeed = 127}, false);
     
 }
 
@@ -151,7 +159,7 @@ void skills () {
     dt_left.move_relative(1, 150);
     dt_right.move_relative(1, 150);
     pros::delay(2000);
-    arm_controller.moveToAngle(12);
+    arm_controller.moveToAngle(16);
     pros::delay(500);
     dt_left.move(0);
     dt_right.move(0);

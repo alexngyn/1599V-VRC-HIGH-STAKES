@@ -3,6 +3,7 @@
 void loginator();
 double meter_to_in (double meter);
 void spitFirstDonut();
+void spinIntake();
 // void auton_left();
 // void auton_right();
 void soloAWP_R();

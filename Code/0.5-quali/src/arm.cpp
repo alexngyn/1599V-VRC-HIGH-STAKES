@@ -22,7 +22,7 @@ void Arm::changeAngle(double deltaAngle) {
 
 void Arm::home() {
     if (getAngle() < 30) {this->moveToAngle(90);}
-    else {this->moveToAngle(12);};
+    else {this->moveToAngle(16);};
 }
 
 double Arm::getAngle() {
@@ -31,5 +31,5 @@ double Arm::getAngle() {
 
 void Arm::apartment() {
     if (getAngle()<30) {this->moveToAngle(120);}
-    else {this->moveToAngle(12);}
+    else {this->moveToAngle(16);}
 }

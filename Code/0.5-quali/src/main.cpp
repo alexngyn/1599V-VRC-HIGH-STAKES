@@ -96,7 +96,7 @@ void autonomous() {
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     arm_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     //partner.print(0, 0, "auton done"); // 0-2 0-14
-    skills();
+    soloAWP_R();
 
 }
 
@@ -111,7 +111,7 @@ void opcontrol() {
     master.clear();
     // console.println("Running op...");
     partner.print(0, 0, "op start"); // 0-2 0-14
-    arm_controller.moveToAngle(12);
+    arm_controller.moveToAngle(16);
     arm_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 	pros::Task drive_thread(drive);

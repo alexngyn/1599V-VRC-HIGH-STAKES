@@ -59,7 +59,7 @@ void colorSort() {
             if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true) {break;}
             }
         
-        pros::delay(100);
+        pros::delay(95);
         intake_motor.brake();
         intake_motor.move_velocity(0);
         pros::delay(500);
