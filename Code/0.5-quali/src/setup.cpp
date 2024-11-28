@@ -1,7 +1,4 @@
 #include "setup.h"
-#include "pros/motor_group.hpp"
-#include "pros/optical.hpp"
-#include "pros/rotation.hpp"
 
 pros::Controller master (pros::E_CONTROLLER_MASTER);
 pros::Controller partner (pros::E_CONTROLLER_PARTNER);
@@ -19,12 +16,39 @@ pros::Motor intake_motor (INTAKE_PORT, pros::MotorGearset::blue, pros::MotorEnco
 pros::Motor arm_motor (ARM_PORT, pros::MotorGearset::green, pros::MotorEncoderUnits::degrees);
 
 pros::Optical optical_sensor (OPTICAL_SENSOR_PORT);
+//pros::Vision vision_sensor(VISION_SENSOR_PORT);
+
+/*
+#define VISION_PORT 1
+#define NUM_VISION_OBJECTS 2
+pros::Vision vision_sensor (VISION_PORT);
+vision_sensor.set_exposure(100);
+
+pros::vision_signature_s_t REDSIG =
+    pros::Vision::signature_from_utility(1, 8973, 11143, 10058, -2119, -1053, -1586, 5.4, 0);
+vision_sensor.set_signature(1, &REDSIG);
+
+pros::vision_signature_s_t BLUESIG =
+    pros::Vision::signature_from_utility(2, 8973, 11143, 10058, -2119, -1053, -1586, 5.4, 0);
+vision_sensor.set_signature(2, &REDSIG);
+
+pros::vision_object_s_t object_arr[NUM_VISION_OBJECTS];
+while (true) { // prints color of ring higher up
+  vision_sensor.read_by_size(0, NUM_VISION_OBJECTS, object_arr);
+  if (object_arr[0].y_middle_coord > object_arr[1].y_middle_coord) { printf("sig: %d", object_arr[0].signature); } else { printf("sig: %d", object_arr[1].signature);}
+  pros::delay(20);
+}
+*/
+
 
 pros::IMU inertial_sensor (INERTIAL_SENSOR_PORT);
 
 pros::Rotation arm_rotational_sensor (ARM_ROTATIONAL_SENSOR_PORT);
 
-color sideColor = sideColorInit;
+pros::Rotation horizontal_encoder (HORIZONTAL_ENCODER_PORT);
+pros::Rotation vertical_encoder (VERTICAL_ENCODER_PORT);
+
+color sideColor = color::unknown;
 
 Arm arm_controller(
     arm_motor,
@@ -70,12 +94,16 @@ lemlib::ControllerSettings angularController (
     0 // maximum acceleration (slew) prevent wheel cuz we dont have encoder
 );
 
+// horizontal tracking wheel
+lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_2, 0);
+// vertical tracking wheel
+lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, -5);
+
 // sensors for odometry
-// note that in this example we use internal motor encoders, so we don't pass vertical tracking wheels
 lemlib::OdomSensors sensors {
-    nullptr, // vertical tracking wheel 1, set to nullptr as we don't have one
+    &vertical_tracking_wheel, // vertical tracking wheel 1, set to nullptr as we don't have one
     nullptr, // vertical tracking wheel 2, set to nullptr as we don't have one
-    nullptr, // horizontal tracking wheel 1
+    &horizontal_tracking_wheel, // horizontal tracking wheel 1
     nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
     &inertial_sensor // inertial sensor
 };

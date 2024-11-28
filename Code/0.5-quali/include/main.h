@@ -43,7 +43,6 @@
 #include "autonomous.h"
 #include "led.h"
 #include "pros/apix.h" 
-#include "robodash/api.h"
 #include "liblvgl/lvgl.h"
 // IWYU pragma:  end_kepp
 

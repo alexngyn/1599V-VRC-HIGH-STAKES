@@ -71,17 +71,19 @@ void initialize() {
     pros::Task selection([&]() {
         while (pros::competition::is_disabled()) {
             if (selector.get_value() < 100) {
-                sideColor = blue;
+                sideColor = color::blue;
                 indicator.set_value(true);
             } else {
-                sideColor = red;
+                sideColor = color::red;
                 indicator.set_value(false);
             }
             pros::delay(100);
         }
     });
 
-    pros::lcd::print(0, "%s %s auton", sideColor == red ? "red" : "blue"); // 0-2 0-14
+    pros::lcd::print(0, "%s %s auton", sideColor == color::red ? "red" : "blue"); // 0-2 0-14
+
+    optical_sensor.set_integration_time(20);
 
     pros::delay(500);
 

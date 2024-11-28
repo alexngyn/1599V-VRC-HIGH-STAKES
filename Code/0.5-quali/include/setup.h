@@ -2,8 +2,7 @@
 
 #include "api.h" // IWYU pragma: keep
 #include "arm.h" 
-#include "led.h"
-#include "pros/adi.hpp"
+#include "led.h" // IWYU pragma: keep
 
 enum protocol { bluetooth, vexnet}; 
 enum color { red, blue, unknown };
@@ -11,7 +10,6 @@ enum color { red, blue, unknown };
 std::string colorToString(color color);
 
 #define CONTROLLER_MODE vexnet
-#define sideColorInit red
 extern color sideColor; // what side we on
 
 //controllers
@@ -22,6 +20,11 @@ extern pros::Controller partner;
 #define RIGHT_MOTOR_PORTS { 1, 2, 3 }
 #define LEFT_MOTOR_PORTS { -16, -17, -18 }
 #define DT_MOTOR_PORTS { 1, 2, 3, -16, -17, -18 }
+
+#define HORIZONTAL_ENCODER_PORT 1
+#define VERTICAL_ENCODER_PORT 2
+extern pros::Rotation horizontal_encoder;
+extern pros::Rotation vertical_encoder;
 
 extern pros::MotorGroup dt_left;
 extern pros::MotorGroup dt_right;
@@ -61,8 +64,9 @@ extern pros::Motor arm_motor;
 extern pros::Rotation arm_rotational_sensor;
 #define OPTICAL_SENSOR_PORT 6
 extern pros::Optical optical_sensor;
+
+#define VISION_SENSOR_PORT 5
+extern pros::Vision vision_sensor;
+
 extern Arm arm_controller;
-
 extern pros::Rotation arm_rotational_sensor;
-
-extern pros::Optical optical_sensor;
