@@ -68,6 +68,19 @@ void initialize() {
         }
     });
 
+    pros::Task selection([&]() {
+        while (pros::competition::is_disabled()) {
+            if (selector.get_value() < 100) {
+                sideColor = blue;
+                indicator.set_value(true);
+            } else {
+                sideColor = red;
+                indicator.set_value(false);
+            }
+            pros::delay(100);
+        }
+    });
+
     // pros::lcd::print(0, "%s %s auton", sideColor == red ? "red" : "blue"); // 0-2 0-14
 
     pros::delay(500);

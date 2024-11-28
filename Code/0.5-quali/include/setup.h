@@ -3,6 +3,7 @@
 #include "api.h" // IWYU pragma: keep
 #include "arm.h" 
 #include "led.h"
+#include "pros/adi.hpp"
 
 enum protocol { bluetooth, vexnet}; 
 enum color { red, blue, unknown };
@@ -38,8 +39,10 @@ extern pros::adi::Pneumatics clamp_solenoid;
 extern pros::adi::Pneumatics doinker_solenoid;
 
 //LEDs
-//#define INDICATOR_G_PORT 'B'
-extern pros::adi::DigitalOut indicator_g;
+#define INDICATOR_PORT 'A'
+extern pros::adi::DigitalOut indicator;
+#define SELECTION_PORT 'B'
+extern pros::adi::AnalogIn selector;
 #define LED_1_PORT 'E'
 #define LED_2_PORT 'F'
 #define LED_1_LENGTH 55

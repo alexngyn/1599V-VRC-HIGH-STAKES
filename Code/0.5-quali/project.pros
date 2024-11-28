@@ -468,7 +468,7 @@
     "upload_options": {
       "after": "screen",
       "icon": "pizza",
-      "slot": 1,
+      "slot": 7,
       "description": "bananas!"
     },
     "use_early_access": false
