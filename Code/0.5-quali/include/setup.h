@@ -38,11 +38,13 @@ extern pros::adi::Pneumatics clamp_solenoid;
 #define DOINKER_PORT 'G'
 extern pros::adi::Pneumatics doinker_solenoid;
 
-//LEDs
+//Auton Selection
 #define INDICATOR_PORT 'A'
 extern pros::adi::DigitalOut indicator;
 #define SELECTION_PORT 'B'
 extern pros::adi::AnalogIn selector;
+
+//LEDs
 #define LED_1_PORT 'E'
 #define LED_2_PORT 'F'
 #define LED_1_LENGTH 55
