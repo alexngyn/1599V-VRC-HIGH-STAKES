@@ -81,7 +81,7 @@ void initialize() {
         }
     });
 
-    // pros::lcd::print(0, "%s %s auton", sideColor == red ? "red" : "blue"); // 0-2 0-14
+    pros::lcd::print(0, "%s %s auton", sideColor == red ? "red" : "blue"); // 0-2 0-14
 
     pros::delay(500);
 
@@ -108,8 +108,18 @@ void autonomous() {
     // partner.print(0, 0, "auton start"); // 0-2 0-14
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     arm_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    //partner.print(0, 0, "auton done"); // 0-2 0-14
-    soloAWP_R();
+
+    //skills();
+
+    if (sideColor == red){
+        //soloAWP_right_red();
+        //soloAWP_left_red();
+        //elims_red();
+    } else {
+        //soloAWP_right_blue();
+        //soloAWP_left_blue();
+        //elims_blue();
+    }
 
 }
 
