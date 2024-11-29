@@ -16,30 +16,15 @@ pros::Motor intake_motor (INTAKE_PORT, pros::MotorGearset::blue, pros::MotorEnco
 pros::Motor arm_motor (ARM_PORT, pros::MotorGearset::green, pros::MotorEncoderUnits::degrees);
 
 pros::Optical optical_sensor (OPTICAL_SENSOR_PORT);
-//pros::Vision vision_sensor(VISION_SENSOR_PORT);
+pros::Vision vision_sensor(VISION_SENSOR_PORT);
 
-/*
-#define VISION_PORT 1
-#define NUM_VISION_OBJECTS 2
-pros::Vision vision_sensor (VISION_PORT);
-vision_sensor.set_exposure(100);
+// vision::signature SIG_1 (1, -4479, -3039, -3758, 7423, 10461, 8942, 3.000, 0);
+// vision::signature SIG_2 (2, 7617, 11241, 9430, -1281, 255, -514, 3.000, 0);
 
 pros::vision_signature_s_t REDSIG =
-    pros::Vision::signature_from_utility(1, 8973, 11143, 10058, -2119, -1053, -1586, 5.4, 0);
-vision_sensor.set_signature(1, &REDSIG);
-
+    pros::Vision::signature_from_utility(1, -4479, -3039, -3758, 7423, 10461, 8942, 3.000, 0);
 pros::vision_signature_s_t BLUESIG =
-    pros::Vision::signature_from_utility(2, 8973, 11143, 10058, -2119, -1053, -1586, 5.4, 0);
-vision_sensor.set_signature(2, &REDSIG);
-
-pros::vision_object_s_t object_arr[NUM_VISION_OBJECTS];
-while (true) { // prints color of ring higher up
-  vision_sensor.read_by_size(0, NUM_VISION_OBJECTS, object_arr);
-  if (object_arr[0].y_middle_coord > object_arr[1].y_middle_coord) { printf("sig: %d", object_arr[0].signature); } else { printf("sig: %d", object_arr[1].signature);}
-  pros::delay(20);
-}
-*/
-
+    pros::Vision::signature_from_utility(2, 7617, 11241, 9430, -1281, 255, -514, 3.000, 0);
 
 pros::IMU inertial_sensor (INERTIAL_SENSOR_PORT);
 

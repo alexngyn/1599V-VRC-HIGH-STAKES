@@ -65,8 +65,11 @@ extern pros::Rotation arm_rotational_sensor;
 #define OPTICAL_SENSOR_PORT 6
 extern pros::Optical optical_sensor;
 
-#define VISION_SENSOR_PORT 5
+#define VISION_SENSOR_PORT 19
 extern pros::Vision vision_sensor;
 
 extern Arm arm_controller;
 extern pros::Rotation arm_rotational_sensor;
+
+extern pros::vision_signature_s_t REDSIG;
+extern pros::vision_signature_s_t BLUESIG;

@@ -46,23 +46,56 @@ void drive() {
 
 //bool fix = true;
 
+// void colorSort() {
+//     if (((sideColor == color::blue && optical_sensor.get_hue() < 40) || //red
+//         (sideColor == color::red && optical_sensor.get_hue() > 70)) //blue
+//         && optical_sensor.get_proximity() > 100 && arm_controller.getAngle() < 15 && ejectEnabled) {
+        
+//         intake_motor.move_velocity(600);
+//         intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        
+//         while (optical_sensor.get_proximity() < 240){
+//             pros::delay(10);
+//             if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true) {break;}
+//             }
+        
+//         pros::delay(95);
+//         intake_motor.brake();
+//         intake_motor.move_velocity(0);
+//         pros::delay(500);
+//         intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+//     } 
+// }
+
 void colorSort() {
-    if (((sideColor == color::blue && optical_sensor.get_hue() < 40) || //red
-        (sideColor == color::red && optical_sensor.get_hue() > 70)) //blue
-        && optical_sensor.get_proximity() > 100 && arm_controller.getAngle() < 15 && ejectEnabled) {
+    pros::vision_object_s_t rtn = vision_sensor.get_by_size(0);
+
+    if (((sideColor == color::blue && rtn.signature == 2) || //red
+        (sideColor == color::red && rtn.signature == 1)) //blue
+        && ejectEnabled) {
         
         intake_motor.move_velocity(600);
         intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
         
-        while (optical_sensor.get_proximity() < 240){
-            pros::delay(10);
-            if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true) {break;}
-            }
+        // while ((sideColor == color::blue && rtn.signature == 2) || //red
+        //        (sideColor == color::red && rtn.signature == 1)) {
+        //     pros::delay(10);
+        //     rtn = vision_sensor.get_by_size(0);
+        //     // if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true) {break;}
+        // }
+
+        pros::delay(250);
+
+        // while (rtn.width > 80){
+        //     pros::delay(10);
+        //     rtn = vision_sensor.get_by_size(0);
+        //     //if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true) {break;}
+        // }
         
-        pros::delay(95);
+        //pros::delay(95);
         intake_motor.brake();
         intake_motor.move_velocity(0);
-        pros::delay(500);
+        pros::delay(2000);
         intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     } 
 }

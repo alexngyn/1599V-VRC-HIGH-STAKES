@@ -83,6 +83,9 @@ void initialize() {
 
     pros::lcd::print(0, "%s %s auton", sideColor == color::red ? "red" : "blue"); // 0-2 0-14
 
+    vision_sensor.set_signature(1, &REDSIG);
+    vision_sensor.set_signature(2, &BLUESIG);
+
     optical_sensor.set_integration_time(20);
 
     pros::delay(500);
