@@ -61,7 +61,7 @@ void colorSortOptical() {
                         false); // don't reset integral when sign of error flips
 
         while ((initPos + 480) - intake_motor.get_position() > 10) {
-            intake_motor.move_velocity((initPos + 480) - intake_motor.get_position());
+            intake_motor.move_velocity(600);
             pros::delay(10);
         }
         
@@ -81,14 +81,7 @@ void colorSortVision() {
 
         double initPos = intake_motor.get_position();
 
-        lemlib::PID intakePID(5, // kP
-                        0.01, // kI
-                        20, // kD
-                        5, // integral anti windup range
-                        false); // don't reset integral when sign of error flips
-
         while ((initPos + 480) - intake_motor.get_position() > 10) {
-            intake_motor.move_velocity((initPos + 480) - intake_motor.get_position());
             pros::delay(10);
         }
         
@@ -120,14 +113,10 @@ void redirect() {
 
         double initPos = intake_motor.get_position();
 
-        lemlib::PID intakePID(5, // kP
-                        0.01, // kI
-                        20, // kD
-                        5, // integral anti windup range
-                        false); // don't reset integral when sign of error flips
+        lemlib::PID intakePID(5, 0, 0, 5, false);
 
         while ((initPos + 360) - intake_motor.get_position() > 10) {
-            intake_motor.move_velocity((initPos + 360) - intake_motor.get_position());
+            intake_motor.move_velocity(intakePID.update((initPos + 480) - intake_motor.get_position()));
             pros::delay(10);
         }
         
