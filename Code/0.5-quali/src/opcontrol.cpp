@@ -1,3 +1,4 @@
+#include "pros/misc.h"
 #include "setup.h"
 #include "arm.h"
 
@@ -46,82 +47,133 @@ void drive() {
 
 //bool fix = true;
 
-// void colorSort() {
-//     if (((sideColor == color::blue && optical_sensor.get_hue() < 40) || //red
-//         (sideColor == color::red && optical_sensor.get_hue() > 70)) //blue
-//         && optical_sensor.get_proximity() > 100 && arm_controller.getAngle() < 15 && ejectEnabled) {
-        
-//         intake_motor.move_velocity(600);
-//         intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        
-//         while (optical_sensor.get_proximity() < 240){
-//             pros::delay(10);
-//             if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true) {break;}
-//             }
-        
-//         pros::delay(95);
-//         intake_motor.brake();
-//         intake_motor.move_velocity(0);
-//         pros::delay(500);
-//         intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-//     } 
-// }
+void colorSortOptical() {
+    if (((sideColor == color::blue && optical_sensor.get_hue() < 40) || //red
+        (sideColor == color::red && optical_sensor.get_hue() > 70)) //blue
+        && optical_sensor.get_proximity() > 100 && ejectEnabled) {
 
-void colorSort() {
+        double initPos = intake_motor.get_position();
+
+        lemlib::PID intakePID(5, // kP
+                        0.01, // kI
+                        20, // kD
+                        5, // integral anti windup range
+                        false); // don't reset integral when sign of error flips
+
+        while ((initPos + 480) - intake_motor.get_position() > 10) {
+            intake_motor.move_velocity((initPos + 480) - intake_motor.get_position());
+            pros::delay(10);
+        }
+        
+        intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        intake_motor.brake();
+        pros::delay(50);
+        intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    } 
+}
+
+void colorSortVision() {
     pros::vision_object_s_t rtn = vision_sensor.get_by_size(0);
 
     if (((sideColor == color::blue && rtn.signature == 2) || //red
         (sideColor == color::red && rtn.signature == 1)) //blue
-        && ejectEnabled) {
+        && ejectEnabled && rtn.height > 100) {
+
+        double initPos = intake_motor.get_position();
+
+        lemlib::PID intakePID(5, // kP
+                        0.01, // kI
+                        20, // kD
+                        5, // integral anti windup range
+                        false); // don't reset integral when sign of error flips
+
+        while ((initPos + 480) - intake_motor.get_position() > 10) {
+            intake_motor.move_velocity((initPos + 480) - intake_motor.get_position());
+            pros::delay(10);
+        }
         
-        intake_motor.move_velocity(600);
         intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        
-        // while ((sideColor == color::blue && rtn.signature == 2) || //red
-        //        (sideColor == color::red && rtn.signature == 1)) {
-        //     pros::delay(10);
-        //     rtn = vision_sensor.get_by_size(0);
-        //     // if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true) {break;}
-        // }
-
-        pros::delay(250);
-
-        // while (rtn.width > 80){
-        //     pros::delay(10);
-        //     rtn = vision_sensor.get_by_size(0);
-        //     //if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true) {break;}
-        // }
-        
-        //pros::delay(95);
         intake_motor.brake();
-        intake_motor.move_velocity(0);
-        pros::delay(2000);
+        pros::delay(50);
         intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     } 
+
+    intake_motor.move_velocity(600);
+    intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    while (optical_sensor.get_proximity() < 240){
+        pros::delay(10);
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true) {break;}
+    }
+    pros::delay(95);
+    intake_motor.brake();
+    intake_motor.move_velocity(0);
+    pros::delay(500);
+    intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+}
+
+void redirect() {
+    pros::vision_object_s_t rtn = vision_sensor.get_by_size(0);
+
+    if (((sideColor == color::blue && rtn.signature == 2) || //red
+        (sideColor == color::red && rtn.signature == 1)) //blue
+        && ejectEnabled && rtn.height > 100) {
+
+        double initPos = intake_motor.get_position();
+
+        lemlib::PID intakePID(5, // kP
+                        0.01, // kI
+                        20, // kD
+                        5, // integral anti windup range
+                        false); // don't reset integral when sign of error flips
+
+        while ((initPos + 360) - intake_motor.get_position() > 10) {
+            intake_motor.move_velocity((initPos + 360) - intake_motor.get_position());
+            pros::delay(10);
+        }
+        
+        intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        intake_motor.brake();
+        pros::delay(50);
+        intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+        intake_motor.move_velocity(-400);
+        pros::delay(200);
+    } 
+
+    intake_motor.move_velocity(600);
+    intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    while (optical_sensor.get_proximity() < 240){
+        pros::delay(10);
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) == true) {break;}
+    }
+    pros::delay(95);
+    intake_motor.brake();
+    intake_motor.move_velocity(0);
+    pros::delay(500);
+    intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 }
 
 void intake () {
     intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     while (true) {
-        if(ejectEnabled == false){master.print(0,0, "Color sort: off");}
+        if(ejectEnabled == false) {master.print(0,0, "Color sort: off");} 
         else {master.print(0, 0, "Color sort: %s", colorToString(sideColor));}
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
             master.clear_line(0);
             ejectEnabled = !ejectEnabled;
         }
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-            master.clear_line(0);
-            if (sideColor == red) {sideColor = color::blue;}
-            else {sideColor = color::red;}
-        }
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) { sideColor == red ? sideColor = color::blue : sideColor = color::red;}
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
             intake_motor.move_velocity(600);
-            if (ejectEnabled) {colorSort();}
+            if (ejectEnabled) {colorSortVision();}
         } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
             intake_motor.move_velocity(-400);
         } else {
             intake_motor.move_velocity(0);
         }
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+            clamp_solenoid.toggle();
+        }
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) { redirect(); }
         pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
     }
 }

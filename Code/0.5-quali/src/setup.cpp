@@ -9,6 +9,7 @@ pros::MotorGroup dt_motors (DT_MOTOR_PORTS, pros::MotorGearset::blue, pros::Moto
 
 pros::adi::Pneumatics clamp_solenoid (CLAMP_SOLENOID_PORT, false);
 pros::adi::Pneumatics doinker_solenoid(DOINKER_PORT, false);
+pros::adi::Pneumatics intake_solenoid(INTAKE_SOLENOID_PORT, false);
 pros::adi::DigitalOut indicator (INDICATOR_PORT);
 pros::adi::AnalogIn selector (SELECTION_PORT);
 

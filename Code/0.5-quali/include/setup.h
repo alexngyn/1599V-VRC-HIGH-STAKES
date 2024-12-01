@@ -26,6 +26,9 @@ extern pros::Controller partner;
 extern pros::Rotation horizontal_encoder;
 extern pros::Rotation vertical_encoder;
 
+#define INTAKE_SOLENOID_PORT 'D'
+extern pros::adi::Pneumatics intake_solenoid;
+
 extern pros::MotorGroup dt_left;
 extern pros::MotorGroup dt_right;
 extern lemlib::Chassis chassis;
