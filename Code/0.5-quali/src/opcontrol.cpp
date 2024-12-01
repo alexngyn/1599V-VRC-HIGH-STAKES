@@ -113,7 +113,7 @@ void redirect() {
 
         double initPos = intake_motor.get_position();
 
-        lemlib::PID intakePID(5, 0, 0, 5, false);
+        lemlib::PID intakePID(8, 0, 0, 1, false);
 
         while ((initPos + 360) - intake_motor.get_position() > 10) {
             intake_motor.move_velocity(intakePID.update((initPos + 480) - intake_motor.get_position()));
