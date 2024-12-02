@@ -21,8 +21,8 @@ extern pros::Controller partner;
 #define LEFT_MOTOR_PORTS { -16, -17, -18 }
 #define DT_MOTOR_PORTS { 1, 2, 3, -16, -17, -18 }
 
-#define HORIZONTAL_ENCODER_PORT 1
-#define VERTICAL_ENCODER_PORT 2
+#define HORIZONTAL_ENCODER_PORT 10
+#define VERTICAL_ENCODER_PORT -15
 extern pros::Rotation horizontal_encoder;
 extern pros::Rotation vertical_encoder;
 

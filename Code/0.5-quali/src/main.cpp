@@ -13,32 +13,19 @@ VBF Robotics
 #include "pros/motors.h"
 #include "setup.h"
 
-void check_device_plugged_in(int port, std::string deviceName)
-{
-	if (pros::v5::Device::get_plugged_type(port) == pros::v5::DeviceType::none ||
-		pros::v5::Device::get_plugged_type(port) == pros::v5::DeviceType::undefined)
-	{
-		master.rumble("---");
-	}
-}
-
 void initialize() {
     // partner.clear();
     //partner.print(0, 0, "init start"); // 0-2 0-14
     chassis.calibrate(); // calibrate the chassis
     arm_rotational_sensor.reset(); // reset the arm sensor
 
-    //console.println("Checking device status...");
-	// check_device_plugged_in(inertial_sensor.get_port(), "IMU");
-	// check_device_plugged_in(dt_left.get_port(0), "Left Motor Group 1");
-	// check_device_plugged_in(dt_left.get_port(1), "Left Motor Group 2");
-	// check_device_plugged_in(dt_left.get_port(2), "Left Motor Group 3");
-	// check_device_plugged_in(dt_right.get_port(0), "Right Motor Group 1");
-	// check_device_plugged_in(dt_right.get_port(1), "Right Motor Group 2");
-	// check_device_plugged_in(dt_right.get_port(2), "Right Motor Group 3");
-    // check_device_plugged_in(intake_motor.get_port(), "Intake Motor");
-	// check_device_plugged_in(arm_motor.get_port(), "Arm Motor");
-	//check_device_plugged_in(horizontal_encoder.get_port(), "Horizontal Encoder");
+    for (int port : {dt_left.get_port(0), dt_left.get_port(1), dt_left.get_port(2), 
+                     dt_right.get_port(0), dt_right.get_port(1), dt_right.get_port(2), 
+                     intake_motor.get_port(), arm_motor.get_port()}) {
+        if (pros::v5::Device::get_plugged_type(port) == pros::v5::DeviceType::none || pros::v5::Device::get_plugged_type(port) == pros::v5::DeviceType::undefined) { 
+            master.rumble("---"); 
+        }
+    }
     
     chassis.setPose(0, 0, 0); // X: 0, Y: 0, Heading: 0
     pros::lcd::initialize(); // initialize brain screen
@@ -56,7 +43,6 @@ void initialize() {
             pros::delay(500);
         }
     });
-    
     pros::lcd::initialize(); // initialize brain screen
     pros::Task screen([&]() {
         while (true) {
@@ -90,18 +76,6 @@ void initialize() {
 
     pros::delay(500);
 
-    //lemlib::Pose testpose = chassis.getPose();
-    // if (testpose.theta != testpose.theta) {
-    //     console.println("Initializing failed...");
-    //     rd_view_alert(getSelectorView(selector), "Initializing failed...");
-    // } else {
-    //     console.println("Initializing successful...");
-    // }
-
-    //pros::Task update_ui_thread(update_ui);
-    //pros::Task lights([&] { led1.rotate(); pros::delay(100); });
-    //imageTest();
-
     //partner.print(0, 0, "init done"); // 0-2 0-14
 }
 
@@ -114,16 +88,23 @@ void autonomous() {
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     arm_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
+    pros::Task colorSort( [&](){
+        colorSortVision(); 
+        pros::delay(50);
+    });
+
+    //pidtune();
+
     //skills();
 
     if (sideColor == red){
-        //soloAWP_right_red();
-        //soloAWP_left_red();
-        //elims_red();
-    } else {
-        //soloAWP_right_blue();
-        //soloAWP_left_blue();
-        //elims_blue();
+        //soloAWP_right_pos(); // red
+        //soloAWP_left_neg(); // red
+        //elims_right(); // red
+    } else if (sideColor == blue){
+        //soloAWP_right_neg(); // blue
+        //soloAWP_left_pos(); // blue
+        //elims_left(); // blue
     }
 
 }

@@ -5,4 +5,4 @@ void intake();
 void clamp();
 void doinker();
 void topmech();
-void colorSort();
+void colorSortVision();

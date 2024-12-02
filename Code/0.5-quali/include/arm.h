@@ -58,12 +58,9 @@ class Arm {
 
                     if (vel > 0) { vel *= UpwardGain; } else {vel *= DownwardGain; }
 
-                    std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, vel);
-
-                    //printf("%f %f %f \n", vel, targetAngle, getAngle());
+                    //std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, vel);
                      this->motor.move(vel);
                 } else if (this->currState == Arm::state::HOLD) {
-                    //printf("%f %f %f \n", 0.0, targetAngle, getAngle());
                     this->motor.move(0);
                 }
             }

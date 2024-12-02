@@ -2,16 +2,15 @@
 
 void loginator();
 double meter_to_in (double meter);
-void spitFirstDonut();
-void spinIntake();
-// void auton_left();
-// void auton_right();
-void soloAWP_R();
-void soloAWP_L();
-void old_R();
-void old_L();
+
+void soloAWP_right_pos(); // red
+void soloAWP_left_neg(); // red
+void soloAWP_right_neg(); // blue
+void soloAWP_left_pos(); // blue
+void elims_right(); // red pos
+void elims_left(); // blue pos
+
 void pidtune();
 void skills();
-void eat_second_donut();
 
 extern bool ejectEnabled;

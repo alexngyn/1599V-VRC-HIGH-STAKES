@@ -50,7 +50,7 @@ lemlib::Drivetrain drivetrain {
     13.25, // track width
     lemlib::Omniwheel::NEW_325, // using new 3.25" omnis
     450, // drivetrain rpm is 480
-    4 // omni chase power is 2. If we had traction wheels, it would have been 8
+    6 // omni chase power is 2. If we had traction wheels, it would have been 8
 };
 
 // lateral motion controller
@@ -69,9 +69,9 @@ lemlib::ControllerSettings linearController (
 
 // angular motion controller
 lemlib::ControllerSettings angularController (
-    2, // proportional gain (kP)
+    4, // proportional gain (kP)
     0, // integral gain (kI)
-    10, // derivative gain (kD)
+    22, // derivative gain (kD)
     3, // anti windup
     1, // small error range, in degrees
     100, // small error range timeout, in milliseconds
@@ -83,11 +83,11 @@ lemlib::ControllerSettings angularController (
 // horizontal tracking wheel
 lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_2, 0);
 // vertical tracking wheel
-lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, -5);
+lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, -2.625);
 
 // sensors for odometry
 lemlib::OdomSensors sensors {
-    &vertical_tracking_wheel, // vertical tracking wheel 1, set to nullptr as we don't have one
+    &vertical_tracking_wheel, // vertical tracking wheel 1, set to nullptr as we don't have one 
     nullptr, // vertical tracking wheel 2, set to nullptr as we don't have one
     &horizontal_tracking_wheel, // horizontal tracking wheel 1
     nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
