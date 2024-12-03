@@ -14,6 +14,7 @@ VBF Robotics
 #include "setup.h"
 
 void initialize() {
+
     // partner.clear();
     //partner.print(0, 0, "init start"); // 0-2 0-14
     chassis.calibrate(); // calibrate the chassis
@@ -88,14 +89,16 @@ void autonomous() {
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     arm_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
-    pros::Task colorSort( [&](){
-        colorSortVision(); 
-        pros::delay(50);
-    });
+    // pros::Task colorSort( [&](){
+    //     colorSortVision(); 
+    //     pros::delay(50);
+    // });
 
     //pidtune();
 
     //skills();
+
+    elims_right();
 
     if (sideColor == red){
         //soloAWP_right_pos(); // red

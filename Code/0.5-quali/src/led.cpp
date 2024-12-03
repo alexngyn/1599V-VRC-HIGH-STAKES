@@ -87,7 +87,10 @@ void ledsetup() {
 		pros::c::adi_led_set(led2, ledbuffer, LED_2_LENGTH);
 		pros::delay(50);
 
-        if (true) {pros::lcd::print(4, "Theta: %f", intake_motor.get_temperature());}
+        //if (true) {pros::lcd::print(4, "Theta: %f", intake_motor.get_temperature());}  intake_motor.is_over_temp()
+        if (intake_motor.get_temperature() > 50) { pros::c::adi_led_set_all(led2, ledbuffer, LED_2_LENGTH, 0xFF4D00); 
+            while (intake_motor.get_temperature() > 50) { pros::delay(200); } }
+        
     }
 
     for (int i = 0; i < floor(static_cast<float>(LED_1_LENGTH) / 3); i++) {

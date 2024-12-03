@@ -30,6 +30,6 @@ double Arm::getAngle() {
 }
 
 void Arm::apartment() {
-    if (getAngle()<30) {this->moveToAngle(120);}
+    if (getAngle()<30) {this->moveToAngle(150);}
     else {this->moveToAngle(16);}
 }

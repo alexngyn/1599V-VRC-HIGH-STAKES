@@ -4,7 +4,7 @@
 
 int sgn (float number) { return 1 ? number >= 0 : -1 ; }
 
-bool reverse_mode = false;
+//bool reverse_mode = false;
 bool ejectEnabled = true;
 
 float driveCurve(float input, float scale) {
@@ -16,7 +16,7 @@ float driveCurve(float input, float scale) {
 
 std::pair<float, float> arcade(int throttle, int turn, float curveGain = 0, float desaturateBias = 0.75) {
     throttle = driveCurve(throttle, curveGain);
-    turn = driveCurve(turn, 7.2);
+    turn = driveCurve(turn, 0);
 
     //printf("%d %d %d %d \n", throttle, turn, newThrottle, newTurn);
 
@@ -31,8 +31,8 @@ void drive() {
         double power = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
 		double turn = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) { reverse_mode = !reverse_mode; }
-        if (reverse_mode){power *= -1;}
+        //if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) { reverse_mode = !reverse_mode; }
+        //if (reverse_mode){power *= -1;}
 
 		auto [left, right] = arcade(power, turn, 4.2);
         // auto [left, right] = curvature(power, turn, 7.2);
@@ -157,10 +157,10 @@ void redirect() {
 }
 
 void intake () {
+    bool val = true;
     intake_motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     while (true) {
-        if(!ejectEnabled) {master.print(0,0, "Color sort: off");} 
-        else {master.print(0, 0, "Color sort: %s", colorToString(sideColor));}
+        if(!ejectEnabled && val) {master.print(0,0, "Color sort: off");} else if (val) {master.print(0, 0, "Color sort: %s", colorToString(sideColor));}
         if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
             master.clear_line(0);
             ejectEnabled = !ejectEnabled;
@@ -179,6 +179,7 @@ void intake () {
         }
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) { redirect(); }
         pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
+        val = !val;
     }
 }
 
