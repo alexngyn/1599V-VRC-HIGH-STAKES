@@ -10,7 +10,6 @@ VBF Robotics
 
 #include "main.h" 
 #include "autonomous.h"
-#include "pros/motors.h"
 #include "setup.h"
 
 void initialize() {
@@ -39,8 +38,8 @@ void initialize() {
             partner.print(1, 0, "%.1f %s", arm_controller.getAngle(), arm_controller.isInPosition() ? "stopped" : " moving"); // 0-2 0-14
             pros::delay(50);
             partner.print(2, 0, "%s %s ej:%s", sideColor == red ? "red" : "blue", ejectEnabled ? "on" : "off"); // 0-2 0-14
-            pros::delay(50);
-            pros::lcd::print(3,"opotical distance: %i", optical_sensor.get_proximity());
+            // pros::delay(50);
+            // pros::lcd::print(3,"opotical distance: %i", optical_sensor.get_proximity());
             pros::delay(500);
         }
     });
@@ -73,7 +72,7 @@ void initialize() {
     vision_sensor.set_signature(1, &REDSIG);
     vision_sensor.set_signature(2, &BLUESIG);
 
-    optical_sensor.set_integration_time(20);
+    //optical_sensor.set_integration_time(20);
 
     pros::delay(500);
 
@@ -89,35 +88,29 @@ void autonomous() {
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     arm_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
-    // pros::Task colorSort( [&](){
-    //     colorSortVision(); 
-    //     pros::delay(50);
-    // });
-
     //pidtune();
 
-    //skills();
+    // skills();
 
+    //soloAWP_left_neg();
+    //soloAWP_right_pos();
+    // pros::delay(1000);
+    // if (sideColor == red){
+    //     // soloAWP_right_pos(); //pos
+    //     soloAWP_left_pos(); //neg
+    // } else if (sideColor == blue){
+    //     // soloAWP_left_pos(); // pos
+    //     soloAWP_right_pos(); // neg
+    // }
     elims_right();
-
-    if (sideColor == red){
-        //soloAWP_right_pos(); // red
-        //soloAWP_left_neg(); // red
-        //elims_right(); // red
-    } else if (sideColor == blue){
-        //soloAWP_right_neg(); // blue
-        //soloAWP_left_pos(); // blue
-        //elims_left(); // blue
-    }
-
 }
 
-void printDistance(){
-    while (true){
-        pros::lcd::print(0,"distance: %i", optical_sensor.get_proximity());
-        pros::delay(500);
-    }
-}
+// void printDistance(){
+//     while (true){
+//         pros::lcd::print(0,"distance: %i", optical_sensor.get_proximity());
+//         pros::delay(500);
+//     }
+// }
 
 void opcontrol() {
     master.clear();
@@ -128,8 +121,7 @@ void opcontrol() {
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 	pros::Task drive_thread(drive);
 	pros::Task intake_thread(intake);
-    pros::Task clamp_thread(clamp);
     pros::Task topmech_thread(topmech);
-    pros::Task doinker_thread(doinker);
+    pros::Task piston_thread(piston);
     ledsetup();
 }

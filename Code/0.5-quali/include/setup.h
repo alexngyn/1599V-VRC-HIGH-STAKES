@@ -65,8 +65,8 @@ extern pros::Motor intake_motor;
 extern pros::Motor arm_motor;
 #define ARM_ROTATIONAL_SENSOR_PORT 21
 extern pros::Rotation arm_rotational_sensor;
-#define OPTICAL_SENSOR_PORT 6
-extern pros::Optical optical_sensor;
+// #define OPTICAL_SENSOR_PORT 6
+// extern pros::Optical optical_sensor;
 
 #define VISION_SENSOR_PORT 19
 extern pros::Vision vision_sensor;

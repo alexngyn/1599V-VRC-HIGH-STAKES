@@ -6,11 +6,8 @@ Arm::Arm(pros::Motor motor,
     : motor(std::move(motor)),
       rotSensor(std::move(rotSensor)),
       ratio(ratio),
-      PID(pid) {
-    this->reset();
-}
-
-void Arm::reset() {}
+      PID(pid) 
+    {}
 
 void Arm::moveToAngle(double angle) {
     this->targetAngle = angle;
@@ -21,7 +18,7 @@ void Arm::changeAngle(double deltaAngle) {
 }
 
 void Arm::home() {
-    if (getAngle() < 30) {this->moveToAngle(90);}
+    if (targetAngle < 30) {this->moveToAngle(90);}
     else {this->moveToAngle(16);};
 }
 
@@ -30,6 +27,6 @@ double Arm::getAngle() {
 }
 
 void Arm::apartment() {
-    if (getAngle()<30) {this->moveToAngle(150);}
+    if (targetAngle<30) {this->moveToAngle(150);}
     else {this->moveToAngle(16);}
 }

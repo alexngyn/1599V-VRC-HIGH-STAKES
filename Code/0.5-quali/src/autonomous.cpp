@@ -1,12 +1,12 @@
 #include "autonomous.h"
+#include "main.h"
 #include "arm.h"
-#include "lemlib/pose.hpp"
 #include "pros/rtos.hpp"
 #include "setup.h" 
 #include "opcontrol.h"
-#include <sys/_intsup.h>
 
 double meter_to_in (double meter) { return meter * 39.37008; }
+void autonIntake() { colorSortVision(); pros::delay(50); }
 
 void pidtune() {
     // disable all other settings other than kd and kp
@@ -28,21 +28,42 @@ void pidtune() {
     //robot::chassisPrintPose();
 }
 
+void detect_donut(){
+    pros::vision_object_s_t rtn = vision_sensor.get_by_size(0);
+
+    intake_motor.move_velocity(400);
+
+    while (!((rtn.signature == 2 || //red
+        rtn.signature == 1) //blue
+        && rtn.height > 150)) {
+
+        pros::vision_object_s_t rtn = vision_sensor.get_by_size(0);
+        pros::delay(20);   
+    }
+    
+    intake_motor.brake();
+}
+
+
 //======================= awp autons =======================
 
 lemlib::Pose awp_0 = {-52.5,-8.5, 300};
 lemlib::Pose awp_1 = {-60, -4.5, 300};
-lemlib::Pose awp_2 = {-30, -20, 300};
+lemlib::Pose awp_2 = {-26, -20, 300};
 lemlib::Pose awp_3 = {-30, -38, 160};
-lemlib::Pose awp_4 = {-44, -5, 330};
+lemlib::Pose awp_4 = {-42, -5, 330};
 lemlib::Pose awp_5 = {-28, -2, 90};
 
 void soloAWP_right_pos(){ // red
+    pros::Task autonIntakeThread(autonIntake);
+    autonIntakeThread.suspend();
+
     chassis.setPose(awp_0.x, awp_0.y, awp_0.theta);
     arm_controller.moveToAngle(90);
     while (!arm_controller.isInPosition()) {pros::delay(10);};
 
     chassis.moveToPoint(awp_1.x, awp_1.y, 1000, {}, false);
+    chassis.waitUntilDone();
 
     arm_controller.moveToAngle(16);
     pros::delay(500);
@@ -61,7 +82,7 @@ void soloAWP_right_pos(){ // red
     
     pros::delay(200);
 
-    intake_motor.move_velocity(600);
+    autonIntakeThread.resume();
 
     chassis.moveToPose(awp_3.x, awp_3.y, awp_3.theta, 2000, {.forwards = true, .maxSpeed = 100}, false);
     // pros::delay(200); //changed 1000 -> 800
@@ -70,23 +91,28 @@ void soloAWP_right_pos(){ // red
     intake_solenoid.toggle();
 
     // //move to donut pile
-    chassis.moveToPose(awp_4.x, awp_4.y, awp_4.theta, 3000, {.forwards = true, .maxSpeed = 100}, false);
+    chassis.moveToPose(awp_4.x, awp_4.y, awp_4.theta, 3000, {.forwards = true, .maxSpeed = 64}, false);
 
     // //eat second donut
     pros::delay(500);
 
     // //move to ladder
     chassis.moveToPose(awp_5.x, awp_5.y, awp_5.theta, 1000, {.forwards = true, .maxSpeed = 127}, true);
-    chassis.waitUntil(5);
+    //chassis.waitUntil(2);
     intake_solenoid.toggle();
+    pros::delay(10000);
 }
 
 void soloAWP_left_pos(){ // blue
+    pros::Task autonIntakeThread(autonIntake);
+    autonIntakeThread.suspend();
+
     chassis.setPose(awp_0.x, -awp_0.y, -awp_0.theta - 180);
     arm_controller.moveToAngle(90);
     while (!arm_controller.isInPosition()) {pros::delay(10);};
 
     chassis.moveToPoint(awp_1.x, -awp_1.y, 1000);
+    chassis.waitUntilDone();
 
     arm_controller.moveToAngle(16);
     pros::delay(500);
@@ -96,15 +122,15 @@ void soloAWP_left_pos(){ // blue
     chassis.moveToPoint(awp_0.x, -awp_0.y, 1000, {.forwards = false, .minSpeed = 60});
     
     //move to mogo
-    chassis.moveToPose(awp_2.x, -awp_2.y, -awp_2.theta - 180, 2000, {.forwards = false, .maxSpeed = 125}, false);
+    chassis.moveToPose(awp_2.x, -awp_2.y, -awp_2.theta - 180, 2000, {.forwards = false, .maxSpeed = 100}, false);
 
     //grab mogo
     pros::delay(50);
     clamp_solenoid.toggle();
 
-     pros::delay(200);
+    pros::delay(200);
     
-    intake_motor.move_velocity(600);
+    autonIntakeThread.resume();
     //pros::delay(200);
 
     chassis.moveToPose(awp_3.x, -awp_3.y, -awp_3.theta-180, 2000, {.forwards = true, .maxSpeed = 100}, false);
@@ -112,10 +138,10 @@ void soloAWP_left_pos(){ // blue
 
     arm_controller.moveToAngle(18);
     intake_solenoid.toggle();
-    //intake_motor.move_velocity(600);
+    //autonIntakeThread.resume();
 
     //move to donut pile
-    chassis.moveToPose(awp_4.x, -awp_4.y, -awp_4.theta - 180, 3000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPose(awp_4.x, -awp_4.y, -awp_4.theta - 180, 3000, {.forwards = true, .maxSpeed = 100}, false);
 
     //eat second donut
     pros::delay(500);
@@ -124,24 +150,29 @@ void soloAWP_left_pos(){ // blue
     chassis.moveToPose(awp_5.x, -awp_5.y, -awp_5.theta - 180, 5000, {.forwards = true, .maxSpeed = 127}, false);
     chassis.waitUntil(5);
     intake_solenoid.toggle();
+    pros::delay(10000);
 }
 
 lemlib::Pose awp_neg_0 = {awp_0.x, -awp_0.y, -awp_0.theta - 180};
 lemlib::Pose awp_neg_1 = {awp_1.x, -awp_1.y, -awp_1.theta - 180};
 lemlib::Pose awp_neg_2 = {awp_2.x, -awp_2.y, -awp_2.theta - 180};
-lemlib::Pose awp_neg_3 = {-5, 43, 0};
-lemlib::Pose awp_neg_4 = {-5,50, 0};
-lemlib::Pose awp_neg_e = {-12,30, 30};
-lemlib::Pose awp_neg_5 = {-20, 45, 300};
+lemlib::Pose awp_neg_3 = {-7, 35, 210};
+lemlib::Pose awp_neg_4 = {-76, 60, 0};
+lemlib::Pose awp_neg_e = {-10,30, 30};
+lemlib::Pose awp_neg_5 = {-25, 45, 210};
 lemlib::Pose awp_neg_6 = {awp_4.x, -awp_4.y, -awp_4.theta - 180};
 lemlib::Pose awp_neg_7 = {awp_5.x, -awp_5.y, -awp_5.theta - 180};
 
 void soloAWP_left_neg(){ // red
+    pros::Task autonIntakeThread(autonIntake);
+    autonIntakeThread.suspend();
+
     chassis.setPose(awp_neg_0.x, awp_neg_0.y, awp_neg_0.theta);
     arm_controller.moveToAngle(90);
     while (!arm_controller.isInPosition()) {pros::delay(10);};
 
     chassis.moveToPoint(awp_neg_1.x, awp_neg_1.y, 1000);
+    chassis.waitUntilDone();
 
     arm_controller.moveToAngle(16);
     pros::delay(500);
@@ -158,14 +189,17 @@ void soloAWP_left_neg(){ // red
     clamp_solenoid.toggle();
     
     pros::delay(200);
-    intake_motor.move_velocity(600);
+    autonIntakeThread.resume();
 
-    chassis.swingToHeading(-awp_neg_2.theta-180, DriveSide::RIGHT, 1000, {.minSpeed = 60});
+    chassis.turnToHeading(-awp_neg_2.theta-180, 1000, {}, false);
 
-    chassis.moveToPoint(awp_neg_3.x, awp_neg_3.y, 2000, {.forwards = true, .maxSpeed = 80, .minSpeed = 20, .earlyExitRange = 3}, false);
-    chassis.moveToPoint(awp_neg_4.x, awp_neg_4.y, 1000, {.forwards = true, .maxSpeed = 80}, false);
-    chassis.moveToPoint(awp_neg_e.x, awp_neg_e.y, 1000, {.forwards = false, .maxSpeed = 80, .minSpeed = 20}, false);
-    chassis.moveToPose(awp_neg_5.x, awp_neg_5.y, awp_5.theta, 2000, {.forwards = true, .maxSpeed = 127, .minSpeed = 20}, false);
+    autonIntakeThread.resume();
+
+    chassis.moveToPose(awp_neg_3.x, awp_neg_3.y, awp_neg_3.theta, 1000, {.forwards = true, .maxSpeed = 50, .minSpeed = 20, .earlyExitRange = 3}, false);
+    //chassis.moveToPoint(awp_neg_3.x, awp_neg_3.y, 2000, {.forwards = true, .maxSpeed = 50, .minSpeed = 20, .earlyExitRange = 3}, false);
+    chassis.moveToPoint(awp_neg_4.x, awp_neg_4.y, 1000, {.forwards = true, .maxSpeed = 50}, false);
+    chassis.moveToPoint(awp_neg_e.x, awp_neg_e.y, 1000, {.forwards = false, .maxSpeed = 80}, false);
+    chassis.moveToPoint(awp_neg_5.x, awp_neg_5.y, 2000, {.forwards = true, .maxSpeed = 127}, false);
 
     intake_solenoid.toggle();
 
@@ -182,11 +216,15 @@ void soloAWP_left_neg(){ // red
 }
 
 void soloAWP_right_neg() { // blue
+    pros::Task autonIntakeThread(autonIntake);
+    autonIntakeThread.suspend();
+
     chassis.setPose(awp_neg_0.x, -awp_neg_0.y, -awp_neg_0.theta - 180);
     arm_controller.moveToAngle(90);
     while (!arm_controller.isInPosition()) {pros::delay(10);};
     
     chassis.moveToPoint(awp_neg_1.x, -awp_neg_1.y, 1000);
+    chassis.waitUntilDone();
 
     arm_controller.moveToAngle(16);
     pros::delay(500);
@@ -203,7 +241,7 @@ void soloAWP_right_neg() { // blue
     clamp_solenoid.toggle();
 
     pros::delay(200);
-    intake_motor.move_velocity(600);
+    autonIntakeThread.resume();
 
     chassis.swingToHeading(-awp_neg_2.theta - 180, DriveSide::LEFT, 1000, {.minSpeed = 60});
 
@@ -230,137 +268,127 @@ void soloAWP_right_neg() { // blue
 //======================= elims =======================
 
 
-lemlib::Pose elims_0 = {awp_0.x, awp_0.y, awp_0.theta};
-lemlib::Pose elims_1 = {awp_1.x, awp_1.y, awp_1.theta};
-lemlib::Pose elims_2 = {-50,-16, 30};
-lemlib::Pose elims_3 = {-50,-6, 20};
-lemlib::Pose elims_4 = {awp_2.x, awp_2.y, awp_2.theta};
-lemlib::Pose elims_5 = {awp_3.x, awp_3.y, awp_3.theta};
-lemlib::Pose elims_6 = {-56, -60, 255};
-lemlib::Pose elims_7 = {-36, -60, 255};
-lemlib::Pose elims_8 = {-5, -50, 60};
-lemlib::Pose elims_9 = {-15, -56, 60};
+lemlib::Pose mid_mogo = {-6, -47.5, 90};
 
-void elims_right () { // red
-    chassis.setPose(elims_0.x, elims_0.y, elims_0.theta);
+//middle donuts
+lemlib::Pose elims_1 = {-6.718, -42.645, 0};
+lemlib::Pose elims_2 = {-7.159, 52.352, 0};
+lemlib::Pose elims_3 = {-22.631, 47.184, 240};
+
+void elims_right () { //red
+    pros::Task autonIntakeThread(autonIntake);
+    autonIntakeThread.suspend();
+
+    chassis.setPose(awp_0.x, awp_0.y, awp_0.theta);
     arm_controller.moveToAngle(90);
     while (!arm_controller.isInPosition()) {pros::delay(10);};
 
-    chassis.moveToPoint(elims_1.x, elims_1.y, 1000, {}, false);
+    chassis.moveToPoint(awp_1.x, awp_1.y, 1000, {}, false);
+    chassis.waitUntilDone();
 
     arm_controller.moveToAngle(16);
     pros::delay(500);
+    //while (!arm_controller.isInPosition()) {pros::delay(10);};
 
     //set position, open clamp
     clamp_solenoid.toggle();
-    chassis.moveToPoint(elims_2.x, elims_2.y, 1000, {.forwards = false, .maxSpeed = 60});
-    intake_solenoid.toggle();
-    intake_motor.move_velocity(600);
-    //intake_motor.move_relative(1000, 600);
-    chassis.swingToHeading(elims_2.theta, DriveSide::RIGHT, 1000, {}, true);
-
-    pros::delay(1500);
-    intake_motor.move_velocity(0);
-
+    chassis.moveToPoint(awp_0.x, awp_0.y, 1000, {.forwards = false, .minSpeed = 60});
+    
     //move to mogo
-    chassis.moveToPose(elims_4.x, elims_4.y, elims_4.theta, 2000, {.forwards = false, .maxSpeed = 100}, false);
+    chassis.moveToPose(awp_2.x, awp_2.y, awp_2.theta, 2000, {.forwards = false, .maxSpeed = 100}, false);
 
-    //grab mogo
+    // // //grab mogo
     pros::delay(50);
-    intake_solenoid.toggle();
     clamp_solenoid.toggle();
-    arm_controller.moveToAngle(90);
     
     pros::delay(200);
 
-    intake_motor.move_velocity(600);
-    chassis.moveToPoint(elims_5.x, elims_5.y, 2000, {.forwards = true, .maxSpeed = 100}, false);
+    autonIntakeThread.resume();
 
-    intake_motor.move_velocity(0);
+    chassis.moveToPose(awp_3.x, awp_3.y, awp_3.theta, 2000, {.forwards = true, .maxSpeed = 100}, false);
 
-    // // donink
+    arm_controller.moveToAngle(18);
+    intake_solenoid.toggle();
 
-    chassis.moveToPose(elims_6.x, elims_6.y, elims_6.theta, 2000, {.forwards = true, .maxSpeed = 127}, true);
-    doinker_solenoid.toggle();
+    // //move to donut pile
+    chassis.moveToPose(awp_4.x, awp_4.y, awp_4.theta, 3000, {.forwards = true, .maxSpeed = 64}, false);
 
-    //chassis.moveToPoint(-55, -59, 1000);
+    // //eat second donut
+    pros::delay(250);
+    autonIntakeThread.suspend();
 
-    chassis.turnToHeading(elims_6.theta+45, 1000);
+    //turn 180, drop mogo, turn back
+    chassis.turnToHeading(awp_4.theta + 180, 3000,{.maxSpeed = 64});
+    chassis.turnToHeading(awp_4.theta, 3000, {.maxSpeed = 64});
+    clamp_solenoid.toggle();
+    // //move to 3rd mogo
+    chassis.moveToPose(mid_mogo.x, mid_mogo.y, mid_mogo.theta, 1000, {.forwards = false, .maxSpeed = 127}, true);
+    // detectdonutthread.suspend();
+    intake_solenoid.toggle();
     pros::delay(500);
-    doinker_solenoid.toggle();
-    clamp_solenoid.toggle();   
-    chassis.turnToHeading(elims_6.theta, 1000);
-    
-    //intake_motor.move_velocity(600);
-    //chassis.moveToPoint(-59, -63, 1000);
-
-    chassis.moveToPoint(elims_7.x, elims_7.y, 2000, {.forwards = false, .maxSpeed = 127}, true);
-    arm_controller.moveToAngle(16);
-    chassis.turnToHeading(elims_7.theta+180, 1000, {.direction = AngularDirection::CCW_COUNTERCLOCKWISE});
-
-    chassis.moveToPose(elims_8.x, elims_8.y, elims_8.theta, 2000, {.forwards = true, .maxSpeed = 127}, false);
-    doinker_solenoid.toggle();
-    chassis.moveToPoint(elims_9.x, elims_9.y, 2000, {.forwards = false, .maxSpeed = 127});
+    autonIntakeThread.resume();
 }
 
 void elims_left() { // blue
-    chassis.setPose(elims_0.x, -elims_0.y, -elims_0.theta - 180);
+    pros::Task autonIntakeThread(autonIntake);
+    autonIntakeThread.suspend();
+
+    chassis.setPose(awp_0.x, awp_0.y, awp_0.theta);
     arm_controller.moveToAngle(90);
     while (!arm_controller.isInPosition()) {pros::delay(10);};
 
-    chassis.moveToPoint(elims_1.x, -elims_1.y, 1000, {}, false);
+    chassis.moveToPoint(awp_1.x, awp_1.y, 1000, {}, false);
+    chassis.waitUntilDone();
 
     arm_controller.moveToAngle(16);
-     pros::delay(500);
+    pros::delay(500);
+    //while (!arm_controller.isInPosition()) {pros::delay(10);};
 
     //set position, open clamp
     clamp_solenoid.toggle();
-    chassis.moveToPoint(elims_2.x, -elims_2.y, 1000, {.forwards = false, .minSpeed = 60});
-    intake_solenoid.toggle();
-    intake_motor.move_velocity(600);
-    chassis.swingToHeading(-elims_2.theta - 180, DriveSide::LEFT, 1000, {}, true);
-
-    pros::delay(1500);
-    intake_motor.move_velocity(0);
+    chassis.moveToPoint(awp_0.x, awp_0.y, 1000, {.forwards = false, .minSpeed = 60});
     
     //move to mogo
-    chassis.moveToPose(elims_4.x, -elims_4.y, -elims_4.theta - 180, 2000, {.forwards = false, .maxSpeed = 125}, false);
+    chassis.moveToPose(awp_2.x, awp_2.y, awp_2.theta, 2000, {.forwards = false, .maxSpeed = 100}, false);
 
-    //grab mogo
+    // // //grab mogo
     pros::delay(50);
     clamp_solenoid.toggle();
+    
+    pros::delay(200);
+
+    autonIntakeThread.resume();
+
+    chassis.moveToPose(awp_3.x, awp_3.y, awp_3.theta, 2000, {.forwards = true, .maxSpeed = 100}, false);
+    // pros::delay(200); //changed 1000 -> 800
+
+    arm_controller.moveToAngle(18);
     intake_solenoid.toggle();
-    arm_controller.moveToAngle(90);
-    
-    intake_motor.move_velocity(600);
-    //pros::delay(200);
-    chassis.moveToPoint(elims_5.x, -elims_5.y, 2000, {.forwards = true, .maxSpeed = 100}, false);
-    intake_motor.move_velocity(0);
 
-    // donink
+    // //move to donut pile
+    chassis.moveToPose(awp_4.x, awp_4.y, awp_4.theta, 3000, {.forwards = true, .maxSpeed = 64}, false);
 
-    chassis.moveToPose(elims_6.x, -elims_6.y, -elims_6.theta - 180, 2000, {.forwards = true, .maxSpeed = 127}, true);
-    doinker_solenoid.toggle();
-
-    chassis.turnToHeading((-elims_6.theta - 180) - 80, 1000);
+    // //eat second donut
     pros::delay(500);
-    doinker_solenoid.toggle();
-    clamp_solenoid.toggle();
-    chassis.turnToHeading(-elims_6.theta - 180, 1000);
 
-    chassis.moveToPose(elims_7.x, -elims_7.y, -elims_7.theta - 180, 2000, {.forwards = true, .maxSpeed = 127}, true);
-    arm_controller.moveToAngle(16);
-    chassis.turnToHeading(-elims_7.theta, 1000, {.direction = AngularDirection::CW_CLOCKWISE});
-    
-    chassis.moveToPose(elims_8.x, -elims_8.y, -elims_8.theta - 180, 2000, {.forwards = true, .maxSpeed = 127}, false);
-    doinker_solenoid.toggle();
-    chassis.moveToPose(elims_9.x, -elims_9.y, -elims_9.theta - 180, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    //turn 180, drop mogo, turn back
+    chassis.turnToHeading(awp_4.theta + 180, 3000);
+    clamp_solenoid.toggle();
+    chassis.turnToHeading(awp_4.theta, 3000);
+
+    // //move to 3rd mogo
+    chassis.moveToPose(mid_mogo.x, mid_mogo.y, mid_mogo.theta, 1000, {.forwards = false, .maxSpeed = 127}, true);
+    intake_solenoid.toggle();
+    pros::delay(500);
 }
 
 
 //======================= skills =======================
 
 void skills () {
+    pros::Task autonIntakeThread(autonIntake);
+    autonIntakeThread.suspend();
+    
     //setup
     clamp_solenoid.toggle();
     dt_left.move_relative(-0.35, 150);
@@ -387,7 +415,7 @@ void skills () {
     pros::delay(1000);
 
     chassis.turnToPoint(-65, -46, 2000);
-    intake_motor.move_velocity(600);
+    autonIntakeThread.resume();
     chassis.moveToPoint(-65, -46, 2000, {.forwards = true, .maxSpeed = 100}, false);
     pros::delay(500);
     chassis.moveToPoint(-46, -46, 2000, {.forwards = true, .maxSpeed = 100}, false);
@@ -404,9 +432,31 @@ void skills () {
     chassis.turnToPoint(-64, -64, 2000, {.forwards = true});
     chassis.moveToPoint(-64, -64, 2000, {.forwards = false, .maxSpeed = 75}, true);
     pros::delay(2000);
-    intake_motor.move_velocity(0);
+    autonIntakeThread.suspend();
     clamp_solenoid.toggle();
     pros::delay(500);
-    dt_left.move_relative(1, 300);
-    dt_right.move_relative(1, 300);
+    chassis.moveToPoint(-55, -55, 2000, {.forwards = false, .maxSpeed = 100}, true);
+
+    chassis.moveToPoint(-47, 17, 3000, {.forwards = false, .maxSpeed = 100}, false);
+    chassis.waitUntilDone();
+    clamp_solenoid.toggle();
+    pros::delay(500);
+    autonIntakeThread.resume();
+    chassis.turnToPoint(-26, 20, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-26, 20, 2000, {.forwards = true, .maxSpeed = 100}, false);
+    chassis.moveToPoint(-22, 45, 2000, {.forwards = true, .maxSpeed = 100}, false);
+    chassis.turnToPoint(-44, 47, 2000, {.forwards = true});
+    chassis.moveToPoint(-44, 47, 2000, {.forwards = true, .maxSpeed = 100}, false);
+    chassis.moveToPoint(-60, 47, 2000, {.forwards = true, .maxSpeed = 100}, false);
+    chassis.turnToPoint(-48, 57, 2000, {.forwards = true, .maxSpeed = 100}, false);
+    chassis.moveToPoint(-48, 57, 2000, {.forwards = true, .maxSpeed = 100}, false);
+    chassis.turnToPoint(-66, 66, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.waitUntilDone();
+    clamp_solenoid.toggle();
+    pros::delay(500);
+    chassis.moveToPoint(-44, 44, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    arm_controller.moveToAngle(150);
+    chassis.moveToPoint(-10, 10, 10000, {.forwards = true, .maxSpeed = 100}, false);
+    chassis.waitUntilDone();
+    arm_controller.moveToAngle(10);
 }

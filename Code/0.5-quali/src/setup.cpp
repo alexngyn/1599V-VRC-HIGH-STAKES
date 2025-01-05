@@ -16,7 +16,7 @@ pros::adi::AnalogIn selector (SELECTION_PORT);
 pros::Motor intake_motor (INTAKE_PORT, pros::MotorGearset::blue, pros::MotorEncoderUnits::degrees);
 pros::Motor arm_motor (ARM_PORT, pros::MotorGearset::green, pros::MotorEncoderUnits::degrees);
 
-pros::Optical optical_sensor (OPTICAL_SENSOR_PORT);
+// pros::Optical optical_sensor (OPTICAL_SENSOR_PORT);
 pros::Vision vision_sensor(VISION_SENSOR_PORT);
 
 // vision::signature SIG_1 (1, -4479, -3039, -3758, 7423, 10461, 8942, 3.000, 0);

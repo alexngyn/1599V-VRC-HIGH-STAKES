@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "right",
+    "project_name": "elim",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -443,7 +443,7 @@
       "after": "screen",
       "description": "bananas!",
       "icon": "pizza",
-      "slot": 1
+      "slot": 7
     },
     "use_early_access": false
   }

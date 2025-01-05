@@ -17,8 +17,6 @@ class Arm {
             HOLD
         };
 
-        void reset();
-
         void moveToAngle(double angle);
         void home();
         void changeAngle(double deltaAngle);
