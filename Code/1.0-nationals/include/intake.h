@@ -19,7 +19,7 @@ class Intake {
         void toggleState();
         void setState(SortState state);
         SortState getState();
-
+        void hold();
         
     private:
         pros::Motor& motor;
@@ -38,14 +38,13 @@ class Intake {
                     this->motor.brake();
                 } else if(this->state == INTAKING){
                     this->motor.move(INTAKE_SPEED);
+                    if (this->motor.get_efficiency() < 5 && this->arm.getTargetPosition() == Arm::position::INTAKE) { this->state = STOPPED; }
                 } else if(this->state == OUTTAKE){
                     this->motor.move(OUTTAKE_SPEED);
                 }
                 pros::delay(10);
 
-                if (!(sort==OFF)){
-                    colorSort();
-                }
+                if (!(sort==OFF)) { colorSort(); }
             }
         }};;
 };

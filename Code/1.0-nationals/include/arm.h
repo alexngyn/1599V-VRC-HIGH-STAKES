@@ -3,12 +3,6 @@
 #include "api.h"  // IWYU pragma: keep
 //#include "setup.h"
 
-#define SCORE_ALLIANCE 240
-#define SCORE_NEUTRAL 140
-#define UP 80
-#define INTAKE 30
-#define RETRACT 10
-
 class Arm {
     public:
         Arm(pros::MotorGroup* motors, pros::Rotation* rotation, lemlib::PID pid);
@@ -19,11 +13,24 @@ class Arm {
             HOLD
         };
 
-        void moveTo(double angle);
+        enum class position {
+            RETRACT,
+            INTAKE,
+            UP,
+            SCORE_NEUTRAL,
+            SCORE_ALLIANCE,
+            CUSTOM
+        };
+
+        void moveTo(double angle, bool async = true);
+        void moveTo(position angle, bool async = true);
         void changeAngle(double deltaAngle);
         double getAngle();
+        double angleStringToAngle();
         double getTargetAngle();
+        position getTargetPosition();
         void home();
+        void waitUntilDone();
 
     private:
         pros::Rotation* rotation;
@@ -31,6 +38,7 @@ class Arm {
         lemlib::PID pid;
 
         double targetAngle = 0; // init angle
+        position targetPosition = position::RETRACT;
         //float UpwardGain = 2.0;
         //float DownwardGain = 1.5;
 
@@ -43,7 +51,7 @@ class Arm {
 
                 //std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, error);
 
-                if (std::fabs(error) <= 10) {
+                if (std::fabs(error) <= 8) {
                     this->currentState = Arm::state::HOLD;
                 } else {
                     this->currentState = Arm::state::MOVING;

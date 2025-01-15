@@ -4,13 +4,13 @@ Intake::Intake(pros::Motor& motor, pros::Optical& topSort, Arm& arm): motor(moto
 
 void Intake::toggleState(){
     if (sort == SortState::OFF){
-        sort = BLUE;
+        this->sort = BLUE;
     }
     else if (sort == SortState::BLUE){
-        sort = RED;
+        this->sort = RED;
     }
     else if (sort == SortState::RED){
-        sort = OFF;
+        this->sort = OFF;
     }
 }
 
@@ -23,38 +23,48 @@ Intake::SortState Intake::getState(){
 }
 
 void Intake::ejectRing(){
-    double initPos = motor.get_position();
+    double initPos = this->motor.get_position();
 
-    while ((initPos + 480) - motor.get_position() > 10) {
-        motor.move_velocity(600);
+    while ((initPos + 480) - this->motor.get_position() > 10) {
+        this->motor.move_velocity(600);
         pros::delay(10);
     
-    motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    motor.brake();
+    this->motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    this->motor.brake();
     pros::delay(50);
-    motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    this->motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     }
 }
 
 void Intake::colorSort(){ // private function
-    if (sort == SortState::BLUE){
-        if (topSort.get_hue()>200 && topSort.get_hue()<=270 &&topSort.get_proximity()<100){   //TUNE PROXIMITY // >0
-            if (arm.getTargetAngle() == INTAKE){
-                arm.moveTo(RETRACT);
+    if (this->sort == SortState::BLUE){
+        if (this->topSort.get_hue()>200 && this->topSort.get_hue()<=270 && this->topSort.get_proximity()<100){   //TUNE PROXIMITY // >0
+            if (this->arm.getTargetPosition() == Arm::position::INTAKE){
+                this->arm.moveTo(Arm::position::RETRACT);
                 ejectRing();
-                arm.moveTo(INTAKE);
+                this->arm.moveTo(Arm::position::INTAKE);
             } else { ejectRing(); }
         }
     }
-    else if (sort == SortState::RED){
-        if (topSort.get_hue()<30 && topSort.get_hue()>=0 &&topSort.get_proximity()<100) {  //TUNE PROXIMITY //<40
-            if (arm.getTargetAngle() == INTAKE){
-                arm.moveTo(RETRACT);
+    else if (this->sort == SortState::RED){
+        if (this->topSort.get_hue()<30 && this->topSort.get_hue()>=0 && this->topSort.get_proximity()<100) {  //TUNE PROXIMITY //<40
+            if (this->arm.getTargetPosition() == Arm::position::INTAKE){
+                this->arm.moveTo(Arm::position::RETRACT);
                 ejectRing();
-                arm.moveTo(INTAKE);
-            } else {ejectRing();}
+                this->arm.moveTo(Arm::position::INTAKE);
+            } else { ejectRing(); }
         }
     }
+}
+
+void Intake::hold(){
+    this->state = INTAKING;
+
+    while (this->topSort.get_proximity() < 100){
+        pros::delay(20);
+    }
+
+    this->state = STOPPED;
 }
 
 void Intake::set(IntakeState state){
