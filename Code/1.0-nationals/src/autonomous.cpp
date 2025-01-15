@@ -5,8 +5,7 @@
 #include "setup.h" 
 #include "opcontrol.h"
 
-double meter_to_in (double meter) { return meter * 39.37008; }
-void autonIntake() { colorSortVision(); pros::delay(50); }
+//======================= pid tuning =======================
 
 void pidtune() {
     // disable all other settings other than kd and kp
@@ -28,24 +27,62 @@ void pidtune() {
     //robot::chassisPrintPose();
 }
 
-void detect_donut(){
-    pros::vision_object_s_t rtn = vision_sensor.get_by_size(0);
+//======================= quali neg 10p auton =======================
 
-    intake_motor.move_velocity(400);
+lemlib::Pose qual_neg_0 = {-52.5,-8.5, 300};
+lemlib::Pose qual_neg_1 = {-60, -4.5, 300};
+lemlib::Pose qual_neg_2 = {-26, -20, 300};
+lemlib::Pose qual_neg_3 = {-30, -38, 160};
+lemlib::Pose qual_neg_4 = {-42, -5, 330};
+lemlib::Pose qual_neg_5 = {-28, -2, 90};
 
-    while (!((rtn.signature == 2 || //red
-        rtn.signature == 1) //blue
-        && rtn.height > 150)) {
+//======================= quali pos autons =======================
 
-        pros::vision_object_s_t rtn = vision_sensor.get_by_size(0);
-        pros::delay(20);   
-    }
-    
-    intake_motor.brake();
-}
+lemlib::Pose qual_pos_blue_0 = {-52.5,-8.5, 300};
+lemlib::Pose qual_pos_blue_1 = {-60, -4.5, 300};
+lemlib::Pose qual_pos_blue_2 = {-26, -20, 300};
+lemlib::Pose qual_pos_blue_3 = {-30, -38, 160};
+lemlib::Pose qual_pos_blue_4 = {-42, -5, 330};
+lemlib::Pose qual_pos_blue_5 = {-28, -2, 90};
 
+lemlib::Pose qual_pos_red_0 = {-52.5,-8.5, 300};
+lemlib::Pose qual_pos_red_1 = {-60, -4.5, 300};
+lemlib::Pose qual_pos_red_2 = {-26, -20, 300};
+lemlib::Pose qual_pos_red_3 = qual_pos_blue_3;
+lemlib::Pose qual_pos_red_4 = qual_pos_blue_4;
+lemlib::Pose qual_pos_red_5 = qual_pos_blue_5;
 
-//======================= awp autons =======================
+//======================= elims autons =======================
+
+lemlib::Pose elims_pos_blue_0 = qual_pos_blue_0;
+lemlib::Pose elims_pos_blue_1 = qual_pos_blue_1;
+lemlib::Pose elims_pos_blue_2 = qual_pos_blue_2;
+lemlib::Pose elims_pos_blue_3 = qual_pos_blue_3;
+lemlib::Pose elims_pos_blue_4 = qual_pos_blue_4;
+lemlib::Pose elims_pos_blue_5 = qual_pos_blue_5;
+lemlib::Pose elims_pos_blue_6 = {-26, -20, 300};
+
+lemlib::Pose elims_pos_red_0 = qual_pos_red_0;
+lemlib::Pose elims_pos_red_1 = qual_pos_red_1;
+lemlib::Pose elims_pos_red_2 = qual_pos_red_2;
+lemlib::Pose elims_pos_red_3 = qual_pos_red_3;
+lemlib::Pose elims_pos_red_4 = qual_pos_red_4;
+lemlib::Pose elims_pos_red_5 = qual_pos_red_5;
+lemlib::Pose elims_pos_red_6 = elims_pos_blue_6;
+
+//======================= skills autons =======================
+
+lemlib::Pose awp_0 = {-52.5,-8.5, 300};
+lemlib::Pose awp_1 = {-60, -4.5, 300};
+lemlib::Pose awp_2 = {-26, -20, 300};
+lemlib::Pose awp_3 = {-30, -38, 160};
+lemlib::Pose awp_4 = {-42, -5, 330};
+lemlib::Pose awp_5 = {-28, -2, 90};
+
+/*======================= old autons =======================
+
+double meter_to_in (double meter) { return meter * 39.37008; }
+void autonIntake() { colorSortVision(); pros::delay(50); }
 
 lemlib::Pose awp_0 = {-52.5,-8.5, 300};
 lemlib::Pose awp_1 = {-60, -4.5, 300};
@@ -267,7 +304,6 @@ void soloAWP_right_neg() { // blue
 
 //======================= elims =======================
 
-
 lemlib::Pose mid_mogo = {-6, -47.5, 90};
 
 //middle donuts
@@ -460,3 +496,4 @@ void skills () {
     chassis.waitUntilDone();
     arm_controller.moveToAngle(10);
 }
+*/

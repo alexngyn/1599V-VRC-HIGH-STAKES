@@ -1,32 +1,41 @@
 #include "arm.h"
 
-Arm::Arm(pros::Motor motor,
-         pros::Rotation rotSensor, double ratio,
-         lemlib::PID pid)
-    : motor(std::move(motor)),
-      rotSensor(std::move(rotSensor)),
-      ratio(ratio),
-      PID(pid) 
-    {}
+/**
+ * @brief Construct a new Arm object
+ *
+ * @param motors The motor group that controls the arm
+ * @param rotation The rotation sensor that measures the arm's angle
+ * @param pid The PID constants for the arm
+ */
 
-void Arm::moveToAngle(double angle) {
+Arm::Arm(pros::MotorGroup* motors, pros::Rotation* rotation, lemlib::PID pid)
+    : motors(motors),
+      rotation(rotation),
+      pid(pid) {
+    motors->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD, 0);
+    motors->set_brake_mode(pros::E_MOTOR_BRAKE_HOLD, 1);
+}    
+
+void Arm::moveTo(double angle) {
     this->targetAngle = angle;
 }
 
 void Arm::changeAngle(double deltaAngle) {
-    this->moveToAngle(this->targetAngle + deltaAngle);
-}
-
-void Arm::home() {
-    if (targetAngle < 30) {this->moveToAngle(90);}
-    else {this->moveToAngle(16);};
+    this->moveTo(this->targetAngle + deltaAngle);
 }
 
 double Arm::getAngle() {
-    return this->rotSensor.get_position() * this->ratio * 0.01;
+    return this->rotation->get_position() * 0.01;
 }
 
-void Arm::apartment() {
-    if (targetAngle<30) {this->moveToAngle(150);}
-    else {this->moveToAngle(16);}
+double Arm::getTargetAngle() {
+    return this->rotation->get_position() * 0.01;
+}
+
+void Arm::home() {
+    if (targetAngle == RETRACT) {this->moveTo(INTAKE);}
+    else if (targetAngle == INTAKE) {this->moveTo(UP);}
+    else if (targetAngle == UP) {this->moveTo(SCORE_NEUTRAL);}
+    else if (targetAngle == SCORE_NEUTRAL) {this->moveTo(SCORE_ALLIANCE);}
+    else if (targetAngle == SCORE_ALLIANCE) {this->moveTo(RETRACT);}
 }

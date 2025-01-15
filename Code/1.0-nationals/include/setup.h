@@ -3,6 +3,7 @@
 #include "api.h" // IWYU pragma: keep
 #include "arm.h" 
 #include "led.h" // IWYU pragma: keep
+#include "intake.h"
 
 enum protocol { bluetooth, vexnet}; 
 enum color { red, blue, unknown };
@@ -19,11 +20,11 @@ extern pros::Controller partner;
 // drivetrain
 #define RIGHT_MOTOR_PORTS { 1, 2, 3 }
 #define LEFT_MOTOR_PORTS { -16, -17, -18 }
-#define DT_MOTOR_PORTS { 1, 2, 3, -16, -17, -18 }
+//#define DT_MOTOR_PORTS { 1, 2, 3, -16, -17, -18 }
 
-#define HORIZONTAL_ENCODER_PORT 10
+//#define HORIZONTAL_ENCODER_PORT 10
 #define VERTICAL_ENCODER_PORT -15
-extern pros::Rotation horizontal_encoder;
+//extern pros::Rotation horizontal_encoder;
 extern pros::Rotation vertical_encoder;
 
 #define INTAKE_SOLENOID_PORT 'D'
@@ -61,18 +62,21 @@ extern pros::adi::AnalogIn selector;
 extern pros::Motor intake_motor;
 
 //arm
-#define ARM_PORT -20
-extern pros::Motor arm_motor;
+#define ARM_PORTS { -20, -19 }
+extern pros::MotorGroup arm_motors;
 #define ARM_ROTATIONAL_SENSOR_PORT 21
 extern pros::Rotation arm_rotational_sensor;
-// #define OPTICAL_SENSOR_PORT 6
-// extern pros::Optical optical_sensor;
+#define OPTICAL_SENSOR_PORT 6
+extern pros::Optical optical_sensor;
+#define DISTANCE_SENSOR_PORT 7
+extern pros::Distance distance_sensor;
 
-#define VISION_SENSOR_PORT 19
-extern pros::Vision vision_sensor;
+// #define VISION_SENSOR_PORT 19
+// extern pros::Vision vision_sensor;
 
 extern Arm arm_controller;
 extern pros::Rotation arm_rotational_sensor;
+extern Intake intake_controller;
 
-extern pros::vision_signature_s_t REDSIG;
-extern pros::vision_signature_s_t BLUESIG;
+// extern pros::vision_signature_s_t REDSIG;
+// extern pros::vision_signature_s_t BLUESIG;

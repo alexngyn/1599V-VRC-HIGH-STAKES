@@ -140,7 +140,8 @@ bin/opcontrol.cpp.o: src/opcontrol.cpp include/pros/misc.h \
  include/fmt/format-inl.h include/lemlib/logger/baseSink.hpp \
  include/fmt/args.h include/lemlib/logger/message.hpp \
  include/lemlib/logger/infoSink.hpp \
- include/lemlib/logger/telemetrySink.hpp include/arm.h include/led.h
+ include/lemlib/logger/telemetrySink.hpp include/arm.h include/led.h \
+ include/intake.h
 include/pros/misc.h:
 include/pros/rtos.hpp:
 include/pros/rtos.h:
@@ -380,3 +381,4 @@ include/lemlib/logger/infoSink.hpp:
 include/lemlib/logger/telemetrySink.hpp:
 include/arm.h:
 include/led.h:
+include/intake.h:

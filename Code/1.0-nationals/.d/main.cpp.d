@@ -141,7 +141,7 @@ bin/main.cpp.o: src/main.cpp include/main.h include/api.h \
  include/fmt/args.h include/lemlib/logger/message.hpp \
  include/lemlib/logger/infoSink.hpp \
  include/lemlib/logger/telemetrySink.hpp include/arm.h include/setup.h \
- include/led.h include/opcontrol.h include/autonomous.h \
+ include/led.h include/intake.h include/opcontrol.h include/autonomous.h \
  include/pros/apix.h include/api.h include/pros/device.h \
  include/pros/serial.h include/pros/serial.hpp include/liblvgl/lvgl.h
 include/main.h:
@@ -384,6 +384,7 @@ include/lemlib/logger/telemetrySink.hpp:
 include/arm.h:
 include/setup.h:
 include/led.h:
+include/intake.h:
 include/opcontrol.h:
 include/autonomous.h:
 include/pros/apix.h:

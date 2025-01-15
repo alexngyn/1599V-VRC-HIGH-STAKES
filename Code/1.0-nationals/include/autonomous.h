@@ -12,5 +12,3 @@ void elims_left(); // blue pos
 
 void pidtune();
 void skills();
-
-extern bool ejectEnabled;
