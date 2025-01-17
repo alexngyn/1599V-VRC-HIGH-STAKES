@@ -18,12 +18,11 @@ extern pros::Controller master;
 extern pros::Controller partner;
 
 // drivetrain
-#define RIGHT_MOTOR_PORTS { 1, 2, 3 }
-#define LEFT_MOTOR_PORTS { -16, -17, -18 }
-//#define DT_MOTOR_PORTS { 1, 2, 3, -16, -17, -18 }
+#define RIGHT_MOTOR_PORTS { 3, 4, 5 }
+#define LEFT_MOTOR_PORTS { -8, -9, -10 }
 
 //#define HORIZONTAL_ENCODER_PORT 10
-#define VERTICAL_ENCODER_PORT -15
+#define VERTICAL_ENCODER_PORT -15 // add
 //extern pros::Rotation horizontal_encoder;
 extern pros::Rotation vertical_encoder;
 
@@ -34,7 +33,7 @@ extern pros::MotorGroup dt_left;
 extern pros::MotorGroup dt_right;
 extern lemlib::Chassis chassis;
 
-#define INERTIAL_SENSOR_PORT 14
+#define INERTIAL_SENSOR_PORT 18
 extern pros::IMU inertial_sensor;
 
 //mogo clamp
@@ -58,17 +57,17 @@ extern pros::adi::AnalogIn selector;
 #define LED_2_LENGTH 55
 
 //intake
-#define INTAKE_PORT -11
+#define INTAKE_PORT -7
 extern pros::Motor intake_motor;
 
 //arm
-#define ARM_PORTS { -20, -19 }
+#define ARM_PORTS { -11,12 }
 extern pros::MotorGroup arm_motors;
-#define ARM_ROTATIONAL_SENSOR_PORT 21
+#define ARM_ROTATIONAL_SENSOR_PORT -14
 extern pros::Rotation arm_rotational_sensor;
-#define OPTICAL_SENSOR_PORT 6
+#define OPTICAL_SENSOR_PORT 16
 extern pros::Optical optical_sensor;
-#define DISTANCE_SENSOR_PORT 7
+#define DISTANCE_SENSOR_PORT 13
 extern pros::Distance distance_sensor;
 
 // #define VISION_SENSOR_PORT 19

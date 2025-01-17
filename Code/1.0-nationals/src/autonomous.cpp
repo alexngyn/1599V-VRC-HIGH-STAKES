@@ -1,7 +1,6 @@
 #include "autonomous.h"
 #include "main.h"
 #include "arm.h"
-#include "pros/rtos.hpp"
 #include "setup.h" 
 #include "opcontrol.h"
 
@@ -295,24 +294,24 @@ void skills() {
 
     chassis.turnToHeading(60, 1000);
     intake_controller.set(Intake::IntakeState::INTAKING);
-    chassis.moveToPose(skills_2.x, skills_2.y, skills_2.theta, 1000, {.forwards=true}, false);
+    chassis.moveToPose(skills_2.x, skills_2.y, skills_2.theta, 1000, {.forwards=true,.minSpeed=48}, false);
     chassis.moveToPoint(skills_3.x, skills_3.y, 1000, {.forwards=true}, false);
 
     chassis.moveToPoint(skills_4.x, skills_4.y, 1000, {.forwards=true}, false);
 
     chassis.moveToPose(skills_5.x, skills_5.y, skills_5.theta, 1000, {.forwards=true}, true);
-    pros::delay(500);
-    arm_controller.moveTo(Arm::position::INTAKE);
-    chassis.waitUntilDone(); arm_controller.waitUntilDone();
+    chassis.waitUntil(5);
+    arm_controller.moveTo(Arm::position::INTAKE, false);
+    chassis.waitUntilDone();
     arm_controller.moveTo(Arm::position::SCORE_NEUTRAL,false);
     arm_controller.moveTo(Arm::position::UP,false);
     arm_controller.moveTo(Arm::position::RETRACT);
 
-    chassis.moveToPose(skills_6.x , skills_6.y, skills_6.theta, 1000, {.forwards=true}, false);
+    chassis.moveToPose(skills_6.x , skills_6.y, skills_6.theta, 1000, {.forwards=true,.minSpeed=48}, false);
     chassis.moveToPoint(skills_7.x, skills_7.y, 1000, {.forwards=true}, false);
     chassis.moveToPoint(skills_8.x, skills_8.y, 1000, {.forwards=true}, false);
 
-    chassis.moveToPoint(skills_9.x, skills_9.y, 1000, {.forwards=false}, false);
+    chassis.moveToPoint(skills_9.x, skills_9.y, 1000, {.forwards=false,.minSpeed=32}, false);
     clamp_solenoid.extend();
 
     //goal 2 quadrent 2 + left wall stake
@@ -324,17 +323,17 @@ void skills() {
     clamp_solenoid.retract();
 
     intake_controller.set(Intake::IntakeState::INTAKING);
-    chassis.moveToPose(skills_12.x, skills_12.y, skills_12.theta, 1000, {.forwards=true}, false);
-    chassis.moveToPose(skills_13.x, skills_13.y, skills_13.theta, 1000, {.forwards=true}, false);
+    chassis.moveToPose(skills_12.x, skills_12.y, skills_12.theta, 1000, {.forwards=true,.minSpeed=48}, false);
+    chassis.moveToPose(skills_13.x, skills_13.y, skills_13.theta, 1000, {.forwards=true,.minSpeed=48}, false);
     chassis.moveToPose(skills_14.x, skills_14.y, skills_14.theta, 1000, {.forwards=true}, false);
     chassis.moveToPoint(skills_15.x, skills_15.y, 1000, {.forwards=true}, false);
 
-    chassis.moveToPoint(skills_16.x, skills_16.y, 1000, {.forwards=false}, false);
+    chassis.moveToPoint(skills_16.x, skills_16.y, 1000, {.forwards=false,.minSpeed=48}, false);
     intake_controller.set(Intake::IntakeState::STOPPED);
     clamp_solenoid.extend();
 
     chassis.moveToPoint(skills_17.x, skills_17.y, 1000, {.forwards=true}, true);
-    chassis.waitUntil(20);
+    chassis.waitUntil(10);
     arm_controller.moveTo(Arm::position::INTAKE);
     intake_controller.hold();
     chassis.moveToPoint(skills_18.x, skills_18.y, 1000, {.forwards=true}, true);
@@ -358,7 +357,7 @@ void skills() {
     clamp_solenoid.retract();
     intake_controller.set(Intake::IntakeState::INTAKING);
 
-    chassis.moveToPose(skills_23.x, skills_23.y, skills_23.theta, 1000, {.forwards=true}, false);
+    chassis.moveToPose(skills_23.x, skills_23.y, skills_23.theta, 1000, {.forwards=true,.minSpeed=48}, false);
     chassis.moveToPose(skills_24.x, skills_24.y, skills_24.theta, 1000, {.forwards=true}, false);
     chassis.moveToPoint(skills_25.x, skills_25.y, 1000, {.forwards=true}, false);
 

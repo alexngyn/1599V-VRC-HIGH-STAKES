@@ -18,7 +18,7 @@ void printTelemetry() {
         pros::screen::print(TEXT_MEDIUM, 1, "x: %.1f", pose.x); // prints the x position
         pros::screen::print(TEXT_MEDIUM, 2, "y: %.1f", pose.y); // prints the y position
         pros::screen::print(TEXT_MEDIUM, 3, "theta: %.1f", pose.theta); // prints the heading
-        pros::screen::print(pros::E_TEXT_MEDIUM, 4, "Arm position: %d", arm_controller.getAngle()); // prints the arm position
+        pros::screen::print(pros::E_TEXT_MEDIUM, 4, "Arm position: %.1f", arm_controller.getAngle()); // prints the arm position
 
         pros::screen::print(pros::E_TEXT_MEDIUM, 5, "left temp: %.1f %.1f %.1f", dt_left.get_temperature(0),
                             dt_left.get_temperature(1), dt_left.get_temperature(2));
@@ -28,11 +28,11 @@ void printTelemetry() {
 
         pros::screen::print(pros::E_TEXT_MEDIUM, 7, "intake temp: %.1f", intake_motor.get_temperature());
 
-        std::cout << pose.x << " " << pose.y << " " << inertial_sensor.get_rotation() << pose.theta << std::endl;
+        //std::cout << pose.x << " " << pose.y << " " << inertial_sensor.get_rotation() << pose.theta << std::endl;
         switch (intake_controller.getState()) {
             case Intake::SortState::BLUE: master.print(1, 1, "%s", "BLUE"); break;
-            case Intake::SortState::RED: master.print(1, 1, "%s", "RED"); break;
-            case Intake::SortState::OFF: master.print(1, 1, "%s", "OFF"); break;
+            case Intake::SortState::RED: master.print(1, 1, "%s", "RED "); break;
+            case Intake::SortState::OFF: master.print(1, 1, "%s", "OFF "); break;
             default: break;
         }
 

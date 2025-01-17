@@ -31,39 +31,47 @@ class Arm {
         position getTargetPosition();
         void home();
         void waitUntilDone();
+        void togglePosition(position position1, position position2, position position3 = position::CUSTOM, 
+                            position position4 = position::CUSTOM,  position position5 = position::CUSTOM);
 
     private:
         pros::Rotation* rotation;
         pros::MotorGroup* motors;
         lemlib::PID pid;
 
-        double targetAngle = 0; // init angle
         position targetPosition = position::RETRACT;
+        double targetAngle = angleStringToAngle(); 
         //float UpwardGain = 2.0;
         //float DownwardGain = 1.5;
 
         Arm::state currentState = Arm::state::HOLD;
 
         pros::Task task = pros::Task {[&] {
-            while (true) {                                                                                                                                                              
+            while (true) {  
+                this->targetAngle = angleStringToAngle(); 
+
                 pros::delay(10);
-                double error = lemlib::angleError(this->targetAngle, this->getAngle());
+                double error = this->targetAngle - this->getAngle();
 
                 //std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, error);
 
-                if (std::fabs(error) <= 8) {
+                if (std::fabs(error) <= 1) {
                     this->currentState = Arm::state::HOLD;
                 } else {
                     this->currentState = Arm::state::MOVING;
                 }
+
+                if (this->getAngle() > -100) {this->currentState = Arm::state::HOLD;}// soft limits 
+
+                //std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, error);
 
                 if (this->currentState == Arm::state::MOVING) {
                     double vel = this->pid.update(error);
 
                     //if ((vel > 0 && this -> getAngle() < 180) || (vel < 0 && this -> getAngle() > 180)) { vel *= UpwardGain; } else {vel *= DownwardGain; }
 
-                    //std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, vel);
-                     this->motors->move(vel);
+                    std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, vel);
+                    this->motors->move(vel);
                 } else if (this->currentState == Arm::state::HOLD) {
                     this->motors->move(0);
                 }

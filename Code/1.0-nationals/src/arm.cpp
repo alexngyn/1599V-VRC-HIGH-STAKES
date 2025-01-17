@@ -1,4 +1,5 @@
 #include "arm.h"
+#include <cstddef>
 
 /**
  * @brief Construct a new Arm object
@@ -51,11 +52,11 @@ void Arm::waitUntilDone() {
 
 double Arm::angleStringToAngle() {
     switch (this->targetPosition) {
-        case position::RETRACT: return 10;
-        case position::INTAKE: return 30;
-        case position::UP: return 80;
-        case position::SCORE_NEUTRAL: return 140;
-        case position::SCORE_ALLIANCE: return 240;
+        case position::RETRACT: return -330;
+        case position::INTAKE: return -310;
+        case position::UP: return -220;
+        case position::SCORE_NEUTRAL: return -180;
+        case position::SCORE_ALLIANCE: return -150;
         default: return targetAngle;
     }
 }
@@ -68,5 +69,23 @@ void Arm::home() {
         case position::SCORE_NEUTRAL: targetPosition = position::SCORE_ALLIANCE; break;
         case position::SCORE_ALLIANCE: targetPosition = position::RETRACT; break;
         default: targetPosition = position::RETRACT; break;
+    }
+}
+
+void Arm::togglePosition(position position1, position position2, 
+                         position position3,position position4, position position5) {
+    if (this->targetPosition == position1) {
+        this->targetPosition = position2;
+    } else if (this->targetPosition == position2) {
+        if (position3 != position::CUSTOM) {this->targetPosition = position3;}
+        else {this->targetPosition = position1;}
+    } else if (this->targetPosition == position3) {
+        if (position4 != position::CUSTOM) {this->targetPosition = position4;}
+        else {this->targetPosition = position1;}
+    } else if (this->targetPosition == position4) {
+        if (position5 != position::CUSTOM) {this->targetPosition = position5;}
+        else {this->targetPosition = position1;}
+    } else {
+        this->targetPosition = position1;
     }
 }

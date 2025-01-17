@@ -31,7 +31,7 @@ color sideColor = color::unknown;
 Arm arm_controller(
     &arm_motors,
     &arm_rotational_sensor,
-    lemlib::PID {3.0, 30, 0.155, true}
+    lemlib::PID {2, 0, 0, true} // 3.0, 30, 0.155
 );
 
 Intake intake_controller(
@@ -44,7 +44,7 @@ Intake intake_controller(
 lemlib::Drivetrain drivetrain {
     &dt_left, // left drivetrain motors
     &dt_right, // right drivetrain motors
-    13.25, // track width
+    11.8, // track width
     lemlib::Omniwheel::NEW_325, // using new 3.25" omnis
     450, // drivetrain rpm is 480
     6 // omni chase power is 2. If we had traction wheels, it would have been 8
