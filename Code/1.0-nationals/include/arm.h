@@ -29,7 +29,6 @@ class Arm {
         double angleStringToAngle();
         double getTargetAngle();
         position getTargetPosition();
-        void home();
         void waitUntilDone();
         void togglePosition(position position1, position position2, position position3 = position::CUSTOM, 
                             position position4 = position::CUSTOM,  position position5 = position::CUSTOM);
@@ -61,7 +60,7 @@ class Arm {
                     this->currentState = Arm::state::MOVING;
                 }
 
-                if (this->getAngle() > -100) {this->currentState = Arm::state::HOLD;}// soft limits 
+                if (this->getAngle() > -100) {this->targetAngle=-200;}// soft limits 
 
                 //std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, error);
 
@@ -70,7 +69,7 @@ class Arm {
 
                     //if ((vel > 0 && this -> getAngle() < 180) || (vel < 0 && this -> getAngle() > 180)) { vel *= UpwardGain; } else {vel *= DownwardGain; }
 
-                    std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, vel);
+                    //std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, vel);
                     this->motors->move(vel);
                 } else if (this->currentState == Arm::state::HOLD) {
                     this->motors->move(0);

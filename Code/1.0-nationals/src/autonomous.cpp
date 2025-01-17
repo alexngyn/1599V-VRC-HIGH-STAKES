@@ -64,43 +64,42 @@ void qual_pos_red() {
     chassis.setPose(qual_pos_red_0.x, qual_pos_red_0.y, qual_pos_red_0.theta);
 
     //goal rush
-    chassis.moveToPoint(qual_pos_red_1.x, qual_pos_red_1.y, 1000, {}, true);
-    chassis.waitUntil(10);
+    chassis.moveToPoint(qual_pos_red_1.x, qual_pos_red_1.y, 1000, {}, false); //rush to mogo
     doinker_solenoid.retract();
-    chassis.moveToPoint(qual_pos_red_2.x, qual_pos_red_2.y, 1000, {.forwards = false}, true);
-    arm_controller.moveTo(Arm::position::SCORE_NEUTRAL);
+    chassis.moveToPoint(qual_pos_red_2.x, qual_pos_red_2.y, 1000, {.forwards = false}, true); // move backwards
+    arm_controller.moveTo(Arm::position::SCORE_NEUTRAL); // get ready to score
     chassis.waitUntil(10);
-    doinker_solenoid.extend();
+    doinker_solenoid.extend(); //let go mogo a bit before fully back. move back then score
     chassis.waitUntilDone();
-    arm_controller.moveTo(270);
-    pros::delay(500);
+    arm_controller.moveTo(-130,false); //score
     
     //second mogo
-    intake_controller.hold();
-    arm_controller.moveTo(Arm::position::RETRACT);
-    chassis.moveToPoint(qual_pos_red_3.x, qual_pos_red_3.y, 1000, {.forwards = true}, false);
-    chassis.moveToPoint(qual_pos_red_4.x, qual_pos_red_4.y, 1000, {.forwards = false}, false);
-    clamp_solenoid.retract();
-    intake_controller.set(Intake::IntakeState::INTAKING);
-    chassis.turnToPoint(qual_pos_red_5.x, qual_pos_red_5.y, 1000, {}, true);
-    pros::delay(500);
+    intake_controller.hold(); //wait until ring is in
+    //arm_controller.moveTo(Arm::position::RETRACT);
+    arm_controller.moveTo(Arm::position::UP); // keep up until we fix intake
+    chassis.moveToPoint(qual_pos_red_3.x, qual_pos_red_3.y, 1000, {.forwards = true}, false); //go to ring
+    chassis.moveToPoint(qual_pos_red_4.x, qual_pos_red_4.y, 1000, {.forwards = false}, false); //go to mogo
+    clamp_solenoid.retract(); //clamp mogo
+    intake_controller.set(Intake::IntakeState::INTAKING); //intake ring inside of intake
+    //chassis.turnToPoint(qual_pos_red_5.x, qual_pos_red_5.y, 1000, {}, true);
+    pros::delay(300);
     intake_controller.set(Intake::IntakeState::STOPPED);
 
     //alicence stake
-    chassis.moveToPoint(qual_pos_red_5.x, qual_pos_red_5.y, 1000, {.forwards = true}, true);
     intake_solenoid.retract();
-    intake_controller.set(Intake::IntakeState::INTAKING);
+    chassis.moveToPoint(qual_pos_red_5.x, qual_pos_red_5.y, 1000, {.forwards = true}, true); // take ring from stack
+    intake_controller.set(Intake::IntakeState::INTAKING); 
     pros::delay(500);
     intake_controller.set(Intake::IntakeState::STOPPED);
-    arm_controller.moveTo(Arm::position::UP);
+    //arm_controller.moveTo(Arm::position::UP);
     chassis.moveToPoint(qual_pos_red_6.x, qual_pos_red_6.y, 1000, {.forwards = true}, false);
     stakealign();
-    arm_controller.moveTo(Arm::position::SCORE_ALLIANCE,false);
+    arm_controller.moveTo(Arm::position::SCORE_ALLIANCE, false);
 
     //touch ladder
-    chassis.moveToPoint(qual_pos_red_7.x, qual_pos_red_7.y, 1000, {.forwards = false}, true);
-    arm_controller.moveTo(100);
-    chassis.moveToPoint(qual_pos_red_8.x, qual_pos_red_8.y, 1000, {.forwards = true}, false);
+    chassis.moveToPoint(qual_pos_red_7.x, qual_pos_red_7.y, 1000, {.forwards = false}, true);//go to middle of field
+    //arm_controller.moveTo(100);//move arm up along the way
+    chassis.moveToPoint(qual_pos_red_8.x, qual_pos_red_8.y, 1000, {.forwards = true}, false);//go to ladder
 }
 
 lemlib::Pose qual_pos_blue_0 = mirrorPose({-50,-36, 100}); 
@@ -155,6 +154,7 @@ void qual_pos_blue() {
     arm_controller.moveTo(100);
     chassis.moveToPoint(qual_pos_blue_8.x, qual_pos_blue_8.y, 1000, {.forwards = true}, false);
 }
+
 
 //======================= elims 10p autons =======================
 

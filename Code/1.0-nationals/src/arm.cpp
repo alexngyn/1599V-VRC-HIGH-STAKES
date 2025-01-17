@@ -52,23 +52,12 @@ void Arm::waitUntilDone() {
 
 double Arm::angleStringToAngle() {
     switch (this->targetPosition) {
-        case position::RETRACT: return -330;
+        case position::RETRACT: return -340;
         case position::INTAKE: return -310;
         case position::UP: return -220;
         case position::SCORE_NEUTRAL: return -180;
         case position::SCORE_ALLIANCE: return -150;
         default: return targetAngle;
-    }
-}
-
-void Arm::home() {
-    switch (this->targetPosition) {
-        case position::RETRACT: targetPosition = position::INTAKE; break;
-        case position::INTAKE: targetPosition = position::UP; break;
-        case position::UP: targetPosition = position::SCORE_NEUTRAL; break;
-        case position::SCORE_NEUTRAL: targetPosition = position::SCORE_ALLIANCE; break;
-        case position::SCORE_ALLIANCE: targetPosition = position::RETRACT; break;
-        default: targetPosition = position::RETRACT; break;
     }
 }
 

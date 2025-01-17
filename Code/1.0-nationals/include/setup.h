@@ -61,11 +61,11 @@ extern pros::adi::AnalogIn selector;
 extern pros::Motor intake_motor;
 
 //arm
-#define ARM_PORTS { -11,12 }
+#define ARM_PORTS { 14,-15 }
 extern pros::MotorGroup arm_motors;
-#define ARM_ROTATIONAL_SENSOR_PORT -14
+#define ARM_ROTATIONAL_SENSOR_PORT -13
 extern pros::Rotation arm_rotational_sensor;
-#define OPTICAL_SENSOR_PORT 16
+#define OPTICAL_SENSOR_PORT 12
 extern pros::Optical optical_sensor;
 #define DISTANCE_SENSOR_PORT 13
 extern pros::Distance distance_sensor;

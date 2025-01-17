@@ -51,10 +51,11 @@ void intake () {
     //pros::Task unjamthread(unjam);
 
     while (true) {
+        std::printf("Intake: %.1f | %d \n", optical_sensor.get_hue(), optical_sensor.get_proximity());
+
         //if(!ejectEnabled && printLoop) {master.print(0,0, "Color sort: off");} else if (printLoop) {master.print(0, 0, "Color sort: %s", colorToString(sideColor));}
-        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP) && 
-            master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) 
-            {intake_controller.toggleState(); pros::delay(200);
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) 
+            {intake_controller.toggleState();
         }
 
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
@@ -89,7 +90,7 @@ void topmech() {
         if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {arm_controller.changeAngle(-10);}
         else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {arm_controller.changeAngle(10);}
         else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {arm_controller.togglePosition(Arm::position::RETRACT, Arm::position::INTAKE,Arm::position::UP);}
-        //pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
+        pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
         //on vexnet: 30ms, on bluetooth, delay 50ms
         //double power = partner.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
         //arm_motor.move(power);
