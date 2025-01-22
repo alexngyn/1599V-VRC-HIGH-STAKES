@@ -31,7 +31,7 @@ color sideColor = color::unknown;
 Arm arm_controller(
     &arm_motors,
     &arm_rotational_sensor,
-    lemlib::PID {2, 0, 0, true} // 3.0, 30, 0.155
+    lemlib::PID {3, 0, 10, true} // 3.0, 30, 0.155
 );
 
 Intake intake_controller(

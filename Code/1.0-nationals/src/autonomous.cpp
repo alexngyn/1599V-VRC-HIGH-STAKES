@@ -4,6 +4,22 @@
 #include "setup.h" 
 #include "opcontrol.h"
 
+#define CLAMP_OFFSET -7.5
+#define INTAKE_OFFSET 6
+
+lemlib::Pose offsetPose(lemlib::Pose targetPose, int offset) {
+    targetPose.x += (offset * cos(-targetPose.theta + 90));
+    targetPose.y += (offset * sin(-targetPose.theta + 90));
+    return {targetPose};
+}
+
+lemlib::Pose offsetPoint(lemlib::Pose targetPoint, lemlib::Pose prevPoint, int offset) {
+    targetPoint.theta = atan2(targetPoint.y - prevPoint.y, targetPoint.x - prevPoint.x);
+    targetPoint.x += (offset * cos(-targetPoint.theta + 90));
+    targetPoint.y += (offset * sin(-targetPoint.theta + 90));
+    return {targetPoint};
+}
+
 lemlib::Pose mirrorPose(lemlib::Pose pose) {
     return {-pose.x, pose.y, -pose.theta};
 }

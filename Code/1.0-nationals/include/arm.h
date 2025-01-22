@@ -70,6 +70,8 @@ class Arm {
                     //if ((vel > 0 && this -> getAngle() < 180) || (vel < 0 && this -> getAngle() > 180)) { vel *= UpwardGain; } else {vel *= DownwardGain; }
 
                     //std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, vel);
+                    pros::screen::print(pros::E_TEXT_MEDIUM, 8, "Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, vel);
+                    //lemlib::telemetrySink()->debug("{}", 1, vel);
                     this->motors->move(vel);
                 } else if (this->currentState == Arm::state::HOLD) {
                     this->motors->move(0);
