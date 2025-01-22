@@ -57,14 +57,26 @@ void Intake::colorSort(){ // private function
     }
 }
 
-void Intake::hold(){
+void Intake::hold(bool async){
     this->state = INTAKING;
 
-    while (this->topSort.get_proximity() < 100){
-        pros::delay(20);
+    if (async) {
+        pros::Task holdTask = pros::Task {[&] {
+            while (this->topSort.get_proximity() < 100){
+                pros::delay(20);
+            }
+        }};
+    } else {
+            while (this->topSort.get_proximity() < 100){
+                pros::delay(20);
+            }
     }
-
+    
     this->state = STOPPED;
+}
+
+void Intake::waitUntilDone() {
+    while (this->state != Intake::INTAKING) {pros::delay(100);}
 }
 
 void Intake::set(IntakeState state){

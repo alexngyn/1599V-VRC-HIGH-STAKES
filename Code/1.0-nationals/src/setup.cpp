@@ -44,7 +44,7 @@ Intake intake_controller(
 lemlib::Drivetrain drivetrain {
     &dt_left, // left drivetrain motors
     &dt_right, // right drivetrain motors
-    11.8, // track width
+    11.85, // track width 11.83
     lemlib::Omniwheel::NEW_325, // using new 3.25" omnis
     450, // drivetrain rpm is 480
     6 // omni chase power is 2. If we had traction wheels, it would have been 8
@@ -81,7 +81,7 @@ lemlib::ControllerSettings angularController ( // 5.2,0,45
 // horizontal tracking wheel
 //lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_2, 0);
 // vertical tracking wheel
-lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, -2.625);
+lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, -2.5);
 
 // sensors for odometry
 lemlib::OdomSensors sensors {

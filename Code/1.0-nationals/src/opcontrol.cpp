@@ -87,8 +87,8 @@ void piston(){
 
 void topmech() {
     while (true) {
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {arm_controller.changeAngle(-10);}
-        else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {arm_controller.changeAngle(10);}
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {arm_controller.changeAngle(-2);}
+        else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {arm_controller.changeAngle(2);}
         else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {arm_controller.togglePosition(Arm::position::RETRACT, Arm::position::INTAKE,Arm::position::UP);}
         pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
         //on vexnet: 30ms, on bluetooth, delay 50ms

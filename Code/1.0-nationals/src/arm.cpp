@@ -53,7 +53,7 @@ void Arm::waitUntilDone() {
 double Arm::angleStringToAngle() {
     switch (this->targetPosition) {
         case position::RETRACT: return -340;
-        case position::INTAKE: return -302;
+        case position::INTAKE: return -306;
         case position::UP: return -185;
         case position::SCORE_NEUTRAL: return -180;
         case position::SCORE_ALLIANCE: return -150;

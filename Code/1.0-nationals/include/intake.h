@@ -19,7 +19,8 @@ class Intake {
         void toggleState();
         void setState(SortState state);
         SortState getState();
-        void hold();
+        void hold(bool async = true);
+        void waitUntilDone();
         
     private:
         pros::Motor& motor;
