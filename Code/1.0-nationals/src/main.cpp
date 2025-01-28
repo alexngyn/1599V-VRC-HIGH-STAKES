@@ -9,41 +9,9 @@ VBF Robotics
 */
 
 #include "main.h" 
-#include "autonomous.h"
 #include "setup.h"
 
-void printTelemetry() {
-    while (true) {
-        lemlib::Pose pose = chassis.getPose(); // get the current position of the robot
-        pros::screen::print(TEXT_MEDIUM, 1, "x: %.1f", pose.x); // prints the x position
-        pros::screen::print(TEXT_MEDIUM, 2, "y: %.1f", pose.y); // prints the y position
-        pros::screen::print(TEXT_MEDIUM, 3, "theta: %.1f", pose.theta); // prints the heading
-        pros::screen::print(pros::E_TEXT_MEDIUM, 4, "Arm position: %.1f", arm_controller.getAngle()); // prints the arm position
-
-        pros::screen::print(pros::E_TEXT_MEDIUM, 5, "left temp: %.1f %.1f %.1f", dt_left.get_temperature(0),
-                            dt_left.get_temperature(1), dt_left.get_temperature(2));
-
-        pros::screen::print(pros::E_TEXT_MEDIUM, 6, "right temp: %.1f %.1f %.1f", dt_right.get_temperature(0),
-                            dt_right.get_temperature(1), dt_right.get_temperature(2));
-
-        pros::screen::print(pros::E_TEXT_MEDIUM, 7, "intake temp: %.1f", intake_motor.get_temperature());
-
-        //std::cout << pose.x << " " << pose.y << " " << inertial_sensor.get_rotation() << pose.theta << std::endl;
-        switch (intake_controller.getState()) {
-            case Intake::SortState::BLUE: master.print(1, 1, "%s", "BLUE"); break;
-            case Intake::SortState::RED: master.print(1, 1, "%s", "RED "); break;
-            case Intake::SortState::OFF: master.print(1, 1, "%s", "OFF "); break;
-            default: break;
-        }
-
-        pros::delay(200);
-    }
-}
-
 void initialize() {
-
-    // partner.clear();
-    //partner.print(0, 0, "init start"); // 0-2 0-14
     chassis.calibrate(); // calibrate the chassis
     arm_rotational_sensor.reset(); // reset the arm sensor
 
@@ -58,7 +26,8 @@ void initialize() {
     chassis.setPose(0, 0, 0); // X: 0, Y: 0, Heading: 0
     pros::lcd::initialize(); // initialize brain screen
     
-    pros::Task positionprint(printTelemetry);
+    pros::Task screen_telemetry_task(screenTelemetry);
+    pros::Task sd_telemetry_task(sdTelemetry);
     pros::lcd::initialize(); // initialize brain screen
 
     pros::Task selection([&]() {
@@ -84,6 +53,8 @@ void initialize() {
     optical_sensor.set_integration_time(20);
     optical_sensor.set_led_pwm(100);
 
+    arm_controller.init();
+
     pros::delay(500);
 }
 
@@ -94,27 +65,22 @@ void autonomous() {
     
     // partner.print(0, 0, "auton start"); // 0-2 0-14
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
-    //arm_motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
     // pidtune();
-
     // skills();
 
     // quali
     // if (sideColor == red){
-    //     // soloAWP_right_pos(); //pos
-    //     soloAWP_left_pos(); //neg
+    //     qual_pos_red();
     // } else if (sideColor == blue){
-    //     // soloAWP_left_pos(); // pos
-    //     soloAWP_right_pos(); // neg
+    //     qual_pos_blue();
     // }
 
     // elims
-    //     // soloAWP_right_pos(); //pos
-    //     soloAWP_left_pos(); //neg
+    // if (sideColor == red){
+    //     elims_pos_red()
     // } else if (sideColor == blue){
-    //     // soloAWP_left_pos(); // pos
-    //     soloAWP_right_pos(); // neg
+    //     elims_pos_blue()
     // }
 }
 
@@ -125,9 +91,9 @@ void opcontrol() {
     //arm_controller.moveToAngle(16);
 
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-	pros::Task drive_thread(drive);
-	pros::Task intake_thread(intake);
-    pros::Task topmech_thread(topmech);
-    pros::Task piston_thread(piston);
+	pros::Task drive_task(drive);
+	pros::Task intake_task(intake);
+    pros::Task topmech_task(topmech);
+    pros::Task piston_task(piston);
     ledsetup();
 }

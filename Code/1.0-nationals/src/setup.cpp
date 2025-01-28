@@ -31,7 +31,7 @@ color sideColor = color::unknown;
 Arm arm_controller(
     &arm_motors,
     &arm_rotational_sensor,
-    lemlib::PID {3, 0, 10, true} // 3.0, 30, 0.155
+    lemlib::PID {1.5, 0.2, 1, true} // 3.0, 30, 0.155
 );
 
 Intake intake_controller(
@@ -85,7 +85,7 @@ lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwhe
 
 // sensors for odometry
 lemlib::OdomSensors sensors {
-    &vertical_tracking_wheel, // vertical tracking wheel 1, set to nullptr as we don't have one 
+    nullptr, // vertical tracking wheel 1, set to nullptr as we don't have one &vertical_tracking_wheel
     nullptr, // vertical tracking wheel 2, set to nullptr as we don't have one
     nullptr, // horizontal tracking wheel 1
     nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one

@@ -42,6 +42,7 @@
 #include "opcontrol.h"
 #include "autonomous.h"
 #include "led.h"
+#include "telemetry.h"
 #include "pros/apix.h" 
 #include "liblvgl/lvgl.h"
 // IWYU pragma:  end_kepp

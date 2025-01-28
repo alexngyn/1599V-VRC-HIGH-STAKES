@@ -38,10 +38,10 @@ class Intake {
                 if(this->state == STOPPED){
                     this->motor.brake();
                 } else if(this->state == INTAKING){
-                    this->motor.move(INTAKE_SPEED);
+                    this->motor.move_velocity(INTAKE_SPEED);
                     if (this->motor.get_efficiency() < 5 && this->arm.getTargetPosition() == Arm::position::INTAKE) { this->state = STOPPED; }
                 } else if(this->state == OUTTAKE){
-                    this->motor.move(OUTTAKE_SPEED);
+                    this->motor.move_velocity(OUTTAKE_SPEED);
                 }
                 pros::delay(10);
 

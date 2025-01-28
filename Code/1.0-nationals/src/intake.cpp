@@ -25,7 +25,7 @@ Intake::SortState Intake::getState(){
 void Intake::ejectRing(){
     double initPos = this->motor.get_position();
 
-    while ((initPos + 200) - this->motor.get_position() > 10) {
+    while ((initPos + 160) - this->motor.get_position() > 10) {
         this->motor.move(127);
         pros::delay(10);
     }
@@ -65,14 +65,14 @@ void Intake::hold(bool async){
             while (this->topSort.get_proximity() < 100){
                 pros::delay(20);
             }
+            this->state = STOPPED;
         }};
     } else {
-            while (this->topSort.get_proximity() < 100){
-                pros::delay(20);
-            }
+        while (this->topSort.get_proximity() < 100){
+            pros::delay(20);
+        }
+        this->state = STOPPED;
     }
-    
-    this->state = STOPPED;
 }
 
 void Intake::waitUntilDone() {

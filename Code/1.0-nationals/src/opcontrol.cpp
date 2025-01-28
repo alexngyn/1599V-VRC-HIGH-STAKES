@@ -1,7 +1,4 @@
-#include "pros/misc.h"
-#include "pros/rtos.hpp"
 #include "setup.h"
-#include "arm.h"
 
 int sgn (float number) { return 1 ? number >= 0 : -1; }
 
@@ -51,7 +48,7 @@ void intake () {
     //pros::Task unjamthread(unjam);
 
     while (true) {
-        std::printf("Intake: %.1f | %d \n", optical_sensor.get_hue(), optical_sensor.get_proximity());
+        //std::printf("Intake: %.1f | %d \n", optical_sensor.get_hue(), optical_sensor.get_proximity());
 
         //if(!ejectEnabled && printLoop) {master.print(0,0, "Color sort: off");} else if (printLoop) {master.print(0, 0, "Color sort: %s", colorToString(sideColor));}
         if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) 

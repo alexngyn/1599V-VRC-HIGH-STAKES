@@ -22,11 +22,11 @@ extern pros::Controller partner;
 #define LEFT_MOTOR_PORTS { -8, -9, -10 }
 
 //#define HORIZONTAL_ENCODER_PORT 10
-#define VERTICAL_ENCODER_PORT -15 // add
+#define VERTICAL_ENCODER_PORT -6
 //extern pros::Rotation horizontal_encoder;
 extern pros::Rotation vertical_encoder;
 
-#define INTAKE_SOLENOID_PORT 'D'
+#define INTAKE_SOLENOID_PORT 'C'
 extern pros::adi::Pneumatics intake_solenoid;
 
 extern pros::MotorGroup dt_left;
@@ -37,11 +37,11 @@ extern lemlib::Chassis chassis;
 extern pros::IMU inertial_sensor;
 
 //mogo clamp
-#define CLAMP_SOLENOID_PORT 'H'
+#define CLAMP_SOLENOID_PORT 'D'
 extern pros::adi::Pneumatics clamp_solenoid;
 
 //doinker
-#define DOINKER_PORT 'G'
+#define DOINKER_PORT 'E'
 extern pros::adi::Pneumatics doinker_solenoid;
 
 //Auton Selection
@@ -51,17 +51,17 @@ extern pros::adi::DigitalOut indicator;
 extern pros::adi::AnalogIn selector;
 
 //LEDs
-#define LED_1_PORT 'E'
-#define LED_2_PORT 'F'
-#define LED_1_LENGTH 55
-#define LED_2_LENGTH 55
+#define LED_1_PORT 'H'
+#define LED_2_PORT 'G'
+#define LED_1_LENGTH 51
+#define LED_2_LENGTH 51
 
 //intake
 #define INTAKE_PORT -7
 extern pros::Motor intake_motor;
 
 //arm
-#define ARM_PORTS { 13,-14 }
+#define ARM_PORTS { 12,-14 }
 extern pros::MotorGroup arm_motors;
 #define ARM_ROTATIONAL_SENSOR_PORT -16
 extern pros::Rotation arm_rotational_sensor;
