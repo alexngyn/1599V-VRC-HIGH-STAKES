@@ -1,4 +1,5 @@
 #include "telemetry.h"
+#include "pros/rtos.hpp"
 #include "setup.h"
 
 void flushBufferToFile(std::string name, std::vector<std::string>& buffer) {
@@ -27,11 +28,13 @@ void sdTelemetry() {
 
     while (true) {
         lemlib::Pose pose = chassis.getPose(); // get the current position of the robot
-        writeToBuffer(std::to_string(pose.x) + "," + 
+        writeToBuffer(std::to_string(pros::millis()) + "," +
+                            std::to_string(pose.x) + "," + 
                             std::to_string(pose.y) + "," + 
                             std::to_string(pose.theta), "pose", poseBuffer);
 
-        writeToBuffer(std::to_string(dt_left.get_temperature(0)) + "," + 
+        writeToBuffer(std::to_string(pros::millis()) + "," +
+                            std::to_string(dt_left.get_temperature(0)) + "," + 
                             std::to_string(dt_left.get_temperature(1)) + "," + 
                             std::to_string(dt_left.get_temperature(2)) + "," +
                             std::to_string(dt_right.get_temperature(0)) + "," +

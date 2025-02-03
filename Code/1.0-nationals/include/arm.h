@@ -18,6 +18,7 @@ class Arm {
             UP,
             SCORE_NEUTRAL,
             SCORE_ALLIANCE,
+            CLIMB,
             CUSTOM
         };
 
