@@ -63,14 +63,14 @@ void autonomous() {
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 
     // pidtune();
-    skills();
+    //skills();
 
     //quali
-    // if (sideColor == red){
-    //     qual_pos_red();
-    // } else if (sideColor == blue){
-    //     qual_pos_blue();
-    // }
+    if (sideColor == red){
+        qual_pos_red();
+    } else if (sideColor == blue){
+        qual_pos_blue();
+    }
 
     // elims
     // if (sideColor == red){

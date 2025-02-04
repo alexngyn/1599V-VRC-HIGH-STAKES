@@ -349,22 +349,23 @@ void elims_pos_blue() {
 
 //======================= skills autons =======================
 
-lemlib::Pose skills_0 = offsetPose({-70, 0, 270}, 10); 
-lemlib::Pose skills_1a = {-47.244, 0, NAN};
-lemlib::Pose skills_1 = offsetPose({-47.244-2, -23.622, 0}, -4);
+lemlib::Pose skills_0 = offsetPose({-70, 0, 270}, 15.5); 
+lemlib::Pose skills_1a = offsetPose(skills_0, 4);
+lemlib::Pose skills_1 = offsetPose({-47.244+0.8, -23.622, 0}, -2);
 lemlib::Pose skills_1b = {NAN,NAN, 60};
 lemlib::Pose skills_2 = {-23.622, -23.622, 135};
-lemlib::Pose skills_3 = {-23.622, -47.244, 90};
-lemlib::Pose skills_4 = offsetPose({23.622, -47.244, 90},2);
-lemlib::Pose skills_5 = offsetPose({0, -59.055, 180},2);
-lemlib::Pose skills_5a = offsetPose({0, -70, 180},2);
-lemlib::Pose skills_6 = offsetPose({-47.244, -47.244, 270},2); 
-lemlib::Pose skills_7 = offsetPose({-59.055, -47.244, 270},2);
-lemlib::Pose skills_8 = offsetPoint({-47.244, -59.055, 135},skills_7,2);
-lemlib::Pose skills_9 = offsetPoint({-65, -65, 45},skills_8,-15);
+lemlib::Pose skills_3 = {-23.622, -47.24, 200};
+lemlib::Pose skills_4 = offsetPose({23.622+6, -47.244, 90},0);
+lemlib::Pose skills_5 = offsetPose({5.5, -61, 180},0);
+lemlib::Pose skills_5a = offsetPose({5.5, -70, 180},10);
+lemlib::Pose skills_6 = offsetPose({-47.244, -52, 270},0); 
+lemlib::Pose skills_7 = offsetPose({-56.055, -52, 270},0);
+lemlib::Pose skills_8 = offsetPoint({-47.244, -64, 135},skills_7,4);
+lemlib::Pose skills_9 = offsetPoint({-58, -67, 45},skills_8,0);
 
-lemlib::Pose skills_10 = offsetPoint({0, 0, 45},skills_9,2);
-lemlib::Pose skills_11 = offsetPose({-47.244, 23.622, 120},-4);
+lemlib::Pose skills_10 = offsetPoint({4, -2, 45},skills_9,0);
+lemlib::Pose skills_11a = {-18,15,NAN};
+lemlib::Pose skills_11 = offsetPose({-47.244+4, 23.622-2, 120},-4);
 lemlib::Pose skills_12 = {-23.622, 23.622, 17.5};
 lemlib::Pose skills_13 = {-23.622, 47.244, 310};
 lemlib::Pose skills_14 = offsetPose({-59.055, 47.244, 270},2);
@@ -395,81 +396,88 @@ void skills() {
     chassis.setPose(skills_0.x, skills_0.y, skills_0.theta);
     
     //allicen stake
-    //arm_controller.moveTo(Arm::position::SCORE_ALLIANCE, true);
+    arm_controller.moveTo(Arm::position::SCORE_ALLIANCE, true);
     pros::delay(1000);
-    //arm_controller.moveTo(Arm::position::RETRACT);
+    arm_controller.moveTo(Arm::position::RETRACT);
     clamp_solenoid.extend();
 
     //goal 1 quadrent 3 + right wall stake
 
-    //chassis.moveToPoint(skills_1a.x, skills_1a.y, 3000, {.forwards=false, .maxSpeed=64}, true);
-    chassis.moveToPose(skills_1.x, skills_1.y, skills_1.theta, 3000, {.forwards=false}, false);
+    chassis.moveToPoint(skills_1a.x, skills_1a.y, 1000, {.forwards=false, .maxSpeed=96}, true);
+    chassis.moveToPose(skills_1.x, skills_1.y, skills_1.theta, 2000, {.forwards=false, .maxSpeed=96}, false);
     //chassis.moveToPoint(skills_1.x, skills_1.y, 1000, {.forwards=false, .maxSpeed=64}, true);
     arm_controller.moveTo(Arm::position::RETRACT);
 
-    pros::delay(2000);
+    pros::delay(100);
 
     clamp_solenoid.retract();
 
-    /*
-
-    chassis.turnToHeading(skills_1b.theta, 1000);
+    chassis.turnToHeading(skills_1b.theta, 800);
     intake_controller.set(Intake::IntakeState::INTAKING);
-    chassis.moveToPose(skills_2.x, skills_2.y, skills_2.theta, 1000, {.forwards=true,.minSpeed=24}, false);
-    chassis.moveToPoint(skills_3.x, skills_3.y, 1000, {.forwards=true, .maxSpeed=64}, false);
+    chassis.moveToPose(skills_2.x, skills_2.y, skills_2.theta, 2000, {.forwards=true, .maxSpeed=96, .minSpeed=36}, false);
+    chassis.moveToPoint(skills_3.x, skills_3.y, 2000, {.forwards=true, .maxSpeed=96}, false);
 
-    chassis.moveToPoint(skills_4.x, skills_4.y, 1000, {.forwards=true, .maxSpeed=64}, false);
+    chassis.turnToHeading(skills_4.theta, 1000);
+    chassis.moveToPoint(skills_4.x, skills_4.y, 2000, {.forwards=true, .maxSpeed=96}, false);
 
-    chassis.moveToPose(skills_5.x, skills_5.y, skills_5.theta, 1000, {.forwards=true, .maxSpeed=64}, true);
+    chassis.moveToPoint(skills_5.x, skills_5.y, 2000, {.forwards=true, .maxSpeed=96}, true);
     pros::delay(500);
-    arm_controller.moveTo(Arm::position::INTAKE, false);
-    intake_controller.holdldb(false,1000);
-    chassis.moveToPoint(skills_5a.x, skills_5a.y, 1000, {.forwards=true, .maxSpeed=64}, false);
-    arm_controller.moveTo(Arm::position::SCORE_NEUTRAL,false,3000);
+    arm_controller.moveTo(Arm::position::INTAKE, true);
+    intake_controller.holdldb(true,1000);
+    chassis.turnToPoint(4, -70, 1000,{},false);
+    arm_controller.moveTo(Arm::position::SCORE_NEUTRAL, false, 2000);
+    //chassis.moveToPose(skills_5a.x, skills_5a.y, skills_5a.theta, 2000, {.forwards=true, .maxSpeed=96}, false);
+    // arm_controller.moveTo(Arm::position::SCORE_NEUTRAL,false,3000);
 
-    chassis.moveToPose(skills_6.x , skills_6.y, skills_6.theta, 1000, {.forwards=true,.minSpeed=48}, true);
-    pros::delay(1000);
+    chassis.moveToPose(skills_6.x , skills_6.y, skills_6.theta, 3000, {.forwards=true,.minSpeed=48}, true);
+    // pros::delay(1000);
     arm_controller.moveTo(Arm::position::RETRACT);
-    chassis.moveToPoint(skills_7.x, skills_7.y, 1000, {.forwards=true, .maxSpeed=64}, false);
-    chassis.moveToPoint(skills_8.x, skills_8.y, 1000, {.forwards=true, .maxSpeed=64}, false);
+    chassis.moveToPoint(skills_7.x, skills_7.y, 2000, {.forwards=true, .maxSpeed=96}, false);
+    chassis.moveToPoint(skills_8.x, skills_8.y, 2000, {.forwards=true, .maxSpeed=96}, false);
 
-    chassis.moveToPoint(skills_9.x, skills_9.y, 1000, {.forwards=false, .maxSpeed=64}, false);
-    clamp_solenoid.retract();
+    chassis.moveToPoint(skills_9.x, skills_9.y, 2000, {.forwards=false, .maxSpeed=96}, false);
+    clamp_solenoid.extend();
+    pros::delay(100);
+
 
     //goal 2 quadrent 2 + left wall stake
-    chassis.moveToPoint(skills_10.x, skills_10.y, 1000, {.forwards=true, .maxSpeed=64}, true);
-    chassis.waitUntil(20);
+    chassis.moveToPoint(skills_10.x, skills_10.y, 3000, {.forwards=true, .maxSpeed=96}, true);
+    chassis.waitUntil(5);
     intake_controller.hold(true,1000);
 
-    chassis.moveToPoint(skills_11.x, skills_11.y, 1000, {.forwards=false, .maxSpeed=64}, false);
-    clamp_solenoid.extend();
-
-    intake_controller.set(Intake::IntakeState::INTAKING);
-    chassis.moveToPose(skills_12.x, skills_12.y, skills_12.theta, 1000, {.forwards=true,.minSpeed=24}, false);
-    chassis.moveToPose(skills_13.x, skills_13.y, skills_13.theta, 1000, {.forwards=true,.minSpeed=24}, false);
-    chassis.moveToPose(skills_14.x, skills_14.y, skills_14.theta, 1000, {.forwards=true, .maxSpeed=64}, false);
-    chassis.moveToPoint(skills_15.x, skills_15.y, 1000, {.forwards=true, .maxSpeed=64}, false);
-
-    chassis.moveToPoint(skills_16.x, skills_16.y, 1000, {.forwards=false,.minSpeed=48}, false);
-    //intake_controller.set(Intake::IntakeState::STOPPED);
+    //chassis.turnToPoint(skills_11.x, skills_11.y, 1000, {.forwards=false, .maxSpeed=64}, false);
+    chassis.moveToPoint(skills_11a.x, skills_11a.y, 2000, {.forwards=false, .maxSpeed=96}, false);
+    chassis.moveToPose(skills_11.x, skills_11.y, skills_11.theta, 2000, {.forwards=false, .maxSpeed=96}, false);
     clamp_solenoid.retract();
 
-    // left wall stake
-    chassis.moveToPoint(skills_17.x, skills_17.y, 1000, {.forwards=true, .maxSpeed=64}, true);
-    //chassis.waitUntil(10);
-    arm_controller.moveTo(Arm::position::INTAKE);
-    intake_controller.holdldb(false, 1000);
-    //intake_controller.hold();
-    //chassis.moveToPoint(skills_18.x, skills_18.y, 1000, {.forwards=true}, true);
-    //chassis.waitUntil(8);
-    //intake_controller.set(Intake::IntakeState::INTAKING);
-    //intake_controller.waitUntilDone();
+    intake_controller.set(Intake::IntakeState::INTAKING);
+    // chassis.moveToPose(skills_12.x, skills_12.y, skills_12.theta, 1000, {.forwards=true,.minSpeed=24}, false);
+    // chassis.moveToPose(skills_13.x, skills_13.y, skills_13.theta, 1000, {.forwards=true,.minSpeed=24}, false);
+    // chassis.moveToPose(skills_14.x, skills_14.y, skills_14.theta, 1000, {.forwards=true, .maxSpeed=64}, false);
+    // chassis.moveToPoint(skills_15.x, skills_15.y, 1000, {.forwards=true, .maxSpeed=64}, false);
 
-    chassis.moveToPose(skills_19a.x, skills_19a.y, skills_19a.theta, 1000, {.forwards=true, .maxSpeed=64}, false);
-    chassis.moveToPoint(skills_19.x, skills_19.y, 1000, {.forwards=true, .maxSpeed=64}, false);
+    // chassis.moveToPoint(skills_16.x, skills_16.y, 1000, {.forwards=false,.minSpeed=48}, false);
+    // //intake_controller.set(Intake::IntakeState::STOPPED);
+    // clamp_solenoid.retract();
 
-    arm_controller.moveTo(Arm::position::SCORE_NEUTRAL, true);
-    pros::delay(3000);
+    // // left wall stake
+    // chassis.moveToPoint(skills_17.x, skills_17.y, 1000, {.forwards=true, .maxSpeed=64}, true);
+    // //chassis.waitUntil(10);
+    // arm_controller.moveTo(Arm::position::INTAKE);
+    // intake_controller.holdldb(false, 1000);
+    // //intake_controller.hold();
+    // //chassis.moveToPoint(skills_18.x, skills_18.y, 1000, {.forwards=true}, true);
+    // //chassis.waitUntil(8);
+    // //intake_controller.set(Intake::IntakeState::INTAKING);
+    // //intake_controller.waitUntilDone();
+
+    // chassis.moveToPose(skills_19a.x, skills_19a.y, skills_19a.theta, 1000, {.forwards=true, .maxSpeed=64}, false);
+    // chassis.moveToPoint(skills_19.x, skills_19.y, 1000, {.forwards=true, .maxSpeed=64}, false);
+
+    // arm_controller.moveTo(Arm::position::SCORE_NEUTRAL, true);
+    // pros::delay(3000);
+
+    /*
     
     //next mogo
 
