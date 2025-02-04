@@ -5,7 +5,7 @@
 #include "led.h" // IWYU pragma: keep
 #include "intake.h"
 
-enum protocol { bluetooth, vexnet}; 
+enum protocol { bluetooth, vexnet }; 
 enum color { red, blue, unknown };
 
 std::string colorToString(color color);
@@ -65,10 +65,10 @@ extern pros::Motor intake_motor;
 extern pros::MotorGroup arm_motors;
 #define ARM_ROTATIONAL_SENSOR_PORT -16
 extern pros::Rotation arm_rotational_sensor;
-#define OPTICAL_SENSOR_PORT 17
+#define OPTICAL_SENSOR_PORT 19 // 17
 extern pros::Optical optical_sensor;
-#define DISTANCE_SENSOR_PORT 19
-extern pros::Distance distance_sensor;
+#define DISTANCE_SENSOR_PORT 17
+extern pros::Optical distance_sensor;
 
 // #define VISION_SENSOR_PORT 19
 // extern pros::Vision vision_sensor;

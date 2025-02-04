@@ -24,11 +24,9 @@ void initialize() {
     }
     
     chassis.setPose(0, 0, 0); // X: 0, Y: 0, Heading: 0
-    pros::lcd::initialize(); // initialize brain screen
     
     pros::Task screen_telemetry_task(screenTelemetry);
     pros::Task sd_telemetry_task(sdTelemetry);
-    pros::lcd::initialize(); // initialize brain screen
 
     pros::Task selection([&]() {
         while (pros::competition::is_disabled()) {
@@ -48,8 +46,6 @@ void initialize() {
         }
     });
 
-    pros::lcd::print(0, "%s %s auton", sideColor == color::red ? "red" : "blue"); // 0-2 0-14
-
     optical_sensor.set_integration_time(20);
     optical_sensor.set_led_pwm(100);
 
@@ -67,9 +63,9 @@ void autonomous() {
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 
     // pidtune();
-    // skills();
+    skills();
 
-    // quali
+    //quali
     // if (sideColor == red){
     //     qual_pos_red();
     // } else if (sideColor == blue){

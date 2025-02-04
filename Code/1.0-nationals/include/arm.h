@@ -22,14 +22,14 @@ class Arm {
             CUSTOM
         };
 
-        void moveTo(double angle, bool async = true);
-        void moveTo(position angle, bool async = true);
+        void moveTo(double angle, bool async = true, int timeout = 10000);
+        void moveTo(position angle, bool async = true, int timeout = 10000);
         void changeAngle(double deltaAngle);
         double getAngle();
         double angleStringToAngle();
         double getTargetAngle();
         position getTargetPosition();
-        void waitUntilDone();
+        void waitUntilDone(int timeout = 10000);
         void togglePosition(position position1, position position2, position position3 = position::CUSTOM, 
                             position position4 = position::CUSTOM,  position position5 = position::CUSTOM);
         void init();

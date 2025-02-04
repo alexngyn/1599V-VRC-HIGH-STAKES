@@ -52,11 +52,11 @@ void intake () {
             intake_controller.toggleState();
         }
 
-        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
             intake_controller.set(Intake::IntakeState::INTAKING);
-        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+        } else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
             intake_controller.set(Intake::IntakeState::OUTTAKE);
-        } else {
+        } else if (!(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) || master.get_digital(pros::E_CONTROLLER_DIGITAL_R1))) {
             intake_controller.set(Intake::IntakeState::STOPPED);
         }
         pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
@@ -71,10 +71,10 @@ void piston(){
         // if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
         //     clamp_solenoid.toggle();
         // }
-        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !clamp_solenoid.is_extended()) {
-            clamp_solenoid.extend();
-        } else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && clamp_solenoid.is_extended()) { 
-            clamp_solenoid.retract(); 
+        if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && clamp_solenoid.is_extended()) {
+            clamp_solenoid.retract();
+        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !clamp_solenoid.is_extended()) { 
+            clamp_solenoid.extend(); 
         }
 
         if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
@@ -91,8 +91,7 @@ void topmech() {
         else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {arm_controller.moveTo(Arm::position::RETRACT);}
         else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {arm_controller.moveTo(Arm::position::CLIMB);}
         else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {arm_controller.togglePosition(Arm::position::INTAKE, 
-                                                                                                                    Arm::position::UP,
-                                                                                                                    Arm::position::SCORE_ALLIANCE);}
+                                                                                                                    Arm::position::SCORE_NEUTRAL);}
 
         pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
         //on vexnet: 30ms, on bluetooth, delay 50ms

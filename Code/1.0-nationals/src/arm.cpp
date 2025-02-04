@@ -37,8 +37,7 @@ void Arm::init() {
             this->currentState = Arm::state::MOVING;
         }
 
-        if (this->getAngle() > -100) {this->targetAngle=-200;}// soft limits 
-        
+        //if (this->getAngle() > -100) {this->targetAngle=-200;}// soft limits 
 
         if (this->currentState == Arm::state::MOVING) {
             vel = this->pid.update(error);
@@ -51,7 +50,7 @@ void Arm::init() {
 
         //std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, error);
         //std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, vel);
-        pros::screen::print(pros::E_TEXT_MEDIUM, 4, "Arm:  actual %.1f | target %.1f | vel %.1f \n", this->getAngle(), this->targetAngle, vel);
+        pros::screen::print(pros::E_TEXT_MEDIUM, 4, "Arm: act pos %.1f | tgt pos %.1f | vel %.1f \n", this->getAngle(), this->targetAngle, vel);
 
         // FILE* usd_arm_file = fopen("/usd/log_arm.txt", "w");
         // fprintf(usd_arm_file, "%.1f,%.1f,%.1f\n", this->getAngle(), this->targetAngle, vel);
@@ -66,15 +65,15 @@ void Arm::init() {
     }};;
 }
 
-void Arm::moveTo(double angle, bool async) {
+void Arm::moveTo(double angle, bool async, int timeout) {
     this->targetPosition = position::CUSTOM;
     this->targetAngle = angle;
-    if (!async) { waitUntilDone(); }
+    if (!async) { waitUntilDone(timeout); }
 }
 
-void Arm::moveTo(position pos, bool async) {
+void Arm::moveTo(position pos, bool async, int timeout) {
     this->targetPosition = pos;
-    if (!async) { waitUntilDone(); }
+    if (!async) { waitUntilDone(timeout); }
 }
 
 void Arm::changeAngle(double deltaAngle) {
@@ -93,9 +92,11 @@ Arm::position Arm::getTargetPosition() {
     return this->targetPosition;
 }
 
-void Arm::waitUntilDone() {
+void Arm::waitUntilDone(int timeout) {
+    int initialTime = pros::millis();
     while (this->currentState == Arm::state::MOVING) {
         pros::delay(10);
+        if (pros::millis() - initialTime > timeout) { break; }
     }
 }
 
@@ -105,7 +106,7 @@ double Arm::angleStringToAngle() {
         case position::INTAKE: return -308;
         case position::UP: return -200;
         case position::SCORE_NEUTRAL: return -185;
-        case position::SCORE_ALLIANCE: return -150;
+        case position::SCORE_ALLIANCE: return -140;
         case position::CLIMB: return -170;
         default: return targetAngle;
     }

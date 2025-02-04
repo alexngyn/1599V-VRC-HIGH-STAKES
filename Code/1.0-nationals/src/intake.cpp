@@ -1,6 +1,6 @@
 #include "intake.h"
 
-Intake::Intake(pros::Motor& motor, pros::Optical& topSort, Arm& arm): motor(motor) , topSort(topSort) , arm(arm){};
+Intake::Intake(pros::Motor& motor, pros::Optical& holdSensor, pros::Optical& sortSensor, Arm& arm): motor(motor) , holdSensor(holdSensor), sortSensor(sortSensor) , arm(arm){};
 
 void Intake::toggleState(){
     if (sort == SortState::OFF){
@@ -22,23 +22,32 @@ Intake::SortState Intake::getState(){
     return this->sort;
 }
 
+// void Intake::ejectRing(){
+//     double initPos = this->motor.get_position();
+
+//     while ((initPos + 160) - this->motor.get_position() > 10) {
+//         this->motor.move(127);
+//         pros::delay(10);
+//     }
+
+//     this->motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+//     this->motor.brake();
+//     pros::delay(500);
+//     this->motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+// }
+
 void Intake::ejectRing(){
     double initPos = this->motor.get_position();
 
-    while ((initPos + 160) - this->motor.get_position() > 10) {
-        this->motor.move(127);
-        pros::delay(10);
-    }
-
     this->motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     this->motor.brake();
-    pros::delay(500);
+    pros::delay(100);
     this->motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 }
 
 void Intake::colorSort(){ // private function
     if (this->sort == SortState::RED){
-        if (this->topSort.get_hue()>210 && this->topSort.get_hue()<=250 && this->topSort.get_proximity()<100){   //TUNE PROXIMITY // >0
+        if (this->sortSensor.get_hue()>200 && this->sortSensor.get_hue()<=250){   //TUNE PROXIMITY // >0
             if (this->arm.getTargetPosition() == Arm::position::INTAKE){
                 this->arm.moveTo(Arm::position::RETRACT);
                 ejectRing();
@@ -47,7 +56,7 @@ void Intake::colorSort(){ // private function
         }
     }
     else if (this->sort == SortState::BLUE){
-        if ((this->topSort.get_hue()<10 || this->topSort.get_hue()>=350) && this->topSort.get_proximity()<100) {  //TUNE PROXIMITY //<40
+        if ((this->sortSensor.get_hue()<25 || this->sortSensor.get_hue()>=350)) {  //TUNE PROXIMITY //<40
             if (this->arm.getTargetPosition() == Arm::position::INTAKE){
                 this->arm.moveTo(Arm::position::RETRACT);
                 ejectRing();
@@ -57,26 +66,55 @@ void Intake::colorSort(){ // private function
     }
 }
 
-void Intake::hold(bool async){
+void Intake::hold(bool async, int timeout){
     this->state = INTAKING;
 
     if (async) {
         pros::Task holdTask = pros::Task {[&] {
-            while (this->topSort.get_proximity() < 100){
+            while (this->holdSensor.get_proximity() < 100){
                 pros::delay(20);
             }
             this->state = STOPPED;
         }};
     } else {
-        while (this->topSort.get_proximity() < 100){
+        while (this->holdSensor.get_proximity() < 100){
             pros::delay(20);
         }
         this->state = STOPPED;
     }
 }
 
-void Intake::waitUntilDone() {
-    while (this->state != Intake::INTAKING) {pros::delay(100);}
+void Intake::holdldb(bool async, int timeout){
+    this->state = INTAKING;
+
+    if (!(this->arm.getTargetPosition() == Arm::position::INTAKE)) {
+        this->arm.moveTo(Arm::position::INTAKE, true);
+    }
+
+    pros::Task holdTask = pros::Task {[&] {
+            while (this->holdSensor.get_proximity() < 100){
+                pros::delay(20);
+            }
+
+            while (motor.get_efficiency() > 0){
+                pros::delay(20);
+            }
+
+            this->state = OUTTAKE;
+            pros::delay(100);
+
+            this->state = STOPPED;
+        }};
+
+    if (!async) {waitUntilDone(timeout);}
+}
+
+void Intake::waitUntilDone(int timeout) {
+    int initialTime = pros::millis();
+    while (this->state != Intake::INTAKING) {
+        pros::delay(50);
+        if (pros::millis() - initialTime > timeout) { break; }
+    }
 }
 
 void Intake::set(IntakeState state){
