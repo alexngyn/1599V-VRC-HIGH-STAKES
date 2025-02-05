@@ -103,7 +103,7 @@ double Arm::angleStringToAngle() {
         case position::RETRACT: return -340;
         case position::INTAKE: return -308;
         case position::UP: return -200;
-        case position::SCORE_NEUTRAL: return -185;
+        case position::SCORE_NEUTRAL: return -180;
         case position::SCORE_ALLIANCE: return -130;
         case position::CLIMB: return -170;
         default: return targetAngle;

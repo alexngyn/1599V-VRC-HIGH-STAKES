@@ -309,8 +309,8 @@
       }
     },
     "upload_options": {
-      "icon": "ufo",
-      "slot": 8
+      "icon": "robot",
+      "slot": 5
     }
   }
 }

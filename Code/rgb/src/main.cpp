@@ -1,13 +1,11 @@
 #include "main.h"
 #include <cstdio>
 
-#define LED_PORT 'f'
+#define LED_PORT 'c'
 #define LED_LENGTH 64
 
 uint32_t ledbuffer[LED_LENGTH];
-uint32_t ledbuffer2[LED_LENGTH];
 std::vector<uint32_t> ledbuffer_v;
-std::vector<uint32_t> ledbuffer2_v;
 
 void initialize() {
 	pros::lcd::initialize();
@@ -69,7 +67,7 @@ void gradient(std::uint32_t start_color, std::uint32_t end_color, int fade_width
 
 void addrled() {
 	for(int i = 0;i<120;i++){
-		ledbuffer_v.push_back(0x00FF00);
+		ledbuffer_v.push_back(0x0000FF);
 	}
 	pros::c::adi_led_t led = pros::c::adi_led_init(LED_PORT);
 	pros::delay(1000);
@@ -77,43 +75,13 @@ void addrled() {
 	//std::copy(ledbuffer_v.begin(), ledbuffer_v.end(), ledbuffer);
 	//pros::c::adi_led_set(led, ledbuffer, LED_LENGTH);
 
-	gradient(0xFFDA29, 0xC40233, 60);
+	gradient(0x0000FF, 0xFFFFFF, 60);
 
 	std::copy(ledbuffer_v.begin(), ledbuffer_v.end(), ledbuffer);
 	pros::c::adi_led_set(led, ledbuffer, 120);
-	while (true) {
-		//std::rotate(ledbuffer.begin(), ledbuffer.end() - 1, ledbuffer.end());
-		// std::rotate(ledbuffer_v.begin(), ledbuffer_v.begin() + 1, ledbuffer_v.end());
-		// std::copy(ledbuffer_v.begin(), ledbuffer_v.end(), ledbuffer);
-		// pros::c::adi_led_set(led, ledbuffer, LED_LENGTH);
-		pros::delay(100);
-	}
+
 }
-
-void addrled2() {
-	for(int i = 64;i<LED_LENGTH+64;i++){
-		ledbuffer2_v.push_back(0x00FF00);
-	}
-	pros::c::adi_led_t led2 = pros::c::adi_led_init(LED_PORT);
-	pros::delay(1000);
-	//ledbuffer = ledbuffer_v.data()
-	//std::copy(ledbuffer_v.begin(), ledbuffer_v.end(), ledbuffer);
-	//pros::c::adi_led_set(led, ledbuffer, LED_LENGTH);
-
-	gradient(0xFFDA29, 0xC40233, 30);
-
-	std::copy(ledbuffer2_v.begin(), ledbuffer2_v.end(), ledbuffer2);
-	pros::c::adi_led_set(led2, ledbuffer2, LED_LENGTH);
-	while (true) {
-		//std::rotate(ledbuffer.begin(), ledbuffer.end() - 1, ledbuffer.end());
-		std::rotate(ledbuffer2_v.begin(), ledbuffer2_v.begin() + 1, ledbuffer2_v.end());
-		std::copy(ledbuffer2_v.begin(), ledbuffer2_v.end(), ledbuffer2);
-		pros::c::adi_led_set(led2, ledbuffer2, LED_LENGTH);
-		pros::delay(100);
-	}
-}
-
 void opcontrol() {
-	pros::Task lights(addrled);
+	addrled();
     //pros::Task lights2(addrled2);
 }
