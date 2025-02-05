@@ -128,7 +128,7 @@ void ledsetup() {
                 led2, ledbuffer, LED_2_LENGTH, 25);
     }
 
-    while (pros::millis() - start_time < 70000) {pros::delay(100); } // 1:25 realse mogo
+    while (pros::millis() - start_time < 70000) {pros::delay(100); } // 1:25 release mogo
 
     for (int i=0; i<10; i++) { // flash red slowly
         std::copy(ledbuffer_v.begin(), ledbuffer_v.end(), ledbuffer);

@@ -1,5 +1,14 @@
 #include "intake.h"
 
+/**
+    * @brief Construct a new Intake:: Intake object
+    * 
+    * @param motor The motor that controls the intake
+    * @param holdSensor The sensor that detects when a ring is in the intake
+    * @param sortSensor The sensor that detects the color of the ring
+    * @param arm The arm object that controls lady brown
+    */
+
 Intake::Intake(pros::Motor& motor, pros::Optical& holdSensor, pros::Optical& sortSensor, Arm& arm): motor(motor) , holdSensor(holdSensor), sortSensor(sortSensor) , arm(arm){};
 
 void Intake::toggleState(){

@@ -62,15 +62,17 @@ void autonomous() {
     // partner.print(0, 0, "auton start"); // 0-2 0-14
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 
+    // uncommment the auton you want to run
+
     // pidtune();
-    //skills();
+    skills();
 
     //quali
-    if (sideColor == red){
-        qual_pos_red();
-    } else if (sideColor == blue){
-        qual_pos_blue();
-    }
+    // if (sideColor == red){
+    //     qual_pos_red();
+    // } else if (sideColor == blue){
+    //     qual_pos_blue();
+    // }
 
     // elims
     // if (sideColor == red){
@@ -84,7 +86,6 @@ void opcontrol() {
     master.clear();
     // console.println("Running op...");
     //partner.print(0, 0, "op start"); // 0-2 0-14
-    //arm_controller.moveToAngle(16);
 
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 	pros::Task drive_task(drive);

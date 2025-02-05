@@ -1,7 +1,6 @@
 #pragma once
 
-//void loginator();
-//double meter_to_in (double meter);
+double meter_to_in (double meter);
 
 void qual_neg();
 

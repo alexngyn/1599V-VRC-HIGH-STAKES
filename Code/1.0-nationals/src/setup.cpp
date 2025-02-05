@@ -31,7 +31,7 @@ color sideColor = color::unknown;
 Arm arm_controller(
     &arm_motors,
     &arm_rotational_sensor,
-    lemlib::PID {1.5, 0.2, 1, true} // 3.0, 30, 0.155
+    lemlib::PID {1.5, 0.2, 1, true} 
 );
 
 Intake intake_controller(
@@ -47,8 +47,8 @@ lemlib::Drivetrain drivetrain {
     &dt_right, // right drivetrain motors
     11.85, // track width 11.83
     lemlib::Omniwheel::NEW_325, // using new 3.25" omnis
-    450, // drivetrain rpm is 480
-    4 // omni chase power is 2. If we had traction wheels, it would have been 8
+    450, // drivetrain rpm is 450
+    4 // prevents drifting
 };
 
 // lateral motion controller
@@ -58,9 +58,9 @@ lemlib::ControllerSettings linearController ( // 26,0,150      ,7
     0, // integral gain (kI)
     55, // derivative gain (kD)
     3, // anti windup
-    0.8, // small error range, in inches
+    1, // small error range, in inches
     100, // small error range timeout, in milliseconds
-    2, // large error range, in inches
+    3, // large error range, in inches
     500, // large error range timeout, in milliseconds
     20 // maximum acceleration (slew)
 );
@@ -78,9 +78,6 @@ lemlib::ControllerSettings angularController ( // 5.2,0,45
     10 // maximum acceleration (slew) prevent wheel cuz we dont have encoder
 );
 
-
-// horizontal tracking wheel
-//lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_2, 0);
 // vertical tracking wheel
 lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, -0);
 

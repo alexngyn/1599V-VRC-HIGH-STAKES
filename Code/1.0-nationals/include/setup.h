@@ -65,17 +65,11 @@ extern pros::Motor intake_motor;
 extern pros::MotorGroup arm_motors;
 #define ARM_ROTATIONAL_SENSOR_PORT -16
 extern pros::Rotation arm_rotational_sensor;
-#define OPTICAL_SENSOR_PORT 19 // 17
+#define OPTICAL_SENSOR_PORT 19 
 extern pros::Optical optical_sensor;
 #define DISTANCE_SENSOR_PORT 17
 extern pros::Optical distance_sensor;
 
-// #define VISION_SENSOR_PORT 19
-// extern pros::Vision vision_sensor;
-
 extern Arm arm_controller;
 extern pros::Rotation arm_rotational_sensor;
 extern Intake intake_controller;
-
-// extern pros::vision_signature_s_t REDSIG;
-// extern pros::vision_signature_s_t BLUESIG;
