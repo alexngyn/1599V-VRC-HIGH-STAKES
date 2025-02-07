@@ -65,25 +65,26 @@ void autonomous() {
     // uncommment the auton you want to run
 
     // pidtune();
-    skills();
+    // skills();
 
     //quali
-    // if (sideColor == red){
-    //     qual_pos_red();
-    // } else if (sideColor == blue){
-    //     qual_pos_blue();
-    // }
+    if (sideColor == red){
+        qual_pos_red();
+    } else if (sideColor == blue){
+        qual_pos_blue();
+    }
 
     // elims
     // if (sideColor == red){
-    //     elims_pos_red()
+    //     elims_pos_red();
     // } else if (sideColor == blue){
-    //     elims_pos_blue()
+    //     elims_pos_blue();
     // }
 }
 
 void opcontrol() {
     master.clear();
+    
     // console.println("Running op...");
     //partner.print(0, 0, "op start"); // 0-2 0-14
 

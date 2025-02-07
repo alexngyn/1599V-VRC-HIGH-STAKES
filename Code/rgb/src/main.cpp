@@ -2,7 +2,7 @@
 #include <cstdio>
 
 #define LED_PORT 'c'
-#define LED_LENGTH 64
+#define LED_LENGTH 52
 
 uint32_t ledbuffer[LED_LENGTH];
 std::vector<uint32_t> ledbuffer_v;
@@ -66,7 +66,7 @@ void gradient(std::uint32_t start_color, std::uint32_t end_color, int fade_width
 }
 
 void addrled() {
-	for(int i = 0;i<120;i++){
+	for(int i = 0;i<LED_LENGTH;i++){
 		ledbuffer_v.push_back(0x0000FF);
 	}
 	pros::c::adi_led_t led = pros::c::adi_led_init(LED_PORT);
@@ -75,10 +75,10 @@ void addrled() {
 	//std::copy(ledbuffer_v.begin(), ledbuffer_v.end(), ledbuffer);
 	//pros::c::adi_led_set(led, ledbuffer, LED_LENGTH);
 
-	gradient(0x0000FF, 0xFFFFFF, 60);
+	//gradient(0x0000FF, 0x0F0FFF, 26);
 
 	std::copy(ledbuffer_v.begin(), ledbuffer_v.end(), ledbuffer);
-	pros::c::adi_led_set(led, ledbuffer, 120);
+	pros::c::adi_led_set(led, ledbuffer, LED_LENGTH);
 
 }
 void opcontrol() {

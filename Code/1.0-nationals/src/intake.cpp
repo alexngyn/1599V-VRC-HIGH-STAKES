@@ -50,13 +50,14 @@ void Intake::ejectRing(){
 
     this->motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     this->motor.brake();
-    pros::delay(100);
+    pros::delay(200);
     this->motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 }
 
 void Intake::colorSort(){ // private function
     if (this->sort == SortState::RED){
-        if (this->sortSensor.get_hue()>200 && this->sortSensor.get_hue()<=250){   //TUNE PROXIMITY // >0
+        if (this->sortSensor.get_hue()>200 && this->sortSensor.get_hue()<=250
+        && this->sortSensor.get_proximity() > 100){   //TUNE PROXIMITY // >0
             if (this->arm.getTargetPosition() == Arm::position::INTAKE){
                 this->arm.moveTo(Arm::position::RETRACT);
                 ejectRing();
@@ -65,7 +66,8 @@ void Intake::colorSort(){ // private function
         }
     }
     else if (this->sort == SortState::BLUE){
-        if ((this->sortSensor.get_hue()<25 || this->sortSensor.get_hue()>=350)) {  //TUNE PROXIMITY //<40
+        if ((this->sortSensor.get_hue()<15 || this->sortSensor.get_hue()>=350
+        && this->sortSensor.get_proximity() > 100)) {  //TUNE PROXIMITY //<40
             if (this->arm.getTargetPosition() == Arm::position::INTAKE){
                 this->arm.moveTo(Arm::position::RETRACT);
                 ejectRing();
@@ -101,16 +103,60 @@ void Intake::holdldb(bool async, int timeout){
     }
 
     pros::Task holdTask = pros::Task {[&] {
-            while (this->holdSensor.get_proximity() < 100){
+            // while (this->holdSensor.get_proximity() < 100){
+            //     pros::delay(20);
+            // }
+
+            // while (motor.get_efficiency() > 0){
+            //     pros::delay(20);
+            // }
+
+            // while (true){
+            //     if (this->motor.get_efficiency() < 0) {
+            //         pros::delay(200);
+            //         if (this->motor.get_efficiency() < 0) {
+            //             break;
+            //         }
+            //     } pros::delay(20);
+            // }
+
+            // while (this->motor.get_efficiency() > 0) {
+            //     pros::delay(20);
+
+            //     if (this->motor.get_efficiency() < 5) {
+            //         pros::delay(200);
+
+            //         if (this->motor.get_efficiency() < 5) {
+            //             break;
+            //         }
+            //     }
+            // }
+
+            while (this->motor.get_efficiency() > 3) {
                 pros::delay(20);
+
+                if (this->motor.get_efficiency() < 3) {
+                    pros::delay(300);
+                }
             }
 
-            while (motor.get_efficiency() > 0){
-                pros::delay(20);
-            }
+            // this->state = OUTTAKE;
+            // pros::delay(200);
+            // double initPos = this->motor.get_position();
 
-            this->state = OUTTAKE;
-            pros::delay(100);
+            // double error = (initPos + 40) - this->motor.get_position();
+
+            // while (error > 0) {
+            //     error = (initPos + 40) - this->motor.get_position();
+            //     this->motor.move(20);
+            //     pros::delay(10);
+            // }
+
+            //this->motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+            //this->motor.brake();
+            //pros::delay(500);
+            //this->motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+
 
             this->state = STOPPED;
         }};
