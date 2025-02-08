@@ -46,11 +46,11 @@ class Intake {
                     if (this->arm.getTargetPosition() == Arm::position::INTAKE) {
                         this->motor.move_velocity(INTAKE_LDB_SPEED);
                     }
+                    if (!(sort==OFF)) { colorSort(); }
                     
                 } else if(this->state == OUTTAKE){
                     this->motor.move_velocity(OUTTAKE_SPEED);
                 }
-                if (!(sort==OFF)) { colorSort(); }
                 pros::delay(10);
             }
         }};;

@@ -1,4 +1,5 @@
 #include "arm.h"
+#include "pros/rtos.hpp"
 
 /**
  * @brief Construct a new Arm object
@@ -21,6 +22,10 @@ void Arm::init() {
     double error;
     double vel;
     while (true) {  
+
+
+        std::printf("%d %f %f %f \n", pros::millis(), this->getAngle(), this->targetAngle, vel);
+        
         this->targetAngle = angleStringToAngle(); 
 
         error = this->targetAngle - this->getAngle();

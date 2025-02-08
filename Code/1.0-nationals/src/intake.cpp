@@ -9,7 +9,14 @@
     * @param arm The arm object that controls lady brown
     */
 
-Intake::Intake(pros::Motor& motor, pros::Optical& holdSensor, pros::Optical& sortSensor, Arm& arm): motor(motor) , holdSensor(holdSensor), sortSensor(sortSensor) , arm(arm){};
+Intake::Intake(pros::Motor& motor,
+               pros::Optical& holdSensor, 
+               pros::Optical& sortSensor, 
+               Arm& arm): 
+               motor(motor), 
+               holdSensor(holdSensor), 
+               sortSensor(sortSensor), 
+               arm(arm){};
 
 void Intake::toggleState(){
     if (sort == SortState::OFF){
@@ -49,6 +56,7 @@ void Intake::ejectRing(){
     double initPos = this->motor.get_position();
 
     this->motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    pros::delay(0);
     this->motor.brake();
     pros::delay(200);
     this->motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
@@ -57,7 +65,7 @@ void Intake::ejectRing(){
 void Intake::colorSort(){ // private function
     if (this->sort == SortState::RED){
         if (this->sortSensor.get_hue()>200 && this->sortSensor.get_hue()<=250
-        && this->sortSensor.get_proximity() > 100){   //TUNE PROXIMITY // >0
+        && this->sortSensor.get_proximity() > 80){   //TUNE PROXIMITY // >0
             if (this->arm.getTargetPosition() == Arm::position::INTAKE){
                 this->arm.moveTo(Arm::position::RETRACT);
                 ejectRing();
@@ -66,8 +74,8 @@ void Intake::colorSort(){ // private function
         }
     }
     else if (this->sort == SortState::BLUE){
-        if ((this->sortSensor.get_hue()<15 || this->sortSensor.get_hue()>=350
-        && this->sortSensor.get_proximity() > 100)) {  //TUNE PROXIMITY //<40
+        if ((this->sortSensor.get_hue()<20 || this->sortSensor.get_hue()>=350
+        && this->sortSensor.get_proximity() > 80)) {  //TUNE PROXIMITY //<40
             if (this->arm.getTargetPosition() == Arm::position::INTAKE){
                 this->arm.moveTo(Arm::position::RETRACT);
                 ejectRing();
