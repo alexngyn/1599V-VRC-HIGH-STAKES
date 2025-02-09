@@ -52,6 +52,7 @@ void sdTelemetry() {
 
 void screenTelemetry() {
     pros::lcd::initialize(); // initialize brain screen
+    pros::c::optical_rgb_s_t rgb_value;
 
     pros::delay(20); // wait for initialization
     while (true) {
@@ -74,6 +75,9 @@ void screenTelemetry() {
         pros::screen::print(pros::E_TEXT_MEDIUM, 7, "intake temp: %d", int(intake_motor.get_temperature()));
         pros::screen::print(pros::E_TEXT_MEDIUM, 8, "arm temp: %d %d", int(arm_motors.get_temperature(0)), int(arm_motors.get_temperature(1)));
         
+        rgb_value = optical_sensor.get_rgb();
+        pros::screen::print(pros::E_TEXT_MEDIUM, 3, "optical: %lf %lf %lf %d", rgb_value.red, rgb_value.green, rgb_value.blue, int(optical_sensor.get_proximity()));
+
         //pros::lcd::print(0, "x: %.3f    y: %.3f   theta: %.3f", pose.x, pose.y, pose.theta); // prints the position
         // pros::lcd::print(3, "left temp: %d %d %d", 
         //                     dt_left.get_temperature(0),

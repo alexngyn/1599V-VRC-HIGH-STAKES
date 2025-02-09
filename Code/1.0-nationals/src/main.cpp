@@ -46,8 +46,8 @@ void initialize() {
         }
     });
 
-    optical_sensor.set_integration_time(20);
-    optical_sensor.set_led_pwm(100);
+    optical_sensor.set_integration_time(10);
+    optical_sensor.set_led_pwm(255);
 
     arm_controller.init();
 
@@ -69,9 +69,9 @@ void autonomous() {
 
     //quali
     if (sideColor == red){
-        qual_pos_blue();
+        qual_rush_pos_red();
     } else if (sideColor == blue){
-       qual_pos_blue();
+        qual_rush_pos_blue();
     }
 
     // elims
@@ -83,6 +83,9 @@ void autonomous() {
 }
 
 void opcontrol() {
+    if (arm_controller.getTargetPosition != Arm::position::CUSTOM) {// only if not not touching laddder at end of match
+        arm_controller.moveTo(Arm::position::RETRACT, true);
+    }
     master.clear();
     
     // console.println("Running op...");
