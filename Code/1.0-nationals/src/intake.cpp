@@ -90,14 +90,14 @@ void Intake::hold(bool async, int timeout){
 
     if (async) {
         pros::Task holdTask = pros::Task {[&] {
-            while (this->holdSensor.get_proximity() < 100){
-                pros::delay(20);
+            while (this->holdSensor.get_proximity() < 80){
+                pros::delay(10);
             }
             this->state = STOPPED;
         }};
     } else {
-        while (this->holdSensor.get_proximity() < 100){
-            pros::delay(20);
+        while (this->holdSensor.get_proximity() < 80){
+            pros::delay(10);
         }
         this->state = STOPPED;
     }

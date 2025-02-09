@@ -5,7 +5,7 @@
 
 #define INTAKE_SPEED 600
 #define OUTTAKE_SPEED -400
-#define INTAKE_LDB_SPEED 300
+#define INTAKE_LDB_SPEED 200
 
 class Intake {
     public:

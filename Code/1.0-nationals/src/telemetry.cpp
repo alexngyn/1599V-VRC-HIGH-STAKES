@@ -1,5 +1,6 @@
 #include "telemetry.h"
 #include "pros/rtos.hpp"
+#include "pros/screen.hpp"
 #include "setup.h"
 
 void flushBufferToFile(std::string name, std::vector<std::string>& buffer) {
@@ -50,27 +51,30 @@ void sdTelemetry() {
 }
 
 void screenTelemetry() {
+    pros::lcd::initialize(); // initialize brain screen
+
+    pros::delay(20); // wait for initialization
     while (true) {
         lemlib::Pose pose = chassis.getPose(); // get the current position of the robot
-        pros::screen::print(pros::E_TEXT_MEDIUM, 2, "x: %.3f    y: %.3f   theta: %.3f", pose.x, pose.y, pose.theta); // prints the x position
+        pros::screen::print(pros::E_TEXT_MEDIUM, 1, "x: %.3f    y: %.3f   theta: %.3f", pose.x, pose.y, pose.theta); // prints the x position
         //pros::screen::print(pros::E_TEXT_MEDIUM, 2, "", pose.y); // prints the y position
 
-        pros::screen::print(pros::E_TEXT_MEDIUM, 3, "Intake:  actual vel %d | target vel  %d | efficency %.1f \n", intake_motor.get_actual_velocity(), intake_motor.get_target_velocity(), intake_motor.get_efficiency());
+        pros::screen::print(pros::E_TEXT_MEDIUM, 2, "Intake: act vel %d | tgt vel  %d | eff %.1f \n", int(intake_motor.get_actual_velocity()), int(intake_motor.get_target_velocity()), intake_motor.get_efficiency());
 
         pros::screen::print(pros::E_TEXT_MEDIUM, 5, "left temp: %d %d %d", 
-                            dt_left.get_temperature(0),
-                            dt_left.get_temperature(1), 
-                            dt_left.get_temperature(2));
+                            int(dt_left.get_temperature(0)),
+                            int(dt_left.get_temperature(1)), 
+                            int(dt_left.get_temperature(2)));
 
         pros::screen::print(pros::E_TEXT_MEDIUM, 6, "right temp: %d %d %d", 
-                            dt_right.get_temperature(0),
-                            dt_right.get_temperature(1), 
-                            dt_right.get_temperature(2));
+                            int(dt_right.get_temperature(0)),
+                            int(dt_right.get_temperature(1)), 
+                            int(dt_right.get_temperature(2)));
 
-        pros::screen::print(pros::E_TEXT_MEDIUM, 7, "intake temp: %d", intake_motor.get_temperature());
-        pros::screen::print(pros::E_TEXT_MEDIUM, 8, "arm temp: %d %d", arm_motors.get_temperature(0), arm_motors.get_temperature(1));
+        pros::screen::print(pros::E_TEXT_MEDIUM, 7, "intake temp: %d", int(intake_motor.get_temperature()));
+        pros::screen::print(pros::E_TEXT_MEDIUM, 8, "arm temp: %d %d", int(arm_motors.get_temperature(0)), int(arm_motors.get_temperature(1)));
         
-        pros::lcd::print(0, "x: %.3f    y: %.3f   theta: %.3f", pose.x, pose.y, pose.theta); // prints the position
+        //pros::lcd::print(0, "x: %.3f    y: %.3f   theta: %.3f", pose.x, pose.y, pose.theta); // prints the position
         // pros::lcd::print(3, "left temp: %d %d %d", 
         //                     dt_left.get_temperature(0),
         //                     dt_left.get_temperature(1), 

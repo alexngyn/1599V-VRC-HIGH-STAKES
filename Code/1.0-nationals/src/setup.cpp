@@ -75,7 +75,7 @@ lemlib::ControllerSettings angularController ( // 5.2,0,45
     100, // small error range timeout, in milliseconds
     5, // large error range, in degrees
     500, // large error range timeout, in milliseconds
-    10 // maximum acceleration (slew) prevent wheel cuz we dont have encoder
+    8 // maximum acceleration (slew) prevent wheel cuz we dont have encoder
 );
 
 // vertical tracking wheel

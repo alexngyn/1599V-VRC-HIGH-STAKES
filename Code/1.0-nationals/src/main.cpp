@@ -69,9 +69,9 @@ void autonomous() {
 
     //quali
     if (sideColor == red){
-        qual_pos_red();
-    } else if (sideColor == blue){
         qual_pos_blue();
+    } else if (sideColor == blue){
+       qual_pos_blue();
     }
 
     // elims
