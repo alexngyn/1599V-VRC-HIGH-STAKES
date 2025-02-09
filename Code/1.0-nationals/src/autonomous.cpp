@@ -96,8 +96,8 @@ lemlib::Pose qual_pos_red_3 = offsetPose({-23.622, -47.244, 120}, 0);
 lemlib::Pose qual_pos_red_4 = offsetPose({-23.622-0, -23.622, 180}, -9);
 lemlib::Pose qual_pos_red_5 = offsetPose({-23.622+0, -23.622, 180}, -2); //x+2
 //lemlib::Pose qual_pos_red_6 = offsetPoint({-47.244, -5, NAN}, qual_pos_red_5, 0);  //51
-lemlib::Pose qual_pos_red_6 = offsetPose({-72, -1, -63}, 13.5);  //16 -61.97 degs
-lemlib::Pose qual_pos_red_6a = offsetPose({-72, -1, -63}, 28);
+lemlib::Pose qual_pos_red_6 = offsetPose({-72, -4, -63}, 18);  //16 -61.97 degs
+lemlib::Pose qual_pos_red_6a = offsetPose({-72, -4, -63}, 28);
 lemlib::Pose qual_pos_red_7 = {-49, -0, NAN};
 lemlib::Pose qual_pos_red_7a = offsetPose({-70,0, 270}, 11.5); //58.5 11.5
 
