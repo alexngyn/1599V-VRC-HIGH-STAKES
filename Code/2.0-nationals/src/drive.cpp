@@ -56,20 +56,26 @@ int scaleValue = 100;
  * (fast) for, the slower the robot will turn.
  */
 
-// We apply a sinusoidal curve (twice) to the joystick input to give finer
-// control at small inputs.
-static double _turnRemapping(double iturn) {
-	double denominator = sin(M_PI / 2 * CD_TURN_NONLINEARITY);
-	double firstRemapIteration =
-	    sin(M_PI / 2 * CD_TURN_NONLINEARITY * iturn) / denominator;
-	return sin(M_PI / 2 * CD_TURN_NONLINEARITY * firstRemapIteration) / denominator;
+static float expDriveCurve(float input, float scale, int type) {
+    if (scale != 0) {
+        if (type==0) {return int((powf(2.718, -(scale / 10)) + powf(2.718, (fabs(input) - 127) / 10) * (1 - powf(2.718, -(scale / 10)))) * input);}
+		if (type==1) {return int((powf(2.718, (((fabs(input)-127)*scale)/1000))) * input);}
+		//https://www.desmos.com/calculator/ntf6aqvcqf
+		// blue is 1 red is 0 purple is 2
+		if (type==2) { //sinusoidal curve (twice)
+			double denominator = sin(M_PI / 2 * scale);
+			double firstRemapIteration = sin(M_PI / 2 * scale * input/127) / denominator;
+			return int(sin(M_PI / 2 * scale * firstRemapIteration) / denominator * 127);
+		}
+    }
+    return std::round(input);
 }
 
 // On each iteration of the drive controller (where we aren't point turning) we
 // constrain the accumulators to the range [-1, 1].
 double quickStopAccumlator = 0.0;
 double negInertiaAccumlator = 0.0;
-static void _updateAccumulators() {
+static void updateAccumulators() {
 	if (negInertiaAccumlator > 1) {
 		negInertiaAccumlator -= 1;
 	} else if (negInertiaAccumlator < -1) {
@@ -109,7 +115,7 @@ std::pair<float, float> cheesyDrive(double ithrottle, double iturn) {
 	// 	linearCmd = prevThrottle - (DRIVE_SLEW * 2);
 	// }
 
-	double remappedTurn = _turnRemapping(iturn);
+	double remappedTurn = expDriveCurve(iturn, CD_TURN_NONLINEARITY, 2);
 
 	double left, right;
 	if (turnInPlace) {
@@ -142,23 +148,13 @@ std::pair<float, float> cheesyDrive(double ithrottle, double iturn) {
 		left += angularCmd;
 		right -= angularCmd;
 
-		_updateAccumulators();
+		updateAccumulators();
 	}
 
     return std::make_pair(left*127, right*127);
 
 	prevTurn = iturn;
 	prevThrottle = ithrottle;
-}
-
-float expDriveCurve(float input, float scale, int type) {
-    if (scale != 0) {
-        if (type==0) {return int((powf(2.718, -(scale / 10)) + powf(2.718, (fabs(input) - 127) / 10) * (1 - powf(2.718, -(scale / 10)))) * input);}
-		if (type==1) {return int((powf(2.718, (((fabs(input)-127)*scale)/1000))) * input);}
-		//https://www.desmos.com/calculator/sdcgzah5ya
-		// blue is 1 red is 0
-    }
-    return std::round(input);
 }
 
 std::pair<float, float> arcadeDrive(double ithrottle, double iturn, float curveGainY = 0, float curveGainX = 0, int curveTypeY = 0, int curveTypeX = 0) {
@@ -182,7 +178,7 @@ std::pair<float, float> arcadeDrive(double ithrottle, double iturn, float curveG
 		linearCmd = prevThrottle - (DRIVE_SLEW * 2);
 	}
 
-	double remappedTurn = _turnRemapping(iturn);
+	double remappedTurn = turnRemapping(iturn);
 
 	double left, right;
 	if (turnInPlace) {
@@ -214,7 +210,7 @@ std::pair<float, float> arcadeDrive(double ithrottle, double iturn, float curveG
 		left += angularCmd;
 		right -= angularCmd;
 
-		_updateAccumulators();
+		updateAccumulators();
 	}
 
     return std::make_pair(left*127, right*127);
@@ -254,8 +250,8 @@ void drive() {
         // auto [left, right] = cheesyDrive(power, turn);
 		// auto [left, right] = arcadeDrive(power, turn, 6.2,4.2,1,0); //14.6
 
-		auto [left, right] = arcade(power, turn, 6.2,4.2,1,0); //14.6
-        auto[sleft, sright] = scale(left, right, scaleValue);
+		auto [left, right] = arcade(power, turn, 6.2,4.2, 1, 0); //14.6
+        auto [sleft, sright] = scale(left, right, scaleValue);
 
 	    dt_left.move(sleft);
 	    dt_right.move(sright);
