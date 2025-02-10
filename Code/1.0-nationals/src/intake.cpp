@@ -58,15 +58,13 @@ void Intake::ejectRing(){
     this->motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     pros::delay(0);
     this->motor.brake();
-    pros::delay(400);
+    pros::delay(200);
     this->motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 }
 
 void Intake::colorSort(){ // private function
-    pros::c::optical_rgb_s_t rgb_value;
-    rgb_value = this->sortSensor.get_rgb();
     if (this->sort == SortState::RED){
-        if (rgb_value.blue>410 //&& this->sortSensor.get_hue()<=250
+        if (this->sortSensor.get_hue()>200 && this->sortSensor.get_hue()<=250
         && this->sortSensor.get_proximity() > 80){   //TUNE PROXIMITY // >0
             if (this->arm.getTargetPosition() == Arm::position::INTAKE){
                 this->arm.moveTo(Arm::position::RETRACT);
@@ -76,8 +74,8 @@ void Intake::colorSort(){ // private function
         }
     }
     else if (this->sort == SortState::BLUE){
-        if (rgb_value.red>750
-        && this->sortSensor.get_proximity() > 80) {  //TUNE PROXIMITY //<40
+        if ((this->sortSensor.get_hue()<20 || this->sortSensor.get_hue()>=350
+        && this->sortSensor.get_proximity() > 80)) {  //TUNE PROXIMITY //<40
             if (this->arm.getTargetPosition() == Arm::position::INTAKE){
                 this->arm.moveTo(Arm::position::RETRACT);
                 ejectRing();
@@ -85,7 +83,6 @@ void Intake::colorSort(){ // private function
             } else { ejectRing(); }
         }
     }
-
 }
 
 void Intake::hold(bool async, int timeout){

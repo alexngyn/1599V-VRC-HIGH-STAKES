@@ -19,7 +19,7 @@ void writeToBuffer(const std::string& data, std::string name, std::vector<std::s
     buffer.push_back(data + "\n");
     if (buffer.size() >= 500) { //20ms*25size is every 500ms
         flushBufferToFile(name, buffer);
-        pros::delay(60000);
+        pros::delay(100000);
     }
 }
 
@@ -52,7 +52,6 @@ void sdTelemetry() {
 
 void screenTelemetry() {
     pros::lcd::initialize(); // initialize brain screen
-    pros::c::optical_rgb_s_t rgb_value;
 
     pros::delay(20); // wait for initialization
     while (true) {
@@ -75,8 +74,21 @@ void screenTelemetry() {
         pros::screen::print(pros::E_TEXT_MEDIUM, 7, "intake temp: %d", int(intake_motor.get_temperature()));
         pros::screen::print(pros::E_TEXT_MEDIUM, 8, "arm temp: %d %d", int(arm_motors.get_temperature(0)), int(arm_motors.get_temperature(1)));
         
-        rgb_value = optical_sensor.get_rgb();
-        pros::screen::print(pros::E_TEXT_MEDIUM, 3, "optical: %lf %lf %lf %d", rgb_value.red, rgb_value.green, rgb_value.blue, int(optical_sensor.get_proximity()));
+        //pros::lcd::print(0, "x: %.3f    y: %.3f   theta: %.3f", pose.x, pose.y, pose.theta); // prints the position
+        // pros::lcd::print(3, "left temp: %d %d %d", 
+        //                     dt_left.get_temperature(0),
+        //                     dt_left.get_temperature(1), 
+        //                     dt_left.get_temperature(2));
+        // pros::lcd::print(4, "right temp: %d %d %d", 
+        //                     dt_right.get_temperature(0),
+        //                     dt_right.get_temperature(1), 
+        //                     dt_right.get_temperature(2));
+        // pros::lcd::print(5, "intake temp: %d", intake_motor.get_temperature());
+        // pros::lcd::print(6, "arm temp: %d %d", arm_motors.get_temperature(0), arm_motors.get_temperature(1));
+        
+        
+        //pros::lcd::print(2, "Theta: %f", pose.theta);
+        //pros::lcd::print(0, "%s %s auton", sideColor == color::red ? "red" : "blue"); // 0-2 0-14
 
         switch (intake_controller.getState()) {
             case Intake::SortState::BLUE: master.print(1, 1, "%s", "BLUE"); break;
