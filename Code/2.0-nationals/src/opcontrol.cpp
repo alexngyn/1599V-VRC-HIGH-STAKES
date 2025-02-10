@@ -1,4 +1,5 @@
 #include "arm.h"
+#include "pros/misc.h"
 #include "setup.h"
 
 int sgn (float number) { return 1 ? number >= 0 : -1; }
@@ -38,9 +39,9 @@ void piston(){
             clamp_solenoid.extend(); 
         }
 
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
-            intake_solenoid.toggle();
-        }
+        // if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+        //     intake_solenoid.toggle();
+        // }
         pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
     }
 }
@@ -52,7 +53,12 @@ void topmech() {
         else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {arm_controller.moveTo(Arm::position::RETRACT);}
         //else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {arm_controller.moveTo(Arm::position::CLIMB);}
         else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {arm_controller.togglePosition(Arm::position::INTAKE, 
+                                                                                                                    Arm::position::UP,
                                                                                                                     Arm::position::SCORE_NEUTRAL);}
+
+        else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {arm_controller.togglePosition(Arm::position::INTAKE, 
+                                                                                                                        Arm::position::SCORE_NEUTRAL,
+                                                                                                                        Arm::position::SCORE_ALLIANCE);}
 
         pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
         //on vexnet: 30ms, on bluetooth, delay 50ms

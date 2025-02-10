@@ -29,6 +29,14 @@ lemlib::Pose mirrorPose(lemlib::Pose pose) {
     return {-pose.x, pose.y, -pose.theta};
 }
 
+void moveStraight(float length, int timeout, lemlib::MoveToPointParams params) {
+    if (chassis.isInMotion()) chassis.waitUntilDone();
+    params.forwards = length > 0;
+    lemlib::Pose pose = chassis.getPose();
+    chassis.moveToPoint(pose.x + length * sin(lemlib::degToRad(pose.theta)),
+                           pose.y + length * cos(lemlib::degToRad(pose.theta)), timeout, params);
+}
+
 //======================= pid tuning =======================
 
 void pidtune() {

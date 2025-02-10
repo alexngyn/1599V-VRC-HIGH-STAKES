@@ -242,9 +242,9 @@ std::pair<float, float> scale(float left, float right, int s = 100) {
 
 void drive() {
 	while (true) {
-        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
             scaleValue += 10;
-        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+        } else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
             scaleValue -= 10;
         }
 

@@ -63,7 +63,7 @@ void screenTelemetry() {
 
         pros::screen::print(pros::E_TEXT_MEDIUM, 2, "Intake: act vel %d | tgt vel  %d | eff %.1f \n", int(intake_motor.get_actual_velocity()), int(intake_motor.get_target_velocity()), intake_motor.get_efficiency());
 
-        pros::screen::print(pros::E_TEXT_MEDIUM, 3, "optical: %d %d %d %d", int(optical_sensor.get_hue()), int(optical_sensor.get_saturation()), int(optical_sensor.get_brightness()), int(optical_sensor.get_proximity()));
+        pros::screen::print(pros::E_TEXT_MEDIUM, 3, "optical: %02d %03.1f %03.1f %d", int(optical_sensor.get_hue()), int(optical_sensor.get_saturation()), int(optical_sensor.get_brightness()), int(optical_sensor.get_proximity()));
 
         pros::screen::print(pros::E_TEXT_MEDIUM, 5, "left temp: %d %d %d", 
                             int(dt_left.get_temperature(0)),
