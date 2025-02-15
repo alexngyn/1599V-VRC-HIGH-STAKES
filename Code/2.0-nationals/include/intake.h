@@ -33,7 +33,8 @@ class Intake {
         IntakeState state = STOPPED;
         SortState sort = OFF;
 
-        void ejectRing();
+        void ejectRingUp();
+        void ejectRingDown();
         void colorSort();
 
         pros::Task task = pros::Task {[&] {
@@ -58,7 +59,7 @@ class Intake {
                     } else {
                         this->motor.move_velocity(INTAKE_SPEED);
                     }
-                    //if (!(sort==OFF)) { colorSort(); }
+                    if (!(sort==OFF)) { colorSort(); }
                     
                 } else if(this->state == OUTTAKE){
                     this->motor.move_velocity(OUTTAKE_SPEED);

@@ -485,6 +485,7 @@ lemlib::Pose skills_33 = {16, -16, 135};
 lemlib::Pose skills_34 = {14, 14, NAN};
 void skills() {
     sideColor = color::red;
+    intake_controller.setState(Intake::SortState::RED);
     chassis.setPose(skills_0.x, skills_0.y, skills_0.theta);
     
     intake_controller.set(Intake::IntakeState::INTAKING);

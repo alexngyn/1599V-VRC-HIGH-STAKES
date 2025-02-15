@@ -1,4 +1,5 @@
 #include "intake.h"
+#include "setup.h"
 
 /**
     * @brief Construct a new Intake:: Intake object
@@ -52,37 +53,47 @@ Intake::SortState Intake::getState(){
 //     this->motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 // }
 
-void Intake::ejectRing(){
+void Intake::ejectRingUp(){
+    master.rumble("-");
     double initPos = this->motor.get_position();
 
-    this->motor.move_velocity(-300);
+    this->motor.move_velocity(-600);
+    pros::delay(100);
+    this->motor.move_velocity(600);
     pros::delay(100);
 }
 
+void Intake::ejectRingDown(){
+    master.rumble("-");
+    double initPos = this->motor.get_position();
+
+    this->motor.move_velocity(-600);
+    pros::delay(1200);
+}
+
 void Intake::colorSort(){ // private function
-    pros::c::optical_rgb_s_t rgb_value;
-    rgb_value = this->sortSensor.get_rgb();
+    // pros::c::optical_rgb_s_t rgb_value;
+    // rgb_value = this->sortSensor.get_rgb();
+    if (this->sortSensor.get_proximity() > 150) {
     if (this->sort == SortState::RED){
-        if (rgb_value.blue>410 //&& this->sortSensor.get_hue()<=250
-        && this->sortSensor.get_proximity() > 80){   //TUNE PROXIMITY // >0
+        if (this->sortSensor.get_hue()>150 && this->sortSensor.get_hue()<280) {  
             if (this->arm.getTargetPosition() == Arm::position::INTAKE){
                 this->arm.moveTo(Arm::position::RETRACT);
-                ejectRing();
+                ejectRingDown();
                 this->arm.moveTo(Arm::position::INTAKE);
-            } else { ejectRing(); }
+            } else { ejectRingUp(); }
         }
     }
     else if (this->sort == SortState::BLUE){
-        if (rgb_value.red>750
-        && this->sortSensor.get_proximity() > 80) {  //TUNE PROXIMITY //<40
+        if (this->sortSensor.get_hue()<40 || this->sortSensor.get_hue()>=320) { 
             if (this->arm.getTargetPosition() == Arm::position::INTAKE){
                 this->arm.moveTo(Arm::position::RETRACT);
-                ejectRing();
+                ejectRingDown();
                 this->arm.moveTo(Arm::position::INTAKE);
-            } else { ejectRing(); }
+            } else { ejectRingUp(); }
         }
     }
-
+    }
 }
 
 void Intake::hold(bool async, int timeout){

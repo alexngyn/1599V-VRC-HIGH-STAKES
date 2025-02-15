@@ -6,7 +6,7 @@
 
 void flushBufferToFile(std::string name, std::vector<std::string>& buffer) {
     std::string path = "/usd/log_" + name + ".txt";
-    FILE* file = fopen(path.c_str(), "w");
+    FILE* file = fopen(path.c_str(), "a"); //w or a
 
     for (const auto& data : buffer) {
         fprintf(file, "%s", data.c_str());
@@ -18,16 +18,17 @@ void flushBufferToFile(std::string name, std::vector<std::string>& buffer) {
 
 void writeToBuffer(const std::string& data, std::string name, std::vector<std::string>& buffer) {
     buffer.push_back(data + "\n");
-    if (buffer.size() >= 500) { //20ms*25size is every 500ms
+    if (buffer.size() >= 50) { //20ms*25size is every 500ms
         flushBufferToFile(name, buffer);
-        pros::delay(60000);
+        // pros::delay(60000);
     }
 }
 
 void sdTelemetry() {
     std::vector<std::string> poseBuffer;
     std::vector<std::string> tempBuffer;
-
+    fclose(fopen("pose_log.txt", "w")); // create new file
+    fclose(fopen("temp_log.txt", "w"));
 
     while (true) {
         lemlib::Pose pose = chassis.getPose(); // get the current position of the robot
@@ -63,8 +64,8 @@ void screenTelemetry() {
 
         pros::screen::print(pros::E_TEXT_MEDIUM, 2, "Intake: act vel %d | tgt vel  %d | eff %.1f \n", int(intake_motor.get_actual_velocity()), int(intake_motor.get_target_velocity()), intake_motor.get_efficiency());
 
-        pros::screen::print(pros::E_TEXT_MEDIUM, 3, "optical: %02d %03.1f %03.1f %d", int(optical_sensor.get_hue()), int(optical_sensor.get_saturation()), int(optical_sensor.get_brightness()), int(optical_sensor.get_proximity()));
-
+        pros::screen::print(pros::E_TEXT_MEDIUM, 3, "optical: %03d %03.1f %03.1f %03d", int(optical_sensor.get_hue()), optical_sensor.get_saturation(), optical_sensor.get_brightness(), optical_sensor.get_proximity());
+        // pros::screen::print(pros::E_TEXT_MEDIUM, 3, "optical: %d", optical_sensor.get_proximity());
         pros::screen::print(pros::E_TEXT_MEDIUM, 5, "left temp: %d %d %d", 
                             int(dt_left.get_temperature(0)),
                             int(dt_left.get_temperature(1)), 
