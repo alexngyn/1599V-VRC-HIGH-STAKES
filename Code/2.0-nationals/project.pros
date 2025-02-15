@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "skills",
+    "project_name": "elims",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -442,8 +442,8 @@
     "upload_options": {
       "after": "screen",
       "description": "bananas!",
-      "icon": "clawbot",
-      "slot": 3
+      "icon": "X",
+      "slot": 2
     },
     "use_early_access": false
   }
