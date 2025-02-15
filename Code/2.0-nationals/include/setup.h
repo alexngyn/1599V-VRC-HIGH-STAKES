@@ -51,7 +51,7 @@ extern pros::adi::DigitalOut indicator;
 extern pros::adi::AnalogIn selector;
 
 //LEDs
-#define LED_1_PORT 'H'
+#define LED_1_PORT 'F'
 #define LED_2_PORT 'G'
 #define LED_1_LENGTH 51
 #define LED_2_LENGTH 51

@@ -21,6 +21,12 @@ void intake () {
         } else if (!(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) || master.get_digital(pros::E_CONTROLLER_DIGITAL_R1))) {
             intake_controller.set(Intake::IntakeState::STOPPED);
         }
+        // if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+        //     intake_controller.hold(true);
+        //     // while (master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
+        //     //     pros::delay(20);
+        //     // }
+        // }
         pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
     }
 }
@@ -53,11 +59,11 @@ void topmech() {
         else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {arm_controller.moveTo(Arm::position::RETRACT);}
         //else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {arm_controller.moveTo(Arm::position::CLIMB);}
         else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {arm_controller.togglePosition(Arm::position::INTAKE, 
-                                                                                                                    Arm::position::UP,
+                                                                                                                    //Arm::position::UP,
                                                                                                                     Arm::position::SCORE_NEUTRAL);}
 
         else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {arm_controller.togglePosition(Arm::position::INTAKE, 
-                                                                                                                        Arm::position::SCORE_NEUTRAL,
+                                                                                                                        //Arm::position::SCORE_NEUTRAL,
                                                                                                                         Arm::position::SCORE_ALLIANCE);}
 
         pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);

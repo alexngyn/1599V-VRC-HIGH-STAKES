@@ -55,11 +55,8 @@ Intake::SortState Intake::getState(){
 void Intake::ejectRing(){
     double initPos = this->motor.get_position();
 
-    this->motor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    pros::delay(0);
-    this->motor.brake();
-    pros::delay(400);
-    this->motor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    this->motor.move_velocity(-300);
+    pros::delay(100);
 }
 
 void Intake::colorSort(){ // private function

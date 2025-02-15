@@ -87,7 +87,7 @@ void screenTelemetry() {
 
         pros::delay(100);
 
-        master.print(2, 1, "%d", scaleValue); break;
+        master.print(2, 1, "%03d", scaleValue);
 
         pros::delay(100);
     }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "api.h"  // IWYU pragma: keep
+//#include "intake.h"
 //#include "setup.h"
 
 class Arm {
@@ -19,7 +20,8 @@ class Arm {
             SCORE_NEUTRAL,
             SCORE_ALLIANCE,
             CLIMB,
-            CUSTOM
+            CUSTOM,
+            NaV // not a value
         };
 
         void moveTo(double angle, bool async = true, int timeout = 10000);
@@ -30,14 +32,15 @@ class Arm {
         double getTargetAngle();
         position getTargetPosition();
         void waitUntilDone(int timeout = 10000);
-        void togglePosition(position position1, position position2, position position3 = position::CUSTOM, 
-                            position position4 = position::CUSTOM,  position position5 = position::CUSTOM);
+        void togglePosition(position position1, position position2, position position3 = position::NaV, 
+                            position position4 = position::NaV,  position position5 = position::NaV);
         void init();
 
     private:
         pros::Rotation* rotation;
         pros::MotorGroup* motors;
         lemlib::PID pid;
+        //Intake intake;
 
         position targetPosition = position::RETRACT;
         double targetAngle = this->angleStringToAngle(); 

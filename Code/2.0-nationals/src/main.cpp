@@ -11,6 +11,8 @@ VBF Robotics
 #include "main.h" 
 #include "setup.h"
 
+#define AUTON_TYPE 0 // 0 for skills, 1 for qual rush, 2 for quali safe, 3 for elims, 4 foor not auton
+
 void initialize() {
     chassis.calibrate(); // calibrate the chassis
     arm_rotational_sensor.reset(); // reset the arm sensor
@@ -32,17 +34,14 @@ void initialize() {
         while (pros::competition::is_disabled()) {
             if (selector.get_value() < 100) {
                 sideColor = color::blue;
+                intake_controller.setState(Intake::SortState::BLUE);
                 indicator.set_value(true);
             } else {
                 sideColor = color::red;
+                intake_controller.setState(Intake::SortState::RED);
                 indicator.set_value(false);
             }
             pros::delay(100);
-        }
-        switch (sideColor) {
-            case color::blue: intake_controller.setState(Intake::SortState::BLUE); break;
-            case color::red: intake_controller.setState(Intake::SortState::RED); break;
-            default: intake_controller.setState(Intake::SortState::OFF); break;
         }
     });
 
@@ -62,24 +61,27 @@ void autonomous() {
     // partner.print(0, 0, "auton start"); // 0-2 0-14
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 
-    // uncommment the auton you want to run
-
     // pidtune();
-    // skills();
 
-    //quali
-    if (sideColor == red){
-        qual_rush_pos_red();
-    } else if (sideColor == blue){
-        qual_rush_pos_blue();
+    if (AUTON_TYPE == 0) {
+        skills();
+    } else if (AUTON_TYPE == 1) { // quali rush
+        if (sideColor == red){
+            qual_rush_pos_red();
+        } else if (sideColor == blue){
+            qual_rush_pos_blue();
+        }
+    } else if (AUTON_TYPE == 2) { // quali safe
+        qual_safe_pos_blue();
+    } else if (AUTON_TYPE == 3) { // elims rush
+        if (sideColor == red){
+            elims_rush_pos_red();
+        } else if (sideColor == blue){
+            elims_rush_pos_blue();
+        }
     }
 
-    // elims
-    // if (sideColor == red){
-    //     elims_pos_red();
-    // } else if (sideColor == blue){
-    //     elims_pos_blue();
-    // }
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 }
 
 void opcontrol() {

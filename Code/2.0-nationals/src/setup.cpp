@@ -79,7 +79,7 @@ lemlib::ControllerSettings angularController ( // 5.2,0,45
 );
 
 // vertical tracking wheel
-lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, -0);
+lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, 1.1);
 
 // sensors for odometry
 lemlib::OdomSensors sensors {

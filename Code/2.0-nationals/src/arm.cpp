@@ -80,6 +80,7 @@ void Arm::moveTo(position pos, bool async, int timeout) {
 }
 
 void Arm::changeAngle(double deltaAngle) {
+    this->targetPosition = position::CUSTOM;
     this->moveTo(this->targetAngle + deltaAngle);
 }
 
@@ -117,18 +118,33 @@ double Arm::angleStringToAngle() {
 
 void Arm::togglePosition(position position1, position position2, 
                          position position3, position position4, position position5) {
-    if (this->targetPosition == position1) {
+
+    position prevPosition = this->targetPosition;
+    if (prevPosition == position1) {
         this->targetPosition = position2;
-    } else if (this->targetPosition == position2) {
-        if (position3 != position::CUSTOM) {this->targetPosition = position3;}
+    } else if (prevPosition == position2) {
+        if (position3 != position::NaV) {this->targetPosition = position3;}
         else {this->targetPosition = position1;}
-    } else if (this->targetPosition == position3) {
-        if (position4 != position::CUSTOM) {this->targetPosition = position4;}
+    } else if (prevPosition == position3) {
+        if (position4 != position::NaV) {this->targetPosition = position4;}
+        else {prevPosition = position1;}
+    } else if (prevPosition == position4) {
+        if (position5 != position::NaV) {this->targetPosition = position5;}
         else {this->targetPosition = position1;}
-    } else if (this->targetPosition == position4) {
-        if (position5 != position::CUSTOM) {this->targetPosition = position5;}
-        else {this->targetPosition = position1;}
+    } else if (prevPosition == position::CUSTOM ) {
+        this->targetPosition = position1;
     } else {
         this->targetPosition = position1;
+        
     }
+
+    // Run unjam function if moving from INTAKE to UP or SCORE positions
+    // if ((this->targetPosition == position::UP || this->targetPosition == position::SCORE_NEUTRAL || this->targetPosition == position::SCORE_ALLIANCE) && prevPosition == position::INTAKE) {
+    //     // Implement the unjam logic here
+
+    //     this->motors->move_relative(-10, 100); // Move back slightly
+    //     pros::delay(100);
+    //     this->motors->move_relative(10, 100); // Move forward slightly
+    //     pros::delay(100);
+    // }
 }

@@ -8,26 +8,10 @@
  */
 #define DRIVE_DEADBAND 0.1f
 #define DRIVE_SLEW 0.08f
-#define CD_TURN_NONLINEARITY                                                   \
-  0.65 // This factor determines how fast the wheel
-       // traverses the "non linear" sine curve
-#define CD_NEG_INERTIA_SCALAR 4.0
-#define CD_SENSITIVITY 0.5
+#define CD_NEG_INERTIA_SCALAR 4.0*127
+#define CD_SENSITIVITY 0.5*127
 
-int scaleValue = 100;
-
-// Unused constants from 254's implementation
-// static double kLowWheelNonLinearity = 0.5;
-// static double kHighNegInertiaScalar = 4.0;
-// static double kLowNegInertiaThreshold = 0.65;
-// static double kLowNegInertiaTurnScalar = 3.5;
-// static double kLowNegInertiaCloseScalar = 4.0;
-// static double kLowNegInertiaFarScalar = 5.0;
-// static double kHighSensitivity= 0.95;
-// static double kLowSensitiity = 1.3;
-// static double kQuickStopDeadband = 0.2;
-// static double kQuickStopWeight = 0.1;
-// static double kQuickStopScalar = 5.0;
+int scaleValue = 100; // for practice only
 
 /**
  * The "curvature" drive control written by FRC team 254.
@@ -68,7 +52,7 @@ static float expDriveCurve(float input, float scale, int type) {
 			return int(sin(M_PI / 2 * scale * firstRemapIteration) / denominator * 127);
 		}
     }
-    return std::round(input);
+    return input;
 }
 
 // On each iteration of the drive controller (where we aren't point turning) we
@@ -95,34 +79,93 @@ static void updateAccumulators() {
 
 double prevTurn = 0.0;
 double prevThrottle = 0.0;
-std::pair<float, float> cheesyDrive(double ithrottle, double iturn) {
-	ithrottle /= 127;
-	iturn /= 127;
+// std::pair<float, float> cheesyDrive(double ithrottle, double iturn) {
+// 	ithrottle /= 127;
+// 	iturn /= 127;
+
+//     bool turnInPlace = false;
+// 	double linearCmd = ithrottle;
+// 	if (fabs(ithrottle) < DRIVE_DEADBAND && fabs(iturn) > DRIVE_DEADBAND) {
+// 		// The controller joysticks can output values near zero when they are
+// 		// not actually pressed. In the case of small inputs like this, we
+// 		// override the throttle value to 0.
+// 		linearCmd = 0.0;
+// 		turnInPlace = true;
+// 	} //else if (ithrottle - prevThrottle > DRIVE_SLEW) {
+// 	// 	linearCmd = prevThrottle + DRIVE_SLEW;
+// 	// } else if (ithrottle - prevThrottle < -(DRIVE_SLEW * 2)) {
+// 	// 	// We double the drive slew rate for the reverse direction to get
+// 	// 	// faster stopping.
+// 	// 	linearCmd = prevThrottle - (DRIVE_SLEW * 2);
+// 	// }
+
+// 	double remappedTurn = expDriveCurve(iturn, CD_TURN_NONLINEARITY, 2);
+
+// 	double left, right;
+// 	if (turnInPlace) {
+// 		// The remappedTurn value is squared when turning in place. This
+// 		// provides even more fine control over small speed values.
+// 		left = remappedTurn * std::abs(remappedTurn / 127);
+// 		right = -remappedTurn * std::abs(remappedTurn / 127);
+
+// 		// The FRC Cheesy Drive Implementation calculated the
+// 		// quickStopAccumulator here:
+// 		// if (Math.abs(linearPower) < 0.2) {
+// 		// 	double alpha = 0.1;
+// 		// 	quickStopAccumulator = (1 - alpha) * quickStopAccumulator
+// 		// 			+ alpha * Util.limit(wheel, 1.0) * 5;
+// 		// }
+// 		// But I apparently left that out of my implementation? Seemed to work
+// 		// without it though.
+// 	} else {
+// 		double negInertiaPower = (iturn - prevTurn) * CD_NEG_INERTIA_SCALAR;
+// 		negInertiaAccumlator += negInertiaPower;
+
+// 		double angularCmd =
+// 		    fabs(linearCmd) *  // the more linear vel, the faster we turn
+// 		        (remappedTurn + negInertiaAccumlator) *
+// 		        CD_SENSITIVITY -  // we can scale down the turning amount by a
+// 		                          // constant
+// 		    quickStopAccumlator;
+
+// 		right = left = linearCmd;
+// 		left += angularCmd;
+// 		right -= angularCmd;
+
+// 		updateAccumulators();
+// 	}
+
+//     return std::make_pair(left*127, right*127);
+
+// 	prevTurn = iturn;
+// 	prevThrottle = ithrottle;
+// }
+
+std::pair<float, float> arcadeDrive(float throttle, float turn, float curveGainY = 0, float curveGainX = 0,  float curveGainX2 = 0, int curveTypeY = 0, int curveTypeX = 0) {
 
     bool turnInPlace = false;
-	double linearCmd = ithrottle;
-	if (fabs(ithrottle) < DRIVE_DEADBAND && fabs(iturn) > DRIVE_DEADBAND) {
+	if (fabs(throttle) < DRIVE_DEADBAND && fabs(turn) > DRIVE_DEADBAND) {
 		// The controller joysticks can output values near zero when they are
 		// not actually pressed. In the case of small inputs like this, we
 		// override the throttle value to 0.
-		linearCmd = 0.0;
 		turnInPlace = true;
-	} //else if (ithrottle - prevThrottle > DRIVE_SLEW) {
+	} 
+	// else if (ithrottle - prevThrottle > DRIVE_SLEW) { // tune da slew
 	// 	linearCmd = prevThrottle + DRIVE_SLEW;
 	// } else if (ithrottle - prevThrottle < -(DRIVE_SLEW * 2)) {
 	// 	// We double the drive slew rate for the reverse direction to get
 	// 	// faster stopping.
 	// 	linearCmd = prevThrottle - (DRIVE_SLEW * 2);
 	// }
-
-	double remappedTurn = expDriveCurve(iturn, CD_TURN_NONLINEARITY, 2);
+	// else {linearCmd = expDriveCurve(throttle, curveGainY, curveTypeY);;}
 
 	double left, right;
 	if (turnInPlace) {
 		// The remappedTurn value is squared when turning in place. This
 		// provides even more fine control over small speed values.
-		left = remappedTurn * std::abs(remappedTurn);
-		right = -remappedTurn * std::abs(remappedTurn);
+		float angularCmd = expDriveCurve(turn, curveGainX2, curveTypeX);
+		left = angularCmd;
+		right = -angularCmd;
 
 		// The FRC Cheesy Drive Implementation calculated the
 		// quickStopAccumulator here:
@@ -134,89 +177,29 @@ std::pair<float, float> cheesyDrive(double ithrottle, double iturn) {
 		// But I apparently left that out of my implementation? Seemed to work
 		// without it though.
 	} else {
-		double negInertiaPower = (iturn - prevTurn) * CD_NEG_INERTIA_SCALAR;
-		negInertiaAccumlator += negInertiaPower;
+		// double negInertiaPower = (turn - prevTurn) * CD_NEG_INERTIA_SCALAR;
+		// negInertiaAccumlator += negInertiaPower;
 
-		double angularCmd =
-		    fabs(linearCmd) *  // the more linear vel, the faster we turn
-		        (remappedTurn + negInertiaAccumlator) *
-		        CD_SENSITIVITY -  // we can scale down the turning amount by a
-		                          // constant
-		    quickStopAccumlator;
+		// double angularCmd =
+		//         (remappedTurn + negInertiaAccumlator) *
+		//         CD_SENSITIVITY -  // we can scale down the turning amount by a
+		//                           // constant
+		//     quickStopAccumlator;
 
-		right = left = linearCmd;
-		left += angularCmd;
-		right -= angularCmd;
-
-		updateAccumulators();
-	}
-
-    return std::make_pair(left*127, right*127);
-
-	prevTurn = iturn;
-	prevThrottle = ithrottle;
-}
-
-std::pair<float, float> arcadeDrive(double ithrottle, double iturn, float curveGainY = 0, float curveGainX = 0, int curveTypeY = 0, int curveTypeX = 0) {
-
-	ithrottle = expDriveCurve(ithrottle/127, curveGainY, curveTypeY);
-	iturn = expDriveCurve(iturn/127, curveGainX, curveTypeX);
-
-    bool turnInPlace = false;
-	double linearCmd = ithrottle;
-	if (fabs(ithrottle) < DRIVE_DEADBAND && fabs(iturn) > DRIVE_DEADBAND) {
-		// The controller joysticks can output values near zero when they are
-		// not actually pressed. In the case of small inputs like this, we
-		// override the throttle value to 0.
-		linearCmd = 0.0;
-		turnInPlace = true;
-	} else if (ithrottle - prevThrottle > DRIVE_SLEW) { // tune da slew
-		linearCmd = prevThrottle + DRIVE_SLEW;
-	} else if (ithrottle - prevThrottle < -(DRIVE_SLEW * 2)) {
-		// We double the drive slew rate for the reverse direction to get
-		// faster stopping.
-		linearCmd = prevThrottle - (DRIVE_SLEW * 2);
-	}
-
-	double remappedTurn = turnRemapping(iturn);
-
-	double left, right;
-	if (turnInPlace) {
-		// The remappedTurn value is squared when turning in place. This
-		// provides even more fine control over small speed values.
-		left = remappedTurn * std::abs(remappedTurn);
-		right = -remappedTurn * std::abs(remappedTurn);
-
-		// The FRC Cheesy Drive Implementation calculated the
-		// quickStopAccumulator here:
-		// if (Math.abs(linearPower) < 0.2) {
-		// 	double alpha = 0.1;
-		// 	quickStopAccumulator = (1 - alpha) * quickStopAccumulator
-		// 			+ alpha * Util.limit(wheel, 1.0) * 5;
-		// }
-		// But I apparently left that out of my implementation? Seemed to work
-		// without it though.
-	} else {
-		double negInertiaPower = (iturn - prevTurn) * CD_NEG_INERTIA_SCALAR;
-		negInertiaAccumlator += negInertiaPower;
-
-		double angularCmd =
-		        (remappedTurn + negInertiaAccumlator) *
-		        CD_SENSITIVITY -  // we can scale down the turning amount by a
-		                          // constant
-		    quickStopAccumlator;
+		float angularCmd = expDriveCurve(turn, curveGainX, curveTypeX);; 
+		float linearCmd = expDriveCurve(throttle, curveGainY, curveTypeY);
 
 		right = left = linearCmd;
 		left += angularCmd;
 		right -= angularCmd;
 
-		updateAccumulators();
+		//updateAccumulators();
 	}
 
-    return std::make_pair(left*127, right*127);
+    return std::make_pair(left, right);
 
-	prevTurn = iturn;
-	prevThrottle = ithrottle;
+	// prevTurn = turn;
+	// prevThrottle = throttle;
 }
 
 std::pair<float, float> arcade(int throttle, int turn, float curveGainY = 0, float curveGainX = 0, int curveTypeY = 0, int curveTypeX = 0) {
@@ -248,9 +231,11 @@ void drive() {
 		double turn = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
         // auto [left, right] = cheesyDrive(power, turn);
-		// auto [left, right] = arcadeDrive(power, turn, 6.2,4.2,1,0); //14.6
+		auto [left, right] = arcadeDrive(power, turn, 
+													6.2, 4.2, 5.8,
+													1, 0); //14.6
 
-		auto [left, right] = arcade(power, turn, 6.2,4.2, 1, 0); //14.6
+		// auto [left, right] = arcade(power, turn, 6.2,4.2, 1, 0); //14.6
         auto [sleft, sright] = scale(left, right, scaleValue);
 
 	    dt_left.move(sleft);

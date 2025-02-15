@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "quali",
+    "project_name": "skills",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -442,8 +442,8 @@
     "upload_options": {
       "after": "screen",
       "description": "bananas!",
-      "icon": "pizza",
-      "slot": 1
+      "icon": "clawbot",
+      "slot": 3
     },
     "use_early_access": false
   }
