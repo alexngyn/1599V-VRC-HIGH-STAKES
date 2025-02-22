@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "qualis",
+    "project_name": "smth",
     "target": "v5",
     "templates": {
       "LemLib": {

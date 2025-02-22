@@ -58,7 +58,7 @@ void Intake::ejectRingUp(){
     double initPos = this->motor.get_position();
 
     this->motor.move_velocity(-600);
-    pros::delay(100);
+    pros::delay(200);
     this->motor.move_velocity(600);
     pros::delay(100);
 }
@@ -67,16 +67,20 @@ void Intake::ejectRingDown(){
     master.rumble("-");
     double initPos = this->motor.get_position();
 
-    this->motor.move_velocity(-600);
-    pros::delay(1200);
+    this->motor.move_velocity(600);
+    pros::delay(80);
+     this->motor.move_velocity(-600);
+    pros::delay(100);
+    this->motor.move_velocity(600);
+    pros::delay(100);
 }
 
 void Intake::colorSort(){ // private function
     // pros::c::optical_rgb_s_t rgb_value;
     // rgb_value = this->sortSensor.get_rgb();
-    if (this->sortSensor.get_proximity() > 150) {
+    if (this->sortSensor.get_proximity() > 100) {
     if (this->sort == SortState::RED){
-        if (this->sortSensor.get_hue()>150 && this->sortSensor.get_hue()<280) {  
+        if (this->sortSensor.get_hue()>100 && this->sortSensor.get_hue()<300) {  
             if (this->arm.getTargetPosition() == Arm::position::INTAKE){
                 this->arm.moveTo(Arm::position::RETRACT);
                 ejectRingDown();

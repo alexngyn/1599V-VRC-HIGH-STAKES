@@ -18,54 +18,61 @@ Arm::Arm(pros::MotorGroup* motors, pros::Rotation* rotation, lemlib::PID pid)
 }  
 
 void Arm::init() {
-    pros::Task task = pros::Task {[&] {
-    double error;
-    double vel;
-    while (true) {  
+    this->task = new pros::Task([&] {
+        double error;
+        double vel;
+        while (true) {  
+            //std::printf("%d %f %f %f \n", pros::millis(), this->getAngle(), this->targetAngle, vel);
 
+            this->targetAngle = angleStringToAngle(); 
 
-        std::printf("%d %f %f %f \n", pros::millis(), this->getAngle(), this->targetAngle, vel);
-        
-        this->targetAngle = angleStringToAngle(); 
+            if (this->targetAngle == this->targetAngle) { // check if not NAN
+                error = this->targetAngle - this->getAngle();
 
-        error = this->targetAngle - this->getAngle();
+                if (std::fabs(error) <= 1 && this->targetPosition == position::INTAKE) {
+                    this->currentState = Arm::state::HOLD;
+                } else if (std::fabs(error) <= 2.5 && this->targetPosition == position::RETRACT) {
+                    this->currentState = Arm::state::HOLD;
+                } else if (std::fabs(error) <= 4 && (this->targetPosition != position::INTAKE || this->targetPosition != position::RETRACT)) {
+                    this->currentState = Arm::state::HOLD;
+                } else {
+                    this->currentState = Arm::state::MOVING;
+                }
 
-        if (std::fabs(error) <= 1 && this->targetPosition == position::INTAKE) {
-            this->currentState = Arm::state::HOLD;
-        } else if (std::fabs(error) <= 2.5 && this->targetPosition == position::RETRACT) {
-            this->currentState = Arm::state::HOLD;
-        } else if (std::fabs(error) <= 4 && (this->targetPosition != position::INTAKE || this->targetPosition != position::RETRACT)) {
-            this->currentState = Arm::state::HOLD;
-        } else {
-            this->currentState = Arm::state::MOVING;
-        }
+                if (this->getAngle() > -90) {this->targetAngle=-110;}// soft limits 
 
-        //if (this->getAngle() > -100) {this->targetAngle=-200;}// soft limits 
+                if (this->currentState == Arm::state::MOVING) {
+                    vel = this->pid.update(error);
 
-        if (this->currentState == Arm::state::MOVING) {
-            vel = this->pid.update(error);
+                    //if ((vel > 0 && this -> getAngle() < 180) || (vel < 0 && this -> getAngle() > 180)) { vel *= UpwardGain; } else {vel *= DownwardGain; }
 
-            //if ((vel > 0 && this -> getAngle() < 180) || (vel < 0 && this -> getAngle() > 180)) { vel *= UpwardGain; } else {vel *= DownwardGain; }
+                } else if (this->currentState == Arm::state::HOLD) {
+                    vel = 0;
+                }
+
+                //std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, error);
+                //std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, vel);
+                pros::screen::print(pros::E_TEXT_MEDIUM, 4, "Arm: act pos %.1f | tgt pos %.1f | vel %.1f \n", this->getAngle(), this->targetAngle, vel);
+
+                this->motors->move(vel);
+            } // soft limits
             
-        } else if (this->currentState == Arm::state::HOLD) {
-            vel = 0;
+            pros::delay(20);
         }
+    } );
+}
 
-        //std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, error);
-        //std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, vel);
-        pros::screen::print(pros::E_TEXT_MEDIUM, 4, "Arm: act pos %.1f | tgt pos %.1f | vel %.1f \n", this->getAngle(), this->targetAngle, vel);
-
-        // FILE* usd_arm_file = fopen("/usd/log_arm.txt", "w");
-        // fprintf(usd_arm_file, "%.1f,%.1f,%.1f\n", this->getAngle(), this->targetAngle, vel);
-        // fclose(usd_arm_file);
-
-        //printf("%d,%.1f,%.1f,%.1f,%.1f\n", pros::millis(), this->getAngle(), this->targetAngle, error, vel);
-
-        this->motors->move(vel);
-
-        pros::delay(20);
-        }
-    }};;
+void Arm::setCustomSpeed(int speed) {
+    if (speed != 0) {
+        if (this->getAngle() > -90) { this->motors->brake();} else {
+        this->motors->move_velocity(speed);}
+        this->targetPosition = position::CUSTOM;
+        this->targetAngle = NAN;
+    } else if (targetAngle != targetAngle) { // if target angle is nan and speed is 0
+        this->motors->brake();
+        this->targetPosition = position::CUSTOM;
+        this->targetAngle = this->getAngle();
+    }
 }
 
 void Arm::moveTo(double angle, bool async, int timeout) {
@@ -107,12 +114,13 @@ void Arm::waitUntilDone(int timeout) {
 double Arm::angleStringToAngle() {
     switch (this->targetPosition) {
         case position::RETRACT: return -340;
-        case position::INTAKE: return -308;
+        case position::INTAKE: return -308;//08
         case position::UP: return -220;
         case position::SCORE_NEUTRAL: return -190;
         case position::SCORE_ALLIANCE: return -130;
+        case position::TIP: return -100;
         //case position::CLIMB: return -170;
-        default: return targetAngle;
+        default: return this->targetAngle;
     }
 }
 

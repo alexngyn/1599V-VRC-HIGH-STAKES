@@ -64,7 +64,11 @@ void topmech() {
 
         else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {arm_controller.togglePosition(Arm::position::INTAKE, 
                                                                                                                         //Arm::position::SCORE_NEUTRAL,
-                                                                                                                        Arm::position::SCORE_ALLIANCE);}
+                                                                                                                        Arm::position::SCORE_ALLIANCE,
+                                                                                                                        Arm::position::TIP);}
+
+        // else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) {arm_controller.setCustomSpeed(160);}
+        // else (arm_controller.setCustomSpeed(0));
 
         pros::delay(30 ? CONTROLLER_MODE == bluetooth : 50);
         //on vexnet: 30ms, on bluetooth, delay 50ms

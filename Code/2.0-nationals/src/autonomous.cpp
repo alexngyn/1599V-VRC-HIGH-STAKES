@@ -107,7 +107,7 @@ lemlib::Pose qual_rush_pos_red_0 = {-50.74,-58, 270};
 lemlib::Pose qual_rush_pos_red_1 = {-32, -58.5, 270};
 lemlib::Pose qual_rush_pos_red_2 = offsetPose({0, -47.24, 240}, -6);
 lemlib::Pose qual_rush_pos_red_3 = offsetPose({-23.622, -47.244, 120}, 2);
-lemlib::Pose qual_rush_pos_red_4 = offsetPose({-23.622-2, -23.622, 180}, -9);
+lemlib::Pose qual_rush_pos_red_4 = offsetPose({-23.622-0, -23.622, 180}, -9);
 lemlib::Pose qual_rush_pos_red_5 = offsetPose({-23.622+0, -23.622, 180}, -2);
 lemlib::Pose qual_rush_pos_red_6 = offsetPoint({-47.244-4, -4, NAN}, qual_rush_pos_red_5, 0);  //51
 lemlib::Pose qual_rush_pos_red_7 = offsetPose({-70, -4, 270}, 0);
@@ -129,7 +129,7 @@ void qual_rush_pos_red() {
     pros::delay(100);
 
     clamp_solenoid.retract(); //clamp mogo
-    pros::delay(50);
+    pros::delay(100);
     intake_controller.set(Intake::IntakeState::INTAKING);
     pros::delay(700);
 
@@ -152,52 +152,52 @@ void qual_rush_pos_red() {
 
     //alicence stake
 
-    intake_solenoid.extend();
-    arm_controller.moveTo(Arm::position::INTAKE);
-    chassis.turnToPoint(qual_rush_pos_red_6.x, qual_rush_pos_red_6.y, 1000, {}, false); // turn to stake
-    chassis.moveToPoint(qual_rush_pos_red_6.x, qual_rush_pos_red_6.y, 1000, {.forwards = true,.maxSpeed=96}, true); // go to stake
-    //chassis.turnToPoint(qual_rush_pos_red_7.x, qual_rush_pos_red_7.y, 1000, {.forwards=true,.maxSpeed=64}, true); // turn to stake
-    chassis.turnToHeading(qual_rush_pos_red_7.theta, 500);
+    // intake_solenoid.extend();
+    // arm_controller.moveTo(Arm::position::INTAKE);
+    // chassis.turnToPoint(qual_rush_pos_red_6.x, qual_rush_pos_red_6.y, 1000, {}, false); // turn to stake
+    // chassis.moveToPoint(qual_rush_pos_red_6.x, qual_rush_pos_red_6.y, 1000, {.forwards = true,.maxSpeed=96}, true); // go to stake
+    // //chassis.turnToPoint(qual_rush_pos_red_7.x, qual_rush_pos_red_7.y, 1000, {.forwards=true,.maxSpeed=64}, true); // turn to stake
+    // chassis.turnToHeading(qual_rush_pos_red_7.theta, 500);
     
-    chassis.moveToPose(qual_rush_pos_red_7a.x, qual_rush_pos_red_7a.y,qual_rush_pos_red_7a.theta, 1000, {.forwards = false,.maxSpeed=96}, false);
-    chassis.turnToHeading(qual_rush_pos_red_7.theta, 1000);
-    //intake_controller.holdldb(true,500);
-    pros::delay(500);
+    // chassis.moveToPose(qual_rush_pos_red_7a.x, qual_rush_pos_red_7a.y,qual_rush_pos_red_7a.theta, 1000, {.forwards = false,.maxSpeed=96}, false);
+    // chassis.turnToHeading(qual_rush_pos_red_7.theta, 1000);
+    // //intake_controller.holdldb(true,500);
+    // pros::delay(500);
 
+
+    // // intake_controller.set(Intake::IntakeState::OUTTAKE);
+    // // pros::delay(50);
+    // // intake_controller.set(Intake::IntakeState::STOPPED);
+
+
+
+
+    // // arm_controller.moveTo(Arm::position::INTAKE);
+    // // intake_controller.set(Intake::IntakeState::INTAKING);
+    // // pros::delay(3000);
 
     // intake_controller.set(Intake::IntakeState::OUTTAKE);
-    // pros::delay(50);
+    // pros::delay(200);
     // intake_controller.set(Intake::IntakeState::STOPPED);
+    // pros::delay(50);
+
+    // // arm_controller.moveTo(Arm::position::SCORE_ALLIANCE, true);
+    // // pros::delay(1000);
+
+    // //pros::delay(5000);
 
 
-
-
-    // arm_controller.moveTo(Arm::position::INTAKE);
-    // intake_controller.set(Intake::IntakeState::INTAKING);
-    // pros::delay(3000);
-
-    intake_controller.set(Intake::IntakeState::OUTTAKE);
-    pros::delay(200);
-    intake_controller.set(Intake::IntakeState::STOPPED);
-    pros::delay(50);
-
+    // // intake_controller.waitUntilDone();
+    // intake_solenoid.retract();
     // arm_controller.moveTo(Arm::position::SCORE_ALLIANCE, true);
-    // pros::delay(1000);
+    // pros::delay(800);
 
-    //pros::delay(5000);
+    // chassis.moveToPoint(qual_rush_pos_red_8.x, qual_rush_pos_red_8.y, 2000, {.forwards = false}, false); // go to ladder
 
-
-    // intake_controller.waitUntilDone();
-    intake_solenoid.retract();
-    arm_controller.moveTo(Arm::position::SCORE_ALLIANCE, true);
-    pros::delay(800);
-
-    chassis.moveToPoint(qual_rush_pos_red_8.x, qual_rush_pos_red_8.y, 2000, {.forwards = false}, false); // go to ladder
-
-    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-    chassis.moveToPoint(qual_rush_pos_red_9.x, qual_rush_pos_red_9.y, 2000, {.forwards = false}, true); // go to ladder
-    arm_controller.moveTo(-290);//move arm up along the way
-    // arm_controller.moveTo(Arm::position::RETRACT, true);
+    // chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    // chassis.moveToPoint(qual_rush_pos_red_9.x, qual_rush_pos_red_9.y, 2000, {.forwards = false}, true); // go to ladder
+    // arm_controller.moveTo(-290);//move arm up along the way
+    // // arm_controller.moveTo(Arm::position::RETRACT, true);
 
 }
 
@@ -225,7 +225,7 @@ void qual_rush_pos_blue() {
     pros::delay(100);
 
     clamp_solenoid.retract(); //clamp mogo
-    pros::delay(50);
+    pros::delay(100);
     intake_controller.set(Intake::IntakeState::INTAKING);
     pros::delay(700);
 
@@ -246,32 +246,32 @@ void qual_rush_pos_blue() {
 
     //alliance stake
 
-    intake_solenoid.extend();
-    arm_controller.moveTo(Arm::position::INTAKE);
-    chassis.turnToPoint(qual_rush_pos_blue_6.x, qual_rush_pos_blue_6.y, 1000, {}, false); // turn to stake
-    chassis.moveToPoint(qual_rush_pos_blue_6.x, qual_rush_pos_blue_6.y, 1000, {.forwards = true}, true); // go to stake
-    chassis.turnToPoint(qual_rush_pos_blue_7.x, qual_rush_pos_blue_7.y, 1000, {.forwards=true}, true); // turn to stake
-    intake_solenoid.retract();
-    chassis.moveToPoint(qual_rush_pos_blue_7.x, qual_rush_pos_blue_7.y, 1000, {.forwards = true}, false);
-   //intake_controller.holdldb(true);
-    //pros::delay(1000);
-    chassis.turnToHeading(qual_rush_pos_blue_7.theta, 500);
-    pros::delay(500);
+//     intake_solenoid.extend();
+//     arm_controller.moveTo(Arm::position::INTAKE);
+//     chassis.turnToPoint(qual_rush_pos_blue_6.x, qual_rush_pos_blue_6.y, 1000, {}, false); // turn to stake
+//     chassis.moveToPoint(qual_rush_pos_blue_6.x, qual_rush_pos_blue_6.y, 1000, {.forwards = true}, true); // go to stake
+//     chassis.turnToPoint(qual_rush_pos_blue_7.x, qual_rush_pos_blue_7.y, 1000, {.forwards=true}, true); // turn to stake
+//     intake_solenoid.retract();
+//     chassis.moveToPoint(qual_rush_pos_blue_7.x, qual_rush_pos_blue_7.y, 1000, {.forwards = true}, false);
+//    //intake_controller.holdldb(true);
+//     //pros::delay(1000);
+//     chassis.turnToHeading(qual_rush_pos_blue_7.theta, 500);
+//     pros::delay(500);
 
-    intake_controller.set(Intake::IntakeState::OUTTAKE);
-    pros::delay(200);
-    intake_controller.set(Intake::IntakeState::STOPPED);
-    pros::delay(50);
+//     intake_controller.set(Intake::IntakeState::OUTTAKE);
+//     pros::delay(200);
+//     intake_controller.set(Intake::IntakeState::STOPPED);
+//     pros::delay(50);
 
-    // intake_controller.waitUntilDone();
-    arm_controller.moveTo(Arm::position::SCORE_ALLIANCE, true);
-    pros::delay(800);
+//     // intake_controller.waitUntilDone();
+//     arm_controller.moveTo(Arm::position::SCORE_ALLIANCE, true);
+//     pros::delay(800);
 
-    chassis.moveToPoint(qual_rush_pos_blue_8.x, qual_rush_pos_blue_8.y, 2000, {.forwards = false}, false); // go to ladder
+//     chassis.moveToPoint(qual_rush_pos_blue_8.x, qual_rush_pos_blue_8.y, 2000, {.forwards = false}, false); // go to ladder
 
-    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-    chassis.moveToPoint(qual_rush_pos_blue_9.x, qual_rush_pos_blue_9.y, 2000, {.forwards = false}, true); // go to ladder
-    arm_controller.moveTo(-290);//move arm up along the way
+//     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+//     chassis.moveToPoint(qual_rush_pos_blue_9.x, qual_rush_pos_blue_9.y, 2000, {.forwards = false}, true); // go to ladder
+//     arm_controller.moveTo(-290);//move arm up along the way
     // arm_controller.moveTo(Arm::position::RETRACT, true);
 }
 
@@ -441,23 +441,23 @@ lemlib::Pose skills_1a = {-47.244, 0, 90};
 lemlib::Pose skills_1 = offsetPose({-47.244, -23.622, 0}, -2);
 lemlib::Pose skills_1b = {NAN,NAN, 60};
 lemlib::Pose skills_2 = {-23.622, -23.622, 135};
-lemlib::Pose skills_3 = {-23.622, -47.24-4, 200};
+lemlib::Pose skills_3 = {-23.622, -47.24, 200};
 lemlib::Pose skills_4 = offsetPose({23.622+0, -47.244-4, 90},0);
-lemlib::Pose skills_5 = offsetPose({1, -62, 180},0);
-lemlib::Pose skills_5a = offsetPose({1, -57, 180},0);
-lemlib::Pose skills_6 = offsetPose({-47.244, -47.244-4, 270},0); 
-lemlib::Pose skills_7 = offsetPose({-56.055-3, -47.244-4, 270},0);
+lemlib::Pose skills_5 = offsetPose({0, -62, 180},0);
+lemlib::Pose skills_5a = offsetPose({0, -57, 180},0);
+lemlib::Pose skills_6 = offsetPose({-47.244, -47.244, 270},0); 
+lemlib::Pose skills_7 = offsetPose({-56.055-3, -47.244, 270},0);
 lemlib::Pose skills_8 = offsetPoint({-47.244, -59.055+0, 135},skills_7,4);
 lemlib::Pose skills_9 = offsetPoint({-58, -67, 45},skills_8,2);
 
-lemlib::Pose skills_10 = offsetPoint({-47-2, -47, 45},skills_9,0);
+lemlib::Pose skills_10 = offsetPoint({-47, -47, 45},skills_9,0);
 //lemlib::Pose skills_10 = offsetPoint({0, 0, 45},skills_9,0);
 //lemlib::Pose skills_11a = {-38,23.5,NAN};
-lemlib::Pose skills_11 = offsetPose({-47.244-2, 23.622+2, 180},0);
+lemlib::Pose skills_11 = offsetPose({-47.244, 23.622+2, 180},0);
 lemlib::Pose skills_11a = offsetPose({NAN,NAN,120},0);
 lemlib::Pose skills_12 = {-23.622+0, 23.622, 17.5};
 lemlib::Pose skills_13 = {-23.622+0, 47.244, 310};
-lemlib::Pose skills_14 = offsetPose({-59.055-8, 47.244, 270},2);
+lemlib::Pose skills_14 = offsetPose({-59.055, 47.244, 270},2);
 lemlib::Pose skills_15 = offsetPoint({-47.244, 59.055, 45},skills_14,2);
 lemlib::Pose skills_16 = offsetPoint({-65, 65, 110},skills_15,-20);
 
@@ -489,14 +489,11 @@ void skills() {
     chassis.setPose(skills_0.x, skills_0.y, skills_0.theta);
     
     intake_controller.set(Intake::IntakeState::INTAKING);
-    pros::delay(500);
-    //allicen stake
-    //arm_controller.moveTo(Arm::position::SCORE_ALLIANCE, true);
-    //pros::delay(1000);
-    //arm_controller.moveTo(Arm::position::RETRACT);
+    pros::delay(500); 
+
     clamp_solenoid.extend();
 
-    //goal 1 quadrent 3 + right wall stake
+    // goal 1 quadrent 3 + right wall stake
 
     chassis.moveToPoint(skills_1a.x, skills_1a.y, 2000, {.forwards=true, .maxSpeed=64}, true);
     chassis.moveToPose(skills_1.x, skills_1.y, skills_1.theta, 2000, {.forwards=false, .maxSpeed=64}, false);
@@ -520,16 +517,17 @@ void skills() {
 
     chassis.moveToPoint(skills_5.x, skills_5.y, 2000, {.forwards=true, .maxSpeed=64}, true);
     pros::delay(1000);
+
     //arm_controller.moveTo(Arm::position::INTAKE, true);
     //intake_controller.holdldb(true,1000);
-    //chassis.turnToPoint(1, -70, 1000,{},false);
-    chassis.moveToPoint(1, -66, 1000, {.forwards=false, .maxSpeed=64}, false);
+    chassis.turnToPoint(0, -70, 1000,{},false);
+    chassis.moveToPoint(0, -66, 1000, {.forwards=false, .maxSpeed=64}, false);
     //arm_controller.moveTo(Arm::position::SCORE_NEUTRAL, true, 1000);
     //pros::delay(1000);
     chassis.moveToPoint(skills_5a.x, skills_5a.y, 2000, {.forwards=false, .maxSpeed=64}, true);
     //pros::delay(100);
     //arm_controller.moveTo(Arm::position::RETRACT);
-    // arm_controller.moveTo(Arm::position::SCORE_NEUTRAL,false,3000);
+
     intake_controller.set(Intake::IntakeState::INTAKING);
 
     chassis.moveToPose(skills_6.x , skills_6.y, skills_6.theta, 3000, {.forwards=true,.minSpeed=48}, true);
@@ -609,7 +607,6 @@ void skills() {
     chassis.moveToPoint(skills_27.x, skills_27.y, 2000, {.forwards=false, .maxSpeed=64}, false);
     clamp_solenoid.extend();
     chassis.moveToPoint(skills_34.x, skills_34.y, 2000, {.forwards=true, .maxSpeed=64}, false);
-
 
 
     //goal 3 quadrent 1/4 + allience + goal4

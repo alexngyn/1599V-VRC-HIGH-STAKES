@@ -19,7 +19,8 @@ class Arm {
             UP,
             SCORE_NEUTRAL,
             SCORE_ALLIANCE,
-            CLIMB,
+            // CLIMB,
+            TIP,
             CUSTOM,
             NaV // not a value
         };
@@ -35,8 +36,10 @@ class Arm {
         void togglePosition(position position1, position position2, position position3 = position::NaV, 
                             position position4 = position::NaV,  position position5 = position::NaV);
         void init();
+        void setCustomSpeed(int speed);
 
     private:
+        void softLimits();
         pros::Rotation* rotation;
         pros::MotorGroup* motors;
         lemlib::PID pid;
@@ -44,6 +47,7 @@ class Arm {
 
         position targetPosition = position::RETRACT;
         double targetAngle = this->angleStringToAngle(); 
+        pros::Task* task;
         //float UpwardGain = 2.0;
         //float DownwardGain = 1.5;
 
