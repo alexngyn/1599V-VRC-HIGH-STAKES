@@ -11,7 +11,7 @@ VBF Robotics
 #include "main.h" 
 #include "setup.h"
 
-#define AUTON_TYPE 1 // 0 for skills, 1 for qual rush, 2 for quali safe, 3 for elims, 4 foor not auton
+#define AUTON_TYPE 0 // 0 for skills, 1 for qual rush, 2 for quali safe, 3 for elims, 4 foor not auton
 
 void initialize() {
     chassis.calibrate(); // calibrate the chassis
@@ -32,17 +32,15 @@ void initialize() {
 
     pros::Task selection([&]() {
         while (pros::competition::is_disabled()) {
-            // if (selector.get_value() < 100) {
-            //     sideColor = color::blue;
-            //     intake_controller.setState(Intake::SortState::BLUE);
-            //     indicator.set_value(true);
-            // } else {
-            //     sideColor = color::red;
-            //     intake_controller.setState(Intake::SortState::RED);
-            //     indicator.set_value(false);
-            // }
-            sideColor = color::blue;
-            intake_controller.setState(Intake::SortState::BLUE);
+            if (selector.get_value() < 100) {
+                sideColor = color::blue;
+                intake_controller.setState(Intake::SortState::BLUE);
+                indicator.set_value(true);
+            } else {
+                sideColor = color::red;
+                intake_controller.setState(Intake::SortState::RED);
+                indicator.set_value(false);
+            }
             pros::delay(100);
         }
     });

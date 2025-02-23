@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "smth",
+    "project_name": "skills",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -443,7 +443,7 @@
       "after": "screen",
       "description": "bananas!",
       "icon": "clawbot",
-      "slot": 1
+      "slot": 7
     },
     "use_early_access": false
   }
