@@ -55,17 +55,19 @@ Intake::SortState Intake::getState(){
 
 void Intake::ejectRingUp(){
     master.rumble("-");
-    double initPos = this->motor.get_position();
+    // double initPos = this->motor.get_position();
 
     this->motor.move_velocity(-600);
     pros::delay(200);
     this->motor.move_velocity(600);
     pros::delay(100);
+    // this->motor.brake();
+    // pros::delay(1000);
 }
 
 void Intake::ejectRingDown(){
     master.rumble("-");
-    double initPos = this->motor.get_position();
+    // double initPos = this->motor.get_position();
 
     this->motor.move_velocity(600);
     pros::delay(80);

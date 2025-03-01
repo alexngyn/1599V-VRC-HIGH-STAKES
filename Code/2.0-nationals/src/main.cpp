@@ -11,7 +11,7 @@ VBF Robotics
 #include "main.h" 
 #include "setup.h"
 
-#define AUTON_TYPE 0 // 0 for skills, 1 for qual rush, 2 for quali safe, 3 for elims, 4 foor not auton
+#define AUTON_TYPE 1 // 0 for skills, 1 for qual rush, 2 for quali safe, 3 for elims, 4 for not auton
 
 void initialize() {
     chassis.calibrate(); // calibrate the chassis
@@ -41,6 +41,7 @@ void initialize() {
                 intake_controller.setState(Intake::SortState::RED);
                 indicator.set_value(false);
             }
+            
             pros::delay(100);
         }
     });

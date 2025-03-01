@@ -54,8 +54,8 @@ void piston(){
 
 void topmech() {
     while (true) {
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {arm_controller.changeAngle(-8);}
-        else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {arm_controller.changeAngle(8);}
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {arm_controller.changeAngle(-9);}
+        else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {arm_controller.changeAngle(9);}
         else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {arm_controller.moveTo(Arm::position::RETRACT);}
         //else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {arm_controller.moveTo(Arm::position::CLIMB);}
         else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {arm_controller.togglePosition(Arm::position::INTAKE, 

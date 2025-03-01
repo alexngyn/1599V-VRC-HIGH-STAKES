@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "skills",
+    "project_name": "qualis",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -443,7 +443,7 @@
       "after": "screen",
       "description": "bananas!",
       "icon": "clawbot",
-      "slot": 7
+      "slot": 1
     },
     "use_early_access": false
   }

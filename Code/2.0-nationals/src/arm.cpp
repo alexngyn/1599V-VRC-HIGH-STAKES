@@ -116,7 +116,7 @@ double Arm::angleStringToAngle() {
         case position::RETRACT: return -340;
         case position::INTAKE: return -308;//08
         case position::UP: return -220;
-        case position::SCORE_NEUTRAL: return -190;
+        case position::SCORE_NEUTRAL: return -182;//190
         case position::SCORE_ALLIANCE: return -130;
         case position::TIP: return -100;
         //case position::CLIMB: return -170;
@@ -128,22 +128,37 @@ void Arm::togglePosition(position position1, position position2,
                          position position3, position position4, position position5) {
 
     position prevPosition = this->targetPosition;
-    if (prevPosition == position1) {
+    // if (prevPosition == position::SCORE_NEUTRAL && position2 == position::SCORE_ALLIANCE) {
+    //     this->targetPosition = position::SCORE_ALLIANCE;
+    // } else if (prevPosition == position1) {
+    //     this->targetPosition = position2;
+    // } else if (prevPosition == position2) {
+    //     if (position3 != position::NaV) {this->targetPosition = position3;}
+    //     else {this->targetPosition = position1;}
+    // } else if (prevPosition == position3) {
+    //     if (position4 != position::NaV) {this->targetPosition = position4;}
+    //     else {this->targetPosition = position1;}
+    // } else if (prevPosition == position4) {
+    //     if (position5 != position::NaV) {this->targetPosition = position5;}
+    //     else {this->targetPosition = position1;}
+    // } else if (prevPosition == position::CUSTOM ) {
+    //     this->targetPosition = position1;
+    // } else {
+    //     this->targetPosition = position1;
+    // }
+
+    if (prevPosition == position::SCORE_NEUTRAL && position2 == position::SCORE_ALLIANCE) {
+        this->targetPosition = position::SCORE_ALLIANCE;
+    } else if (prevPosition == position1) {
         this->targetPosition = position2;
-    } else if (prevPosition == position2) {
-        if (position3 != position::NaV) {this->targetPosition = position3;}
-        else {this->targetPosition = position1;}
-    } else if (prevPosition == position3) {
-        if (position4 != position::NaV) {this->targetPosition = position4;}
-        else {prevPosition = position1;}
-    } else if (prevPosition == position4) {
-        if (position5 != position::NaV) {this->targetPosition = position5;}
-        else {this->targetPosition = position1;}
-    } else if (prevPosition == position::CUSTOM ) {
-        this->targetPosition = position1;
+    } else if (prevPosition == position2 && position3 != position::NaV) {
+        this->targetPosition = position3;
+    } else if (prevPosition == position3 && position4 != position::NaV) {
+        this->targetPosition = position4;
+    } else if (prevPosition == position4 && position5 != position::NaV) {
+        this->targetPosition = position5;
     } else {
         this->targetPosition = position1;
-        
     }
 
     // Run unjam function if moving from INTAKE to UP or SCORE positions

@@ -6,7 +6,7 @@
 /**
  * Cheesy Drive Constants
  */
-#define DRIVE_DEADBAND 0.1f
+#define DRIVE_DEADBAND 2
 #define DRIVE_SLEW 0.08f
 #define CD_NEG_INERTIA_SCALAR 4.0*127
 #define CD_SENSITIVITY 0.5*127
