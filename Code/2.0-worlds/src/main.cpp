@@ -13,6 +13,8 @@ VBF Robotics
 
 #define AUTON_TYPE 1 // 0 for skills, 1 for qual rush, 2 for quali safe, 3 for elims, 4 for not auton
 
+static pros::Task* init_task = nullptr;
+
 void initialize() {
     telemetryInit();
 
@@ -29,7 +31,12 @@ void initialize() {
     
     chassis.setPose(0, 0, 0); // X: 0, Y: 0, Heading: 0
 
-    pros::Task selection([&]() {
+    optical_sensor.set_integration_time(10);
+    optical_sensor.set_led_pwm(100);
+
+    arm_controller.init();
+
+    if (init_task == nullptr) { init_task = new pros::Task([&]() {
         while (pros::competition::is_disabled()) {
             if (selector.get_value() < 100) {
                 sideColor = color::blue;
@@ -40,30 +47,19 @@ void initialize() {
                 intake_controller.setState(Intake::SortState::RED);
                 indicator.set_value(false);
             }
+            if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) { initialize(); }
             
             pros::delay(100);
         }
-    });
-
-    optical_sensor.set_integration_time(10);
-    optical_sensor.set_led_pwm(100);
-
-    arm_controller.init();
-    // console.println("Initializing robot...");
+    });}
 
     pros::delay(500);
 }
 
 void disabled() {}
-void competition_initialize() {
-    //image
-    
-    
-}
+void competition_initialize() {}
 
 void autonomous() {
-    //goof.focus();
-    
     // partner.print(0, 0, "auton start"); // 0-2 0-14
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 
@@ -91,16 +87,11 @@ void autonomous() {
 }
 
 void opcontrol() {
-
-    //console.clear();
-	//planet.focus(); 
-
     if (arm_controller.getTargetPosition() != Arm::position::CUSTOM) {// only if not not touching laddder at end of match
         arm_controller.moveTo(Arm::position::RETRACT, true);
     }
     master.clear();
     
-    // console.println("Running op...");
     //partner.print(0, 0, "op start"); // 0-2 0-14
 
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
