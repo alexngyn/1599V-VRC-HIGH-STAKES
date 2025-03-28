@@ -18,7 +18,7 @@ static pros::Task* init_task = nullptr;
 void initialize() {
     telemetryInit();
 
-    chassis.calibrate(); // calibrate the chassis
+    // chassis.calibrate(); // calibrate the chassis
     arm_rotational_sensor.reset(); // reset the arm sensor
 
     for (int port : {dt_left.get_port(0), dt_left.get_port(1), dt_left.get_port(2), 

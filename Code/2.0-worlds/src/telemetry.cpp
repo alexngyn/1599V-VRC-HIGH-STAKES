@@ -56,7 +56,7 @@ void screenTelemetry() {
     // pros::lcd::initialize(); // initialize brain screen
     //pros::c::optical_rgb_s_t rgb_value;
 
-    pros::delay(20); // wait for initialization
+    // pros::delay(20); // wait for initialization
     while (true) {
         lemlib::Pose pose = chassis.getPose(); // get the current position of the robot
         pros::screen::print(pros::E_TEXT_MEDIUM, 1, "x: %.3f    y: %.3f   theta: %.3f", pose.x, pose.y, pose.theta); // prints the x position
@@ -79,8 +79,14 @@ void screenTelemetry() {
         pros::screen::print(pros::E_TEXT_MEDIUM, 7, "intake temp: %d", int(intake_motor.get_temperature()));
         pros::screen::print(pros::E_TEXT_MEDIUM, 8, "arm temp: %d %d", int(arm_motors.get_temperature(0)), int(arm_motors.get_temperature(1)));
 
+        pros::delay(100);
+    }
+}
+
+void controllerTelemetry() {
+    pros::delay(20); // wait for initialization
+    while (true) {
         //      controller screen
-        
         switch (intake_controller.getState()) {
             case Intake::SortState::BLUE: master.print(1, 1, "%s", "BLUE"); break;
             case Intake::SortState::RED: master.print(1, 1, "%s", "RED "); break;
@@ -98,9 +104,9 @@ void screenTelemetry() {
 
 LV_IMG_DECLARE(lf);
 LV_IMG_DECLARE(sc);
-LV_IMG_DECLARE(typ);
+// LV_IMG_DECLARE(typ);
 LV_IMG_DECLARE(abt);
-LV_IMG_DECLARE(allience);
+// LV_IMG_DECLARE(allience);
 LV_IMG_DECLARE(banana);
 LV_IMG_DECLARE(ssis);
 
@@ -108,11 +114,11 @@ LV_IMG_DECLARE(ssis);
 std::map<std::string, const lv_img_dsc_t*> imageMap = {
     {"sc", &sc},
     {"lf", &lf},
-    {"typ", &typ},
+    // {"typ", &typ},
     {"abt", &abt},
     {"ssis", &ssis},
     {"banana", &banana},
-    {"allience", &allience}
+    // {"allience", &allience}
 
 };
 
@@ -150,6 +156,7 @@ void switchScreen() {
     }
 
     if (imgIndex == imgNames.size()) {
+        
         printImage(imgNames[imgIndex]);
         imgIndex = 0;
         //lv_obj_clean(lv_scr_act());
@@ -165,13 +172,14 @@ void switchScreen() {
 
 void screenImage() {
     printImage("sc");
-    pros::screen::touch_callback(switchScreen, pros::E_TOUCH_PRESSED);
+    // screenTelemetryTask->suspend();
+    // pros::screen::touch_callback(switchScreen, pros::E_TOUCH_PRESSED);
 }
 
 
 void telemetryInit() {
-    screenImage();
     screenTelemetryTask = new pros::Task(screenTelemetry);
-    screenTelemetryTask->suspend();
+    screenImage();
+    pros::Task controllerScreenTask(controllerTelemetry);
     pros::Task sdTask(sdTelemetry);
 }
