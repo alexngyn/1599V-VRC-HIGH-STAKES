@@ -4,6 +4,17 @@
 #include "lemlib/pose.hpp"
 #include "setup.h" 
 
+/* -------- ROBOT PROGRAMS --------
+1 - awp (allience stake + mogo of 3 (doinker grab 2))
+2 - new non-awp (mogo of 1 + mogo of 3 (doinker grab 2))
+3 - old non-awp (mogo of 1 + mogo of 2)
+4 - awp neg (allience stake + mogo of 3 (doinker grab 2))
+5 - 
+6 - skills
+7 - 
+8 - doom :)
+*/
+
 #define CLAMP_OFFSET -4
 #define INTAKE_OFFSET 2
 #define ALLIANCE_STAKE_OFFSET 15.5
@@ -55,10 +66,10 @@ void pidtune() {
     //chassis.turnToHeading(270, 100000);
     // chassis.moveToPoint(-48, 0, 10000);
 
-    //chassis.turnToPoint(elims_rush_pos_red_7.x, elims_rush_pos_red_7.y, 1000, {.forwards=true}, true); // turn to stake
+    //chassis.turnToPoint(elims_3_pos_red_7.x, elims_3_pos_red_7.y, 1000, {.forwards=true}, true); // turn to stake
     //intake_solenoid.retract();
-    //chassis.moveToPoint(elims_rush_pos_red_7.x, elims_rush_pos_red_7.y, 1000, {.forwards = true}, false);
-    //chassis.turnToHeading(elims_rush_pos_red_7.theta, 500);
+    //chassis.moveToPoint(elims_3_pos_red_7.x, elims_3_pos_red_7.y, 1000, {.forwards = true}, false);
+    //chassis.turnToHeading(elims_3_pos_red_7.theta, 500);
     pros::delay(2000);
     std::printf("%.1f %.1f %.1f\n", pose.x, pose.y, pose.theta);
     pros::delay(50000);
@@ -68,35 +79,35 @@ void pidtune() {
     //robot::chassisPrintPose();
 }
 
-//======================= qualis pos 6p safe rush auton =======================
+//======================= awp pos (allience stake + mogo of 3 (doinker grab 2)) =======================
 
-lemlib::Pose qual_safe_pos_blue_0 = {64,15,142}; 
-lemlib::Pose qual_safe_pos_blue_1 = offsetPose(qual_safe_pos_blue_0, 8);
-lemlib::Pose qual_safe_pos_blue_2 ={23.6,23.6, 60};
-lemlib::Pose qual_safe_pos_blue_3 = {23.6, 47.25, NAN};
-lemlib::Pose qual_safe_pos_blue_4 = {47, 0, NAN};
+lemlib::Pose qual_1_pos_blue_0 = {64,15,142}; 
+lemlib::Pose qual_1_pos_blue_1 = offsetPose(qual_1_pos_blue_0, 8);
+lemlib::Pose qual_1_pos_blue_2 ={23.6,23.6, 60};
+lemlib::Pose qual_1_pos_blue_3 = {23.6, 47.25, NAN};
+lemlib::Pose qual_1_pos_blue_4 = {47, 0, NAN};
 
-void qual_safe_pos_blue() {
-    chassis.setPose(qual_safe_pos_blue_0.x, qual_safe_pos_blue_0.y, qual_safe_pos_blue_0.theta);
+void qual_1_pos_blue() {
+    chassis.setPose(qual_1_pos_blue_0.x, qual_1_pos_blue_0.y, qual_1_pos_blue_0.theta);
     clamp_solenoid.extend();
 
     arm_controller.moveTo(Arm::position::SCORE_ALLIANCE);
     pros::delay(1000);
 
-    chassis.moveToPoint(qual_safe_pos_blue_1.x, qual_safe_pos_blue_1.y, 3000, {.forwards = false}, false); //rush to mogo
+    chassis.moveToPoint(qual_1_pos_blue_1.x, qual_1_pos_blue_1.y, 3000, {.forwards = false}, false); //rush to mogo
 
-    chassis.moveToPose(qual_safe_pos_blue_2.x, qual_safe_pos_blue_2.y, qual_safe_pos_blue_2.theta, 30000, {.forwards = false}, false); //rush to mogo
+    chassis.moveToPose(qual_1_pos_blue_2.x, qual_1_pos_blue_2.y, qual_1_pos_blue_2.theta, 30000, {.forwards = false}, false); //rush to mogo
     clamp_solenoid.retract(); //clamp mogo
 
     intake_controller.set(Intake::IntakeState::INTAKING);
 
-    chassis.moveToPoint(qual_safe_pos_blue_3.x, qual_safe_pos_blue_3.y, 3000, {.forwards = true, .maxSpeed=64}, false); //rush to mogo
+    chassis.moveToPoint(qual_1_pos_blue_3.x, qual_1_pos_blue_3.y, 3000, {.forwards = true, .maxSpeed=64}, false); //rush to mogo
 
     pros::delay(300);
 
     intake_solenoid.extend();
 
-    chassis.moveToPoint(qual_safe_pos_blue_4.x, qual_safe_pos_blue_4.y, 8000, {.forwards = true, .maxSpeed=64}, false); //rush to mogo
+    chassis.moveToPoint(qual_1_pos_blue_4.x, qual_1_pos_blue_4.y, 8000, {.forwards = true, .maxSpeed=64}, false); //rush to mogo
 
     pros::delay(200);
 
@@ -105,32 +116,50 @@ void qual_safe_pos_blue() {
     pros::delay(20000);
 }
 
-//======================= qualis pos 9p goal rush AWP auton =======================
+lemlib::Pose qual_1_pos_red_0 = mirrorPose(qual_1_pos_blue_0);
+lemlib::Pose qual_1_pos_red_1 = mirrorPose(qual_1_pos_blue_1);
+lemlib::Pose qual_1_pos_red_2 = mirrorPose(qual_1_pos_blue_2);
+lemlib::Pose qual_1_pos_red_3 = mirrorPose(qual_1_pos_blue_3);
+lemlib::Pose qual_1_pos_red_4 = mirrorPose(qual_1_pos_blue_4);
 
-lemlib::Pose qual_rush_pos_red_0 = {-50.74,-58, 270}; 
-lemlib::Pose qual_rush_pos_red_1 = {-32, -58.5, 270};
-lemlib::Pose qual_rush_pos_red_2 = offsetPose({0, -47.24, 240}, -6);
-lemlib::Pose qual_rush_pos_red_3 = offsetPose({-23.622, -47.244, 120}, 2);
-lemlib::Pose qual_rush_pos_red_4 = offsetPose({-23.622-0, -23.622, 180}, -9);
-lemlib::Pose qual_rush_pos_red_5 = offsetPose({-23.622+0, -23.622, 180}, -2);
-lemlib::Pose qual_rush_pos_red_6 = offsetPoint({-47.244-1, -2, NAN}, qual_rush_pos_red_5, 0);  //51
-lemlib::Pose qual_rush_pos_red_7 = offsetPose({-70, -2, 270}, 0);
-lemlib::Pose qual_rush_pos_red_7a = offsetPose({-70, -2, 270}, 17); //58.5 11.5 //7
+void qual_1_pos_red() {
+    chassis.setPose(qual_1_pos_red_0.x, qual_1_pos_red_0.y, qual_1_pos_red_0.theta);
+    //bunch of code
+}
 
-lemlib::Pose qual_rush_pos_red_8 = {-24, -24, NAN}; 
-lemlib::Pose qual_rush_pos_red_9 = {-14, -14, NAN}; 
+void qual_1_neg_blue() {
+    qual_1_pos_red();
+}
+void qual_1_neg_red() {
+    qual_1_pos_blue();
+}
 
-lemlib::Pose qual_rush_pos_red_10 = {-24, -47, 90}; 
+//======================= new non-awp (mogo of 1 + mogo of 3 (doinker grab 2)) =======================
 
-void qual_rush_pos_red() {
-    chassis.setPose(qual_rush_pos_red_0.x, qual_rush_pos_red_0.y, qual_rush_pos_red_0.theta);
+lemlib::Pose qual_2_pos_red_0 = {-50.74,-58, 270}; 
+lemlib::Pose qual_2_pos_red_1 = {-32, -58.5, 270};
+lemlib::Pose qual_2_pos_red_2 = offsetPose({0, -47.24, 240}, -6);
+lemlib::Pose qual_2_pos_red_3 = offsetPose({-23.622, -47.244, 120}, 2);
+lemlib::Pose qual_2_pos_red_4 = offsetPose({-23.622-0, -23.622, 180}, -9);
+lemlib::Pose qual_2_pos_red_5 = offsetPose({-23.622+0, -23.622, 180}, -2);
+lemlib::Pose qual_2_pos_red_6 = offsetPoint({-47.244-1, -2, NAN}, qual_2_pos_red_5, 0);  //51
+lemlib::Pose qual_2_pos_red_7 = offsetPose({-70, -2, 270}, 0);
+lemlib::Pose qual_2_pos_red_7a = offsetPose({-70, -2, 270}, 17); //58.5 11.5 //7
+
+lemlib::Pose qual_2_pos_red_8 = {-24, -24, NAN}; 
+lemlib::Pose qual_2_pos_red_9 = {-14, -14, NAN}; 
+
+lemlib::Pose qual_2_pos_red_10 = {-24, -47, 90}; 
+
+void qual_2_pos_red() {
+    chassis.setPose(qual_2_pos_red_0.x, qual_2_pos_red_0.y, qual_2_pos_red_0.theta);
     clamp_solenoid.extend();
 
     //goal rush
 
-    chassis.moveToPoint(qual_rush_pos_red_1.x , qual_rush_pos_red_1.y, 10000, {.forwards = false, .minSpeed=127}, false); 
-    chassis.moveToPose(qual_rush_pos_red_2.x, qual_rush_pos_red_2.y, qual_rush_pos_red_2.theta, 1000, {.forwards = false}, false);
-    chassis.moveToPoint(qual_rush_pos_red_2.x, qual_rush_pos_red_2.y, 500, {.forwards = false}, false);
+    chassis.moveToPoint(qual_2_pos_red_1.x , qual_2_pos_red_1.y, 10000, {.forwards = false, .minSpeed=127}, false); 
+    chassis.moveToPose(qual_2_pos_red_2.x, qual_2_pos_red_2.y, qual_2_pos_red_2.theta, 1000, {.forwards = false}, false);
+    chassis.moveToPoint(qual_2_pos_red_2.x, qual_2_pos_red_2.y, 500, {.forwards = false}, false);
 
     pros::delay(100);
 
@@ -139,16 +168,16 @@ void qual_rush_pos_red() {
     intake_controller.set(Intake::IntakeState::INTAKING);
     pros::delay(700);
 
-    chassis.moveToPose(qual_rush_pos_red_3.x, qual_rush_pos_red_3.y, qual_rush_pos_red_3.theta, 1000, {.forwards = true}, true);
+    chassis.moveToPose(qual_2_pos_red_3.x, qual_2_pos_red_3.y, qual_2_pos_red_3.theta, 1000, {.forwards = true}, true);
     intake_controller.hold(true);
 
     //second mogo
     
-    chassis.turnToPoint(qual_rush_pos_red_4.x, qual_rush_pos_red_4.y, 1000, {.forwards=true, .direction=lemlib::AngularDirection::CW_CLOCKWISE,.maxSpeed=96}, false); // turn to ring
+    chassis.turnToPoint(qual_2_pos_red_4.x, qual_2_pos_red_4.y, 1000, {.forwards=true, .direction=lemlib::AngularDirection::CW_CLOCKWISE,.maxSpeed=96}, false); // turn to ring
     clamp_solenoid.extend();
-    chassis.turnToPoint(qual_rush_pos_red_5.x, qual_rush_pos_red_5.y, 1000, {.forwards=false, .direction=lemlib::AngularDirection::CW_CLOCKWISE,.maxSpeed=96}, false); // turn to mogo
-    chassis.moveToPoint(qual_rush_pos_red_4.x, qual_rush_pos_red_4.y, 1000, {.forwards = false,.maxSpeed=96}, false); // go to mogo
-    chassis.moveToPoint(qual_rush_pos_red_5.x, qual_rush_pos_red_5.y, 1000, {.forwards = false}, false); // go to mogo
+    chassis.turnToPoint(qual_2_pos_red_5.x, qual_2_pos_red_5.y, 1000, {.forwards=false, .direction=lemlib::AngularDirection::CW_CLOCKWISE,.maxSpeed=96}, false); // turn to mogo
+    chassis.moveToPoint(qual_2_pos_red_4.x, qual_2_pos_red_4.y, 1000, {.forwards = false,.maxSpeed=96}, false); // go to mogo
+    chassis.moveToPoint(qual_2_pos_red_5.x, qual_2_pos_red_5.y, 1000, {.forwards = false}, false); // go to mogo
     clamp_solenoid.retract();
     pros::delay(50);
     intake_controller.set(Intake::IntakeState::INTAKING);
@@ -158,48 +187,48 @@ void qual_rush_pos_red() {
     //
     intake_solenoid.extend();
 
-    chassis.turnToPoint(qual_rush_pos_red_6.x, qual_rush_pos_red_6.y, 1000, {}, false); // turn to stake
-    chassis.moveToPoint(qual_rush_pos_red_6.x, qual_rush_pos_red_6.y, 1000, {.forwards = true,.maxSpeed=96}, true); // go to stake
-    //chassis.turnToPoint(qual_rush_pos_red_7.x, qual_rush_pos_red_7.y, 1000, {.forwards=true,.maxSpeed=64}, true); // turn to stake
-    chassis.turnToHeading(qual_rush_pos_red_7.theta, 500);
+    chassis.turnToPoint(qual_2_pos_red_6.x, qual_2_pos_red_6.y, 1000, {}, false); // turn to stake
+    chassis.moveToPoint(qual_2_pos_red_6.x, qual_2_pos_red_6.y, 1000, {.forwards = true,.maxSpeed=96}, true); // go to stake
+    //chassis.turnToPoint(qual_2_pos_red_7.x, qual_2_pos_red_7.y, 1000, {.forwards=true,.maxSpeed=64}, true); // turn to stake
+    chassis.turnToHeading(qual_2_pos_red_7.theta, 500);
     intake_solenoid.retract();
     
-    chassis.moveToPose(qual_rush_pos_red_7a.x, qual_rush_pos_red_7a.y,qual_rush_pos_red_7a.theta, 1000, {.forwards = true,.maxSpeed=96}, false);
+    chassis.moveToPose(qual_2_pos_red_7a.x, qual_2_pos_red_7a.y,qual_2_pos_red_7a.theta, 1000, {.forwards = true,.maxSpeed=96}, false);
 
     pros::delay(800);
     //
-    // chassis.moveToPoint(qual_rush_pos_red_8.x, qual_rush_pos_red_8.y, 2000, {.forwards = false}, false); // go to ladder
+    // chassis.moveToPoint(qual_2_pos_red_8.x, qual_2_pos_red_8.y, 2000, {.forwards = false}, false); // go to ladder
 
     // chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-    // chassis.moveToPoint(qual_rush_pos_red_9.x, qual_rush_pos_red_9.y, 2000, {.forwards = false}, true); // go to ladder
+    // chassis.moveToPoint(qual_2_pos_red_9.x, qual_2_pos_red_9.y, 2000, {.forwards = false}, true); // go to ladder
     // arm_controller.moveTo(-290);//move arm up along the way
     //
-    chassis.moveToPoint(qual_rush_pos_red_10.x, qual_rush_pos_red_10.y, 2000, {.forwards = false}, false); // go to ladder
-    chassis.turnToHeading(qual_rush_pos_red_10.theta, 1000);
+    chassis.moveToPoint(qual_2_pos_red_10.x, qual_2_pos_red_10.y, 2000, {.forwards = false}, false); // go to ladder
+    chassis.turnToHeading(qual_2_pos_red_10.theta, 1000);
 }
 
-lemlib::Pose qual_rush_pos_blue_0 = mirrorPose(qual_rush_pos_red_0); 
-lemlib::Pose qual_rush_pos_blue_1 = mirrorPose(qual_rush_pos_red_1);
-lemlib::Pose qual_rush_pos_blue_2 = mirrorPose(qual_rush_pos_red_2);
-lemlib::Pose qual_rush_pos_blue_3 = mirrorPose(qual_rush_pos_red_3);
-lemlib::Pose qual_rush_pos_blue_4 = mirrorPose(qual_rush_pos_red_4);
-lemlib::Pose qual_rush_pos_blue_5 = mirrorPose(qual_rush_pos_red_5);
-lemlib::Pose qual_rush_pos_blue_6 = mirrorPose(qual_rush_pos_red_6);
-lemlib::Pose qual_rush_pos_blue_7 = mirrorPose(qual_rush_pos_red_7);
-lemlib::Pose qual_rush_pos_blue_7a = mirrorPose(qual_rush_pos_red_7a);
-lemlib::Pose qual_rush_pos_blue_8 = mirrorPose(qual_rush_pos_red_8);
-lemlib::Pose qual_rush_pos_blue_9 = mirrorPose(qual_rush_pos_red_9);
-lemlib::Pose qual_rush_pos_blue_10 = mirrorPose(qual_rush_pos_red_10);
+lemlib::Pose qual_2_pos_blue_0 = mirrorPose(qual_2_pos_red_0); 
+lemlib::Pose qual_2_pos_blue_1 = mirrorPose(qual_2_pos_red_1);
+lemlib::Pose qual_2_pos_blue_2 = mirrorPose(qual_2_pos_red_2);
+lemlib::Pose qual_2_pos_blue_3 = mirrorPose(qual_2_pos_red_3);
+lemlib::Pose qual_2_pos_blue_4 = mirrorPose(qual_2_pos_red_4);
+lemlib::Pose qual_2_pos_blue_5 = mirrorPose(qual_2_pos_red_5);
+lemlib::Pose qual_2_pos_blue_6 = mirrorPose(qual_2_pos_red_6);
+lemlib::Pose qual_2_pos_blue_7 = mirrorPose(qual_2_pos_red_7);
+lemlib::Pose qual_2_pos_blue_7a = mirrorPose(qual_2_pos_red_7a);
+lemlib::Pose qual_2_pos_blue_8 = mirrorPose(qual_2_pos_red_8);
+lemlib::Pose qual_2_pos_blue_9 = mirrorPose(qual_2_pos_red_9);
+lemlib::Pose qual_2_pos_blue_10 = mirrorPose(qual_2_pos_red_10);
 
-void qual_rush_pos_blue() {
-    chassis.setPose(qual_rush_pos_blue_0.x, qual_rush_pos_blue_0.y, qual_rush_pos_blue_0.theta);
+void qual_2_pos_blue() {
+    chassis.setPose(qual_2_pos_blue_0.x, qual_2_pos_blue_0.y, qual_2_pos_blue_0.theta);
     clamp_solenoid.extend();
 
     //goal rush
 
-    chassis.moveToPoint(qual_rush_pos_blue_1.x, qual_rush_pos_blue_1.y, 1000, {.forwards = false, .minSpeed=127}, false); //rush to mogo
-    chassis.moveToPose(qual_rush_pos_blue_2.x, qual_rush_pos_blue_2.y, qual_rush_pos_blue_2.theta, 1000, {.forwards = false}, false); //rush to mogo
-    chassis.moveToPoint(qual_rush_pos_blue_2.x, qual_rush_pos_blue_2.y, 500, {.forwards = false}, false); //rush to mogo
+    chassis.moveToPoint(qual_2_pos_blue_1.x, qual_2_pos_blue_1.y, 1000, {.forwards = false, .minSpeed=127}, false); //rush to mogo
+    chassis.moveToPose(qual_2_pos_blue_2.x, qual_2_pos_blue_2.y, qual_2_pos_blue_2.theta, 1000, {.forwards = false}, false); //rush to mogo
+    chassis.moveToPoint(qual_2_pos_blue_2.x, qual_2_pos_blue_2.y, 500, {.forwards = false}, false); //rush to mogo
 
     pros::delay(100);
 
@@ -208,16 +237,16 @@ void qual_rush_pos_blue() {
     intake_controller.set(Intake::IntakeState::INTAKING);
     pros::delay(700);
 
-    chassis.moveToPose(qual_rush_pos_blue_3.x, qual_rush_pos_blue_3.y, qual_rush_pos_blue_3.theta, 1000, {.forwards = true}, true);
+    chassis.moveToPose(qual_2_pos_blue_3.x, qual_2_pos_blue_3.y, qual_2_pos_blue_3.theta, 1000, {.forwards = true}, true);
     intake_controller.hold(true);
 
     //second mogo
 
-    chassis.turnToPoint(qual_rush_pos_blue_4.x, qual_rush_pos_blue_4.y, 1000, {.forwards=true, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE,.maxSpeed=96}, false); // turn to ring
+    chassis.turnToPoint(qual_2_pos_blue_4.x, qual_2_pos_blue_4.y, 1000, {.forwards=true, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE,.maxSpeed=96}, false); // turn to ring
     clamp_solenoid.extend();
-    chassis.turnToPoint(qual_rush_pos_blue_5.x, qual_rush_pos_blue_5.y, 1000, {.forwards=false, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE,.maxSpeed=96}, false); // turn to mogo
-    chassis.moveToPoint(qual_rush_pos_blue_4.x, qual_rush_pos_blue_4.y, 1000, {.forwards = false,.maxSpeed=96}, false); // go to mogo
-    chassis.moveToPoint(qual_rush_pos_blue_5.x, qual_rush_pos_blue_5.y, 1000, {.forwards = false}, false); // go to mogo
+    chassis.turnToPoint(qual_2_pos_blue_5.x, qual_2_pos_blue_5.y, 1000, {.forwards=false, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE,.maxSpeed=96}, false); // turn to mogo
+    chassis.moveToPoint(qual_2_pos_blue_4.x, qual_2_pos_blue_4.y, 1000, {.forwards = false,.maxSpeed=96}, false); // go to mogo
+    chassis.moveToPoint(qual_2_pos_blue_5.x, qual_2_pos_blue_5.y, 1000, {.forwards = false}, false); // go to mogo
     clamp_solenoid.retract();
     pros::delay(50);
     intake_controller.set(Intake::IntakeState::INTAKING);
@@ -227,50 +256,48 @@ void qual_rush_pos_blue() {
 
     intake_solenoid.extend();
 
-    chassis.turnToPoint(qual_rush_pos_blue_6.x, qual_rush_pos_blue_6.y, 1000, {}, false); // turn to stake
-    chassis.moveToPoint(qual_rush_pos_blue_6.x, qual_rush_pos_blue_6.y, 1000, {.forwards = true,.maxSpeed=96}, true); // go to stake
+    chassis.turnToPoint(qual_2_pos_blue_6.x, qual_2_pos_blue_6.y, 1000, {}, false); // turn to stake
+    chassis.moveToPoint(qual_2_pos_blue_6.x, qual_2_pos_blue_6.y, 1000, {.forwards = true,.maxSpeed=96}, true); // go to stake
     
-    chassis.turnToHeading(qual_rush_pos_blue_7.theta, 500);
+    chassis.turnToHeading(qual_2_pos_blue_7.theta, 500);
     intake_solenoid.retract();
 
-    chassis.moveToPose(qual_rush_pos_blue_7a.x, qual_rush_pos_blue_7a.y,qual_rush_pos_blue_7a.theta, 1000, {.forwards = true,.maxSpeed=96}, false);
+    chassis.moveToPose(qual_2_pos_blue_7a.x, qual_2_pos_blue_7a.y,qual_2_pos_blue_7a.theta, 1000, {.forwards = true,.maxSpeed=96}, false);
 
     pros::delay(800);
 
-    // chassis.moveToPoint(qual_rush_pos_blue_8.x, qual_rush_pos_blue_8.y, 2000, {.forwards = false}, false); // go to ladder
+    // chassis.moveToPoint(qual_2_pos_blue_8.x, qual_2_pos_blue_8.y, 2000, {.forwards = false}, false); // go to ladder
 
     // chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-    // chassis.moveToPoint(qual_rush_pos_blue_9.x, qual_rush_pos_blue_9.y, 2000, {.forwards = false}, true); // go to ladder
+    // chassis.moveToPoint(qual_2_pos_blue_9.x, qual_2_pos_blue_9.y, 2000, {.forwards = false}, true); // go to ladder
     // arm_controller.moveTo(-290);//move arm up along the way
 
-    chassis.moveToPoint(qual_rush_pos_blue_10.x, qual_rush_pos_blue_10.y, 2000, {.forwards = false}, false); // go to ladder
-    chassis.turnToHeading(qual_rush_pos_blue_10.theta, 1000);
+    chassis.moveToPoint(qual_2_pos_blue_10.x, qual_2_pos_blue_10.y, 2000, {.forwards = false}, false); // go to ladder
+    chassis.turnToHeading(qual_2_pos_blue_10.theta, 1000);
 }
 
-//======================= elims pos 9p goal rush auton =======================
-
-lemlib::Pose elims_rush_pos_red_0 = {-50.74,-58, 270}; 
-lemlib::Pose elims_rush_pos_red_1 = {-32, -58.5, 270};
-lemlib::Pose elims_rush_pos_red_2 = offsetPose({0, -47.24, 240}, -6);
-lemlib::Pose elims_rush_pos_red_3 = offsetPose({-23.622, -47.244, 120}, 0);
-lemlib::Pose elims_rush_pos_red_4 = offsetPose({-23.622-0, -23.622, 180}, -9);
-lemlib::Pose elims_rush_pos_red_5 = offsetPose({-23.622+0, -23.622, 180}, -7); //x+2
-//lemlib::Pose elims_rush_pos_red_6 = offsetPoint({-47.244, -5, NAN}, elims_rush_pos_red_5, 0);  //51
-lemlib::Pose elims_rush_pos_red_6 = offsetPose({-72, -7, -63}, 12);  //16 -61.97 degs
-lemlib::Pose elims_rush_pos_red_6a = offsetPose({-72, -7, -63}, 32);
-lemlib::Pose elims_rush_pos_red_7 = {-54, -0, NAN};
-lemlib::Pose elims_rush_pos_red_7a = offsetPose({-70,0, 270}, 13.5); //58.5 11.5
+lemlib::Pose elims_2_pos_red_0 = {-50.74,-58, 270}; 
+lemlib::Pose elims_2_pos_red_1 = {-32, -58.5, 270};
+lemlib::Pose elims_2_pos_red_2 = offsetPose({0, -47.24, 240}, -6);
+lemlib::Pose elims_2_pos_red_3 = offsetPose({-23.622, -47.244, 120}, 0);
+lemlib::Pose elims_2_pos_red_4 = offsetPose({-23.622-0, -23.622, 180}, -9);
+lemlib::Pose elims_2_pos_red_5 = offsetPose({-23.622+0, -23.622, 180}, -7); //x+2
+//lemlib::Pose elims_2_pos_red_6 = offsetPoint({-47.244, -5, NAN}, elims_2_pos_red_5, 0);  //51
+lemlib::Pose elims_2_pos_red_6 = offsetPose({-72, -7, -63}, 12);  //16 -61.97 degs
+lemlib::Pose elims_2_pos_red_6a = offsetPose({-72, -7, -63}, 32);
+lemlib::Pose elims_2_pos_red_7 = {-54, -0, NAN};
+lemlib::Pose elims_2_pos_red_7a = offsetPose({-70,0, 270}, 13.5); //58.5 11.5
 
 
-void elims_rush_pos_red() {
-    chassis.setPose(elims_rush_pos_red_0.x, elims_rush_pos_red_0.y, elims_rush_pos_red_0.theta);
+void elims_2_pos_red() {
+    chassis.setPose(elims_2_pos_red_0.x, elims_2_pos_red_0.y, elims_2_pos_red_0.theta);
     clamp_solenoid.extend();
 
     //goal rush
 
-    chassis.moveToPoint(elims_rush_pos_red_1.x, elims_rush_pos_red_1.y, 1000, {.forwards = false,.minSpeed=127}, false); //rush to mogo
-    chassis.moveToPose(elims_rush_pos_red_2.x, elims_rush_pos_red_2.y, elims_rush_pos_red_2.theta, 1000, {.forwards = false}, false); //rush to mogo
-    chassis.moveToPoint(elims_rush_pos_red_2.x, elims_rush_pos_red_2.y, 500, {.forwards = false}, false); //rush to mogo
+    chassis.moveToPoint(elims_2_pos_red_1.x, elims_2_pos_red_1.y, 1000, {.forwards = false,.minSpeed=127}, false); //rush to mogo
+    chassis.moveToPose(elims_2_pos_red_2.x, elims_2_pos_red_2.y, elims_2_pos_red_2.theta, 1000, {.forwards = false}, false); //rush to mogo
+    chassis.moveToPoint(elims_2_pos_red_2.x, elims_2_pos_red_2.y, 500, {.forwards = false}, false); //rush to mogo
 
     pros::delay(100);
 
@@ -279,24 +306,24 @@ void elims_rush_pos_red() {
     intake_controller.set(Intake::IntakeState::INTAKING);
     pros::delay(400);
 
-    chassis.moveToPose(elims_rush_pos_red_3.x, elims_rush_pos_red_3.y, elims_rush_pos_red_3.theta, 1000, {.forwards = true}, false);
+    chassis.moveToPose(elims_2_pos_red_3.x, elims_2_pos_red_3.y, elims_2_pos_red_3.theta, 1000, {.forwards = true}, false);
     intake_controller.hold(true);
     arm_controller.moveTo(Arm::position::INTAKE);
 
     //second mogo
 
-    chassis.turnToPoint(elims_rush_pos_red_4.x, elims_rush_pos_red_4.y, 1000, {.forwards=true, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE,.maxSpeed=64}, false); // turn to ring
+    chassis.turnToPoint(elims_2_pos_red_4.x, elims_2_pos_red_4.y, 1000, {.forwards=true, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE,.maxSpeed=64}, false); // turn to ring
     clamp_solenoid.extend();
-    chassis.turnToPoint(elims_rush_pos_red_5.x, elims_rush_pos_red_5.y, 1000, {.forwards=false, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE,.maxSpeed=64}, false); // turn to mogo
-    chassis.moveToPoint(elims_rush_pos_red_4.x, elims_rush_pos_red_4.y, 1000, {.forwards = false,.maxSpeed=64}, false); // go to mogo
-    chassis.moveToPoint(elims_rush_pos_red_5.x, elims_rush_pos_red_5.y, 1000, {.forwards = false,.maxSpeed=64}, false); // go to mogo
+    chassis.turnToPoint(elims_2_pos_red_5.x, elims_2_pos_red_5.y, 1000, {.forwards=false, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE,.maxSpeed=64}, false); // turn to mogo
+    chassis.moveToPoint(elims_2_pos_red_4.x, elims_2_pos_red_4.y, 1000, {.forwards = false,.maxSpeed=64}, false); // go to mogo
+    chassis.moveToPoint(elims_2_pos_red_5.x, elims_2_pos_red_5.y, 1000, {.forwards = false,.maxSpeed=64}, false); // go to mogo
     clamp_solenoid.retract();
     pros::delay(100);
     intake_controller.set(Intake::IntakeState::INTAKING);
     pros::delay(200); // wait for allience
 
-    chassis.turnToPoint(elims_rush_pos_red_6.x, elims_rush_pos_red_6.y, 1000, {.forwards=true}, true); // turn to stake
-    chassis.moveToPoint(elims_rush_pos_red_6.x, elims_rush_pos_red_6.y, 4000, {.forwards = true,.maxSpeed=64}, false);
+    chassis.turnToPoint(elims_2_pos_red_6.x, elims_2_pos_red_6.y, 1000, {.forwards=true}, true); // turn to stake
+    chassis.moveToPoint(elims_2_pos_red_6.x, elims_2_pos_red_6.y, 4000, {.forwards = true,.maxSpeed=64}, false);
 
     //pros::delay(500);
 
@@ -307,12 +334,12 @@ void elims_rush_pos_red() {
 
     arm_controller.moveTo(Arm::position::SCORE_ALLIANCE, true);
     pros::delay(600);
-    chassis.moveToPoint(elims_rush_pos_red_6a.x, elims_rush_pos_red_6a.y, 2000, {.forwards = false}, false); // go to ladder
+    chassis.moveToPoint(elims_2_pos_red_6a.x, elims_2_pos_red_6a.y, 2000, {.forwards = false}, false); // go to ladder
     intake_controller.set(Intake::IntakeState::INTAKING);
     intake_solenoid.extend();
 
-    chassis.turnToPoint(elims_rush_pos_red_7.x, elims_rush_pos_red_7.y, 1000, {.forwards=true}, true); // turn to stake
-    chassis.moveToPoint(elims_rush_pos_red_7.x, elims_rush_pos_red_7.y, 2000, {.forwards = true,.maxSpeed=48}, false); // go to ladder
+    chassis.turnToPoint(elims_2_pos_red_7.x, elims_2_pos_red_7.y, 1000, {.forwards=true}, true); // turn to stake
+    chassis.moveToPoint(elims_2_pos_red_7.x, elims_2_pos_red_7.y, 2000, {.forwards = true,.maxSpeed=48}, false); // go to ladder
     arm_controller.moveTo(Arm::position::RETRACT, true);
 
     pros::delay(200);
@@ -329,26 +356,26 @@ void elims_rush_pos_red() {
 
 }
 
-lemlib::Pose elims_rush_pos_blue_0 = mirrorPose(elims_rush_pos_red_0); 
-lemlib::Pose elims_rush_pos_blue_1 = mirrorPose(elims_rush_pos_red_1);
-lemlib::Pose elims_rush_pos_blue_2 = mirrorPose(elims_rush_pos_red_2);
-lemlib::Pose elims_rush_pos_blue_3 = mirrorPose(elims_rush_pos_red_3);
-lemlib::Pose elims_rush_pos_blue_4 = mirrorPose(elims_rush_pos_red_4);
-lemlib::Pose elims_rush_pos_blue_5 = mirrorPose(elims_rush_pos_red_5);
-lemlib::Pose elims_rush_pos_blue_6 = mirrorPose(elims_rush_pos_red_6);
-lemlib::Pose elims_rush_pos_blue_6a = mirrorPose(elims_rush_pos_red_6a);
-lemlib::Pose elims_rush_pos_blue_7 = mirrorPose(elims_rush_pos_red_7);
-lemlib::Pose elims_rush_pos_blue_7a = mirrorPose(elims_rush_pos_red_7a);
+lemlib::Pose elims_2_pos_blue_0 = mirrorPose(elims_2_pos_red_0); 
+lemlib::Pose elims_2_pos_blue_1 = mirrorPose(elims_2_pos_red_1);
+lemlib::Pose elims_2_pos_blue_2 = mirrorPose(elims_2_pos_red_2);
+lemlib::Pose elims_2_pos_blue_3 = mirrorPose(elims_2_pos_red_3);
+lemlib::Pose elims_2_pos_blue_4 = mirrorPose(elims_2_pos_red_4);
+lemlib::Pose elims_2_pos_blue_5 = mirrorPose(elims_2_pos_red_5);
+lemlib::Pose elims_2_pos_blue_6 = mirrorPose(elims_2_pos_red_6);
+lemlib::Pose elims_2_pos_blue_6a = mirrorPose(elims_2_pos_red_6a);
+lemlib::Pose elims_2_pos_blue_7 = mirrorPose(elims_2_pos_red_7);
+lemlib::Pose elims_2_pos_blue_7a = mirrorPose(elims_2_pos_red_7a);
 
-void elims_rush_pos_blue() {
-    chassis.setPose(elims_rush_pos_blue_0.x, elims_rush_pos_blue_0.y, elims_rush_pos_blue_0.theta);
+void elims_2_pos_blue() {
+    chassis.setPose(elims_2_pos_blue_0.x, elims_2_pos_blue_0.y, elims_2_pos_blue_0.theta);
     clamp_solenoid.extend();
 
     //goal rush
 
-    chassis.moveToPoint(elims_rush_pos_blue_1.x, elims_rush_pos_blue_1.y, 1000, {.forwards = false,.minSpeed=127}, false); //rush to mogo
-    chassis.moveToPose(elims_rush_pos_blue_2.x, elims_rush_pos_blue_2.y, elims_rush_pos_blue_2.theta, 1000, {.forwards = false}, false); //rush to mogo
-    chassis.moveToPoint(elims_rush_pos_blue_2.x, elims_rush_pos_blue_2.y, 500, {.forwards = false}, false); //rush to mogo
+    chassis.moveToPoint(elims_2_pos_blue_1.x, elims_2_pos_blue_1.y, 1000, {.forwards = false,.minSpeed=127}, false); //rush to mogo
+    chassis.moveToPose(elims_2_pos_blue_2.x, elims_2_pos_blue_2.y, elims_2_pos_blue_2.theta, 1000, {.forwards = false}, false); //rush to mogo
+    chassis.moveToPoint(elims_2_pos_blue_2.x, elims_2_pos_blue_2.y, 500, {.forwards = false}, false); //rush to mogo
 
     pros::delay(100);
 
@@ -357,25 +384,25 @@ void elims_rush_pos_blue() {
     intake_controller.set(Intake::IntakeState::INTAKING);
     pros::delay(400);
 
-    chassis.moveToPose(elims_rush_pos_blue_3.x, elims_rush_pos_blue_3.y, elims_rush_pos_blue_3.theta, 1000, {.forwards = true}, true);
+    chassis.moveToPose(elims_2_pos_blue_3.x, elims_2_pos_blue_3.y, elims_2_pos_blue_3.theta, 1000, {.forwards = true}, true);
     intake_controller.hold(true);
     arm_controller.moveTo(Arm::position::INTAKE);
 
     //second mogo
 
-    chassis.turnToPoint(elims_rush_pos_blue_4.x, elims_rush_pos_blue_4.y, 1000, {.forwards=true, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE,.maxSpeed=64}, false); // turn to ring
+    chassis.turnToPoint(elims_2_pos_blue_4.x, elims_2_pos_blue_4.y, 1000, {.forwards=true, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE,.maxSpeed=64}, false); // turn to ring
     clamp_solenoid.extend();
-    chassis.turnToPoint(elims_rush_pos_blue_5.x, elims_rush_pos_blue_5.y, 1000, {.forwards=false, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE,.maxSpeed=64}, false); // turn to mogo
-    chassis.moveToPoint(elims_rush_pos_blue_4.x, elims_rush_pos_blue_4.y, 1000, {.forwards = false,.maxSpeed=64}, false); // go to mogo
-    chassis.moveToPoint(elims_rush_pos_blue_5.x, elims_rush_pos_blue_5.y, 1000, {.forwards = false,.maxSpeed=64}, false); // go to mogo
+    chassis.turnToPoint(elims_2_pos_blue_5.x, elims_2_pos_blue_5.y, 1000, {.forwards=false, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE,.maxSpeed=64}, false); // turn to mogo
+    chassis.moveToPoint(elims_2_pos_blue_4.x, elims_2_pos_blue_4.y, 1000, {.forwards = false,.maxSpeed=64}, false); // go to mogo
+    chassis.moveToPoint(elims_2_pos_blue_5.x, elims_2_pos_blue_5.y, 1000, {.forwards = false,.maxSpeed=64}, false); // go to mogo
     clamp_solenoid.retract();
     intake_controller.set(Intake::IntakeState::OUTTAKE);
     pros::delay(100);
     intake_controller.set(Intake::IntakeState::INTAKING);
     pros::delay(200); // wait for allience
 
-    chassis.turnToPoint(elims_rush_pos_blue_6.x, elims_rush_pos_blue_6.y, 1000, {.forwards=true, .maxSpeed=64}, true); // turn to stake
-    chassis.moveToPoint(elims_rush_pos_blue_6.x, elims_rush_pos_blue_6.y, 4000, {.forwards = true,.maxSpeed=64}, false);
+    chassis.turnToPoint(elims_2_pos_blue_6.x, elims_2_pos_blue_6.y, 1000, {.forwards=true, .maxSpeed=64}, true); // turn to stake
+    chassis.moveToPoint(elims_2_pos_blue_6.x, elims_2_pos_blue_6.y, 4000, {.forwards = true,.maxSpeed=64}, false);
     
     //pros::delay(500);
 
@@ -386,12 +413,312 @@ void elims_rush_pos_blue() {
     
     arm_controller.moveTo(Arm::position::SCORE_ALLIANCE, true);
     pros::delay(600);
-    chassis.moveToPoint(elims_rush_pos_blue_6a.x, elims_rush_pos_blue_6a.y, 2000, {.forwards = false}, false); // go to ladder
+    chassis.moveToPoint(elims_2_pos_blue_6a.x, elims_2_pos_blue_6a.y, 2000, {.forwards = false}, false); // go to ladder
     intake_controller.set(Intake::IntakeState::INTAKING);
     intake_solenoid.extend();
 
-    chassis.turnToPoint(elims_rush_pos_blue_7.x, elims_rush_pos_blue_7.y, 1000, {.forwards=true}, true); // turn to stake
-    chassis.moveToPoint(elims_rush_pos_blue_7.x, elims_rush_pos_blue_7.y, 2000, {.forwards = true,.maxSpeed=48}, false); // go to ladder
+    chassis.turnToPoint(elims_2_pos_blue_7.x, elims_2_pos_blue_7.y, 1000, {.forwards=true}, true); // turn to stake
+    chassis.moveToPoint(elims_2_pos_blue_7.x, elims_2_pos_blue_7.y, 2000, {.forwards = true,.maxSpeed=48}, false); // go to ladder
+
+    pros::delay(200);
+    intake_solenoid.retract();
+
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    dt_left.move(-48);
+    dt_right.move(-48);
+    pros::delay(150);
+    dt_left.move(0);
+    dt_right.move(0);
+
+    pros::delay(5000);
+}
+
+
+//======================= old non-awp (mogo of 1 + mogo of 2) =======================
+
+lemlib::Pose qual_3_pos_red_0 = {-50.74,-58, 270}; 
+lemlib::Pose qual_3_pos_red_1 = {-32, -58.5, 270};
+lemlib::Pose qual_3_pos_red_2 = offsetPose({0, -47.24, 240}, -6);
+lemlib::Pose qual_3_pos_red_3 = offsetPose({-23.622, -47.244, 120}, 2);
+lemlib::Pose qual_3_pos_red_4 = offsetPose({-23.622-0, -23.622, 180}, -9);
+lemlib::Pose qual_3_pos_red_5 = offsetPose({-23.622+0, -23.622, 180}, -2);
+lemlib::Pose qual_3_pos_red_6 = offsetPoint({-47.244-1, -2, NAN}, qual_3_pos_red_5, 0);  //51
+lemlib::Pose qual_3_pos_red_7 = offsetPose({-70, -2, 270}, 0);
+lemlib::Pose qual_3_pos_red_7a = offsetPose({-70, -2, 270}, 17); //58.5 11.5 //7
+
+lemlib::Pose qual_3_pos_red_8 = {-24, -24, NAN}; 
+lemlib::Pose qual_3_pos_red_9 = {-14, -14, NAN}; 
+
+lemlib::Pose qual_3_pos_red_10 = {-24, -47, 90}; 
+
+void qual_3_pos_red() {
+    chassis.setPose(qual_3_pos_red_0.x, qual_3_pos_red_0.y, qual_3_pos_red_0.theta);
+    clamp_solenoid.extend();
+
+    //goal rush
+
+    chassis.moveToPoint(qual_3_pos_red_1.x , qual_3_pos_red_1.y, 10000, {.forwards = false, .minSpeed=127}, false); 
+    chassis.moveToPose(qual_3_pos_red_2.x, qual_3_pos_red_2.y, qual_3_pos_red_2.theta, 1000, {.forwards = false}, false);
+    chassis.moveToPoint(qual_3_pos_red_2.x, qual_3_pos_red_2.y, 500, {.forwards = false}, false);
+
+    pros::delay(100);
+
+    clamp_solenoid.retract(); //clamp mogo
+    pros::delay(100);
+    intake_controller.set(Intake::IntakeState::INTAKING);
+    pros::delay(700);
+
+    chassis.moveToPose(qual_3_pos_red_3.x, qual_3_pos_red_3.y, qual_3_pos_red_3.theta, 1000, {.forwards = true}, true);
+    intake_controller.hold(true);
+
+    //second mogo
+    
+    chassis.turnToPoint(qual_3_pos_red_4.x, qual_3_pos_red_4.y, 1000, {.forwards=true, .direction=lemlib::AngularDirection::CW_CLOCKWISE,.maxSpeed=96}, false); // turn to ring
+    clamp_solenoid.extend();
+    chassis.turnToPoint(qual_3_pos_red_5.x, qual_3_pos_red_5.y, 1000, {.forwards=false, .direction=lemlib::AngularDirection::CW_CLOCKWISE,.maxSpeed=96}, false); // turn to mogo
+    chassis.moveToPoint(qual_3_pos_red_4.x, qual_3_pos_red_4.y, 1000, {.forwards = false,.maxSpeed=96}, false); // go to mogo
+    chassis.moveToPoint(qual_3_pos_red_5.x, qual_3_pos_red_5.y, 1000, {.forwards = false}, false); // go to mogo
+    clamp_solenoid.retract();
+    pros::delay(50);
+    intake_controller.set(Intake::IntakeState::INTAKING);
+    pros::delay(500); // wait for allience
+
+    //alicence stake
+    //
+    intake_solenoid.extend();
+
+    chassis.turnToPoint(qual_3_pos_red_6.x, qual_3_pos_red_6.y, 1000, {}, false); // turn to stake
+    chassis.moveToPoint(qual_3_pos_red_6.x, qual_3_pos_red_6.y, 1000, {.forwards = true,.maxSpeed=96}, true); // go to stake
+    //chassis.turnToPoint(qual_3_pos_red_7.x, qual_3_pos_red_7.y, 1000, {.forwards=true,.maxSpeed=64}, true); // turn to stake
+    chassis.turnToHeading(qual_3_pos_red_7.theta, 500);
+    intake_solenoid.retract();
+    
+    chassis.moveToPose(qual_3_pos_red_7a.x, qual_3_pos_red_7a.y,qual_3_pos_red_7a.theta, 1000, {.forwards = true,.maxSpeed=96}, false);
+
+    pros::delay(800);
+    //
+    // chassis.moveToPoint(qual_3_pos_red_8.x, qual_3_pos_red_8.y, 2000, {.forwards = false}, false); // go to ladder
+
+    // chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    // chassis.moveToPoint(qual_3_pos_red_9.x, qual_3_pos_red_9.y, 2000, {.forwards = false}, true); // go to ladder
+    // arm_controller.moveTo(-290);//move arm up along the way
+    //
+    chassis.moveToPoint(qual_3_pos_red_10.x, qual_3_pos_red_10.y, 2000, {.forwards = false}, false); // go to ladder
+    chassis.turnToHeading(qual_3_pos_red_10.theta, 1000);
+}
+
+lemlib::Pose qual_3_pos_blue_0 = mirrorPose(qual_3_pos_red_0); 
+lemlib::Pose qual_3_pos_blue_1 = mirrorPose(qual_3_pos_red_1);
+lemlib::Pose qual_3_pos_blue_2 = mirrorPose(qual_3_pos_red_2);
+lemlib::Pose qual_3_pos_blue_3 = mirrorPose(qual_3_pos_red_3);
+lemlib::Pose qual_3_pos_blue_4 = mirrorPose(qual_3_pos_red_4);
+lemlib::Pose qual_3_pos_blue_5 = mirrorPose(qual_3_pos_red_5);
+lemlib::Pose qual_3_pos_blue_6 = mirrorPose(qual_3_pos_red_6);
+lemlib::Pose qual_3_pos_blue_7 = mirrorPose(qual_3_pos_red_7);
+lemlib::Pose qual_3_pos_blue_7a = mirrorPose(qual_3_pos_red_7a);
+lemlib::Pose qual_3_pos_blue_8 = mirrorPose(qual_3_pos_red_8);
+lemlib::Pose qual_3_pos_blue_9 = mirrorPose(qual_3_pos_red_9);
+lemlib::Pose qual_3_pos_blue_10 = mirrorPose(qual_3_pos_red_10);
+
+void qual_3_pos_blue() {
+    chassis.setPose(qual_3_pos_blue_0.x, qual_3_pos_blue_0.y, qual_3_pos_blue_0.theta);
+    clamp_solenoid.extend();
+
+    //goal rush
+
+    chassis.moveToPoint(qual_3_pos_blue_1.x, qual_3_pos_blue_1.y, 1000, {.forwards = false, .minSpeed=127}, false); //rush to mogo
+    chassis.moveToPose(qual_3_pos_blue_2.x, qual_3_pos_blue_2.y, qual_3_pos_blue_2.theta, 1000, {.forwards = false}, false); //rush to mogo
+    chassis.moveToPoint(qual_3_pos_blue_2.x, qual_3_pos_blue_2.y, 500, {.forwards = false}, false); //rush to mogo
+
+    pros::delay(100);
+
+    clamp_solenoid.retract(); //clamp mogo
+    pros::delay(100);
+    intake_controller.set(Intake::IntakeState::INTAKING);
+    pros::delay(700);
+
+    chassis.moveToPose(qual_3_pos_blue_3.x, qual_3_pos_blue_3.y, qual_3_pos_blue_3.theta, 1000, {.forwards = true}, true);
+    intake_controller.hold(true);
+
+    //second mogo
+
+    chassis.turnToPoint(qual_3_pos_blue_4.x, qual_3_pos_blue_4.y, 1000, {.forwards=true, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE,.maxSpeed=96}, false); // turn to ring
+    clamp_solenoid.extend();
+    chassis.turnToPoint(qual_3_pos_blue_5.x, qual_3_pos_blue_5.y, 1000, {.forwards=false, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE,.maxSpeed=96}, false); // turn to mogo
+    chassis.moveToPoint(qual_3_pos_blue_4.x, qual_3_pos_blue_4.y, 1000, {.forwards = false,.maxSpeed=96}, false); // go to mogo
+    chassis.moveToPoint(qual_3_pos_blue_5.x, qual_3_pos_blue_5.y, 1000, {.forwards = false}, false); // go to mogo
+    clamp_solenoid.retract();
+    pros::delay(50);
+    intake_controller.set(Intake::IntakeState::INTAKING);
+    pros::delay(500); // wait for allience
+
+    //alliance stake
+
+    intake_solenoid.extend();
+
+    chassis.turnToPoint(qual_3_pos_blue_6.x, qual_3_pos_blue_6.y, 1000, {}, false); // turn to stake
+    chassis.moveToPoint(qual_3_pos_blue_6.x, qual_3_pos_blue_6.y, 1000, {.forwards = true,.maxSpeed=96}, true); // go to stake
+    
+    chassis.turnToHeading(qual_3_pos_blue_7.theta, 500);
+    intake_solenoid.retract();
+
+    chassis.moveToPose(qual_3_pos_blue_7a.x, qual_3_pos_blue_7a.y,qual_3_pos_blue_7a.theta, 1000, {.forwards = true,.maxSpeed=96}, false);
+
+    pros::delay(800);
+
+    // chassis.moveToPoint(qual_3_pos_blue_8.x, qual_3_pos_blue_8.y, 2000, {.forwards = false}, false); // go to ladder
+
+    // chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    // chassis.moveToPoint(qual_3_pos_blue_9.x, qual_3_pos_blue_9.y, 2000, {.forwards = false}, true); // go to ladder
+    // arm_controller.moveTo(-290);//move arm up along the way
+
+    chassis.moveToPoint(qual_3_pos_blue_10.x, qual_3_pos_blue_10.y, 2000, {.forwards = false}, false); // go to ladder
+    chassis.turnToHeading(qual_3_pos_blue_10.theta, 1000);
+}
+
+lemlib::Pose elims_3_pos_red_0 = {-50.74,-58, 270}; 
+lemlib::Pose elims_3_pos_red_1 = {-32, -58.5, 270};
+lemlib::Pose elims_3_pos_red_2 = offsetPose({0, -47.24, 240}, -6);
+lemlib::Pose elims_3_pos_red_3 = offsetPose({-23.622, -47.244, 120}, 0);
+lemlib::Pose elims_3_pos_red_4 = offsetPose({-23.622-0, -23.622, 180}, -9);
+lemlib::Pose elims_3_pos_red_5 = offsetPose({-23.622+0, -23.622, 180}, -7); //x+2
+//lemlib::Pose elims_3_pos_red_6 = offsetPoint({-47.244, -5, NAN}, elims_3_pos_red_5, 0);  //51
+lemlib::Pose elims_3_pos_red_6 = offsetPose({-72, -7, -63}, 12);  //16 -61.97 degs
+lemlib::Pose elims_3_pos_red_6a = offsetPose({-72, -7, -63}, 32);
+lemlib::Pose elims_3_pos_red_7 = {-54, -0, NAN};
+lemlib::Pose elims_3_pos_red_7a = offsetPose({-70,0, 270}, 13.5); //58.5 11.5
+
+
+void elims_3_pos_red() {
+    chassis.setPose(elims_3_pos_red_0.x, elims_3_pos_red_0.y, elims_3_pos_red_0.theta);
+    clamp_solenoid.extend();
+
+    //goal rush
+
+    chassis.moveToPoint(elims_3_pos_red_1.x, elims_3_pos_red_1.y, 1000, {.forwards = false,.minSpeed=127}, false); //rush to mogo
+    chassis.moveToPose(elims_3_pos_red_2.x, elims_3_pos_red_2.y, elims_3_pos_red_2.theta, 1000, {.forwards = false}, false); //rush to mogo
+    chassis.moveToPoint(elims_3_pos_red_2.x, elims_3_pos_red_2.y, 500, {.forwards = false}, false); //rush to mogo
+
+    pros::delay(100);
+
+    clamp_solenoid.retract(); //clamp mogo
+    pros::delay(50);
+    intake_controller.set(Intake::IntakeState::INTAKING);
+    pros::delay(400);
+
+    chassis.moveToPose(elims_3_pos_red_3.x, elims_3_pos_red_3.y, elims_3_pos_red_3.theta, 1000, {.forwards = true}, false);
+    intake_controller.hold(true);
+    arm_controller.moveTo(Arm::position::INTAKE);
+
+    //second mogo
+
+    chassis.turnToPoint(elims_3_pos_red_4.x, elims_3_pos_red_4.y, 1000, {.forwards=true, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE,.maxSpeed=64}, false); // turn to ring
+    clamp_solenoid.extend();
+    chassis.turnToPoint(elims_3_pos_red_5.x, elims_3_pos_red_5.y, 1000, {.forwards=false, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE,.maxSpeed=64}, false); // turn to mogo
+    chassis.moveToPoint(elims_3_pos_red_4.x, elims_3_pos_red_4.y, 1000, {.forwards = false,.maxSpeed=64}, false); // go to mogo
+    chassis.moveToPoint(elims_3_pos_red_5.x, elims_3_pos_red_5.y, 1000, {.forwards = false,.maxSpeed=64}, false); // go to mogo
+    clamp_solenoid.retract();
+    pros::delay(100);
+    intake_controller.set(Intake::IntakeState::INTAKING);
+    pros::delay(200); // wait for allience
+
+    chassis.turnToPoint(elims_3_pos_red_6.x, elims_3_pos_red_6.y, 1000, {.forwards=true}, true); // turn to stake
+    chassis.moveToPoint(elims_3_pos_red_6.x, elims_3_pos_red_6.y, 4000, {.forwards = true,.maxSpeed=64}, false);
+
+    //pros::delay(500);
+
+    intake_controller.set(Intake::IntakeState::OUTTAKE);
+    pros::delay(200);
+    intake_controller.set(Intake::IntakeState::STOPPED);
+    pros::delay(50);
+
+    arm_controller.moveTo(Arm::position::SCORE_ALLIANCE, true);
+    pros::delay(600);
+    chassis.moveToPoint(elims_3_pos_red_6a.x, elims_3_pos_red_6a.y, 2000, {.forwards = false}, false); // go to ladder
+    intake_controller.set(Intake::IntakeState::INTAKING);
+    intake_solenoid.extend();
+
+    chassis.turnToPoint(elims_3_pos_red_7.x, elims_3_pos_red_7.y, 1000, {.forwards=true}, true); // turn to stake
+    chassis.moveToPoint(elims_3_pos_red_7.x, elims_3_pos_red_7.y, 2000, {.forwards = true,.maxSpeed=48}, false); // go to ladder
+    arm_controller.moveTo(Arm::position::RETRACT, true);
+
+    pros::delay(200);
+    intake_solenoid.retract();
+
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    dt_left.move(-48);
+    dt_right.move(-48);
+    pros::delay(150);
+    dt_left.move(0);
+    dt_right.move(0);
+
+    pros::delay(5000);
+
+}
+
+lemlib::Pose elims_3_pos_blue_0 = mirrorPose(elims_3_pos_red_0); 
+lemlib::Pose elims_3_pos_blue_1 = mirrorPose(elims_3_pos_red_1);
+lemlib::Pose elims_3_pos_blue_2 = mirrorPose(elims_3_pos_red_2);
+lemlib::Pose elims_3_pos_blue_3 = mirrorPose(elims_3_pos_red_3);
+lemlib::Pose elims_3_pos_blue_4 = mirrorPose(elims_3_pos_red_4);
+lemlib::Pose elims_3_pos_blue_5 = mirrorPose(elims_3_pos_red_5);
+lemlib::Pose elims_3_pos_blue_6 = mirrorPose(elims_3_pos_red_6);
+lemlib::Pose elims_3_pos_blue_6a = mirrorPose(elims_3_pos_red_6a);
+lemlib::Pose elims_3_pos_blue_7 = mirrorPose(elims_3_pos_red_7);
+lemlib::Pose elims_3_pos_blue_7a = mirrorPose(elims_3_pos_red_7a);
+
+void elims_3_pos_blue() {
+    chassis.setPose(elims_3_pos_blue_0.x, elims_3_pos_blue_0.y, elims_3_pos_blue_0.theta);
+    clamp_solenoid.extend();
+
+    //goal rush
+
+    chassis.moveToPoint(elims_3_pos_blue_1.x, elims_3_pos_blue_1.y, 1000, {.forwards = false,.minSpeed=127}, false); //rush to mogo
+    chassis.moveToPose(elims_3_pos_blue_2.x, elims_3_pos_blue_2.y, elims_3_pos_blue_2.theta, 1000, {.forwards = false}, false); //rush to mogo
+    chassis.moveToPoint(elims_3_pos_blue_2.x, elims_3_pos_blue_2.y, 500, {.forwards = false}, false); //rush to mogo
+
+    pros::delay(100);
+
+    clamp_solenoid.retract(); //clamp mogo
+    pros::delay(50);
+    intake_controller.set(Intake::IntakeState::INTAKING);
+    pros::delay(400);
+
+    chassis.moveToPose(elims_3_pos_blue_3.x, elims_3_pos_blue_3.y, elims_3_pos_blue_3.theta, 1000, {.forwards = true}, true);
+    intake_controller.hold(true);
+    arm_controller.moveTo(Arm::position::INTAKE);
+
+    //second mogo
+
+    chassis.turnToPoint(elims_3_pos_blue_4.x, elims_3_pos_blue_4.y, 1000, {.forwards=true, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE,.maxSpeed=64}, false); // turn to ring
+    clamp_solenoid.extend();
+    chassis.turnToPoint(elims_3_pos_blue_5.x, elims_3_pos_blue_5.y, 1000, {.forwards=false, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE,.maxSpeed=64}, false); // turn to mogo
+    chassis.moveToPoint(elims_3_pos_blue_4.x, elims_3_pos_blue_4.y, 1000, {.forwards = false,.maxSpeed=64}, false); // go to mogo
+    chassis.moveToPoint(elims_3_pos_blue_5.x, elims_3_pos_blue_5.y, 1000, {.forwards = false,.maxSpeed=64}, false); // go to mogo
+    clamp_solenoid.retract();
+    intake_controller.set(Intake::IntakeState::OUTTAKE);
+    pros::delay(100);
+    intake_controller.set(Intake::IntakeState::INTAKING);
+    pros::delay(200); // wait for allience
+
+    chassis.turnToPoint(elims_3_pos_blue_6.x, elims_3_pos_blue_6.y, 1000, {.forwards=true, .maxSpeed=64}, true); // turn to stake
+    chassis.moveToPoint(elims_3_pos_blue_6.x, elims_3_pos_blue_6.y, 4000, {.forwards = true,.maxSpeed=64}, false);
+    
+    //pros::delay(500);
+
+    intake_controller.set(Intake::IntakeState::OUTTAKE);
+    pros::delay(200);
+    intake_controller.set(Intake::IntakeState::STOPPED);
+    pros::delay(50);
+    
+    arm_controller.moveTo(Arm::position::SCORE_ALLIANCE, true);
+    pros::delay(600);
+    chassis.moveToPoint(elims_3_pos_blue_6a.x, elims_3_pos_blue_6a.y, 2000, {.forwards = false}, false); // go to ladder
+    intake_controller.set(Intake::IntakeState::INTAKING);
+    intake_solenoid.extend();
+
+    chassis.turnToPoint(elims_3_pos_blue_7.x, elims_3_pos_blue_7.y, 1000, {.forwards=true}, true); // turn to stake
+    chassis.moveToPoint(elims_3_pos_blue_7.x, elims_3_pos_blue_7.y, 2000, {.forwards = true,.maxSpeed=48}, false); // go to ladder
 
     pros::delay(200);
     intake_solenoid.retract();
@@ -601,7 +928,7 @@ void skills() {
     clamp_solenoid.retract();
     intake_controller.set(Intake::IntakeState::INTAKING);
 
-    /*
+   
 
     chassis.moveToPoint(skills_22.x, skills_22.y, 3000, {.forwards=true,.maxSpeed=96}, false);
 
@@ -652,14 +979,15 @@ void skills() {
     chassis.moveToPoint(skills_31.x, skills_31.y, 1000, {.forwards=true, .maxSpeed=96}, false);
     chassis.moveToPoint(skills_32.x, skills_32.y, 1000, {.forwards=true, .maxSpeed=127}, false);
 
-    // // //climb
-    // arm_controller.moveTo(Arm::position::SCORE_NEUTRAL, true);
-    // chassis.moveToPose(skills_33.x, skills_33.y, skills_33.theta, 10000, {.forwards=false, .maxSpeed=127}, false);
-    // // //chassis.turnToPoint(skills_33.x, skills_33.y, 1000, {.forwards=false}, false);
-    // dt_left.move(127);
-    // dt_right.move(127);
-    // pros::delay(500);
-    // dt_left.move(0);
-    // dt_right.move(0);
+    // //climb
+    arm_controller.moveTo(Arm::position::SCORE_NEUTRAL, true);
+    chassis.moveToPose(skills_33.x, skills_33.y, skills_33.theta, 10000, {.forwards=false, .maxSpeed=127}, false);
+    // //chassis.turnToPoint(skills_33.x, skills_33.y, 1000, {.forwards=false}, false);
+     /*
+    dt_left.move(127);
+    dt_right.move(127);
+    pros::delay(500);
+    dt_left.move(0);
+    dt_right.move(0);
     */
 }

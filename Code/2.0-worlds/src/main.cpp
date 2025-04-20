@@ -11,7 +11,18 @@ VBF Robotics
 #include "main.h" 
 #include "setup.h"
 
-#define AUTON_TYPE 0 // 0 for skills, 1 for qual rush, 2 for quali safe, 3 for elims, 4 for not auton
+#define AUTON_SLOT 6
+
+/* -------- ROBOT PROGRAMS --------
+1 - awp pos (allience stake + mogo of 3 (doinker grab 2))
+2 - new non-awp pos (mogo of 1 + mogo of 3 (doinker grab 2))
+3 - old non-awp pos (mogo of 1 + mogo of 2)
+4 - awp neg (allience stake + mogo of 3 (doinker grab 2))
+5 - 
+6 - skills
+7 - 
+8 - doom :)
+*/
 
 static pros::Task* init_task = nullptr;
 
@@ -19,13 +30,13 @@ void initialize() {
     chassis.calibrate(); // calibrate the chassis
     arm_rotational_sensor.reset(); // reset the arm sensor
 
-    for (int port : {dt_left.get_port(0), dt_left.get_port(1), dt_left.get_port(2), 
-                     dt_right.get_port(0), dt_right.get_port(1), dt_right.get_port(2), 
-                     intake_motor.get_port(), arm_motors.get_port(0), arm_motors.get_port(1)}) {
-        if (pros::v5::Device::get_plugged_type(port) == pros::v5::DeviceType::none || pros::v5::Device::get_plugged_type(port) == pros::v5::DeviceType::undefined) { 
-            master.rumble("---"); 
-        }
-    }
+    // for (int port : {dt_left.get_port(0), dt_left.get_port(1), dt_left.get_port(2), 
+    //                  dt_right.get_port(0), dt_right.get_port(1), dt_right.get_port(2), 
+    //                  intake_motor.get_port(), arm_motors.get_port(0), arm_motors.get_port(1)}) {
+    //     if (pros::v5::Device::get_plugged_type(port) == pros::v5::DeviceType::none || pros::v5::Device::get_plugged_type(port) == pros::v5::DeviceType::undefined) { 
+    //         master.rumble("---"); 
+    //     }
+    // }
     
     chassis.setPose(0, 0, 0); // X: 0, Y: 0, Heading: 0
 
@@ -64,23 +75,63 @@ void autonomous() {
 
     // pidtune();
 
-    if (AUTON_TYPE == 0) {
-        skills();
-    } else if (AUTON_TYPE == 1) { // quali rush
+    if (AUTON_SLOT == 6) { skills(); }  
+
+    // qualis
+    if (AUTON_SLOT == 1) { // awp (allience stake + mogo of 3 (doinker grab 2)) end at ladder
         if (sideColor == red){
-            qual_rush_pos_red();
+            qual_1_pos_red();
         } else if (sideColor == blue){
-            qual_rush_pos_blue();
+            qual_1_pos_blue();
         } 
-    } else if (AUTON_TYPE == 2) { // quali safe
-        qual_safe_pos_blue();
-    } else if (AUTON_TYPE == 3) { // elims rush
+    } else if (AUTON_SLOT == 2) { // new non-awp (mogo of 1 + mogo of 3 (doinker grab 2)) end at ladder
         if (sideColor == red){
-            elims_rush_pos_red();
+            qual_2_pos_red();
         } else if (sideColor == blue){
-            elims_rush_pos_blue();
+            qual_2_pos_blue();
         }
-    }
+    } else if (AUTON_SLOT == 3) { // old non-awp (mogo of 1 + mogo of 2) end at ladder
+        if (sideColor == red){
+            qual_3_pos_red();
+        } else if (sideColor == blue){
+            qual_3_pos_blue();
+        }
+    } else if (AUTON_SLOT == 4) { // awp neg (allience stake + mogo of 3 (doinker grab 2)) end at ladder
+        if (sideColor == red){
+            qual_1_neg_red();
+        } else if (sideColor == blue){
+            qual_1_neg_blue();
+        }
+    } 
+
+    // elims
+    /*
+    if (AUTON_SLOT == 1) { // awp (allience stake + mogo of 3 (doinker grab 2)) end at mid
+        if (sideColor == red){
+            elim_1_pos_red();
+        } else if (sideColor == blue){
+            elim_1_pos_blue();
+        }
+    } else if (AUTON_SLOT == 2) { // new non-awp (mogo of 1 + mogo of 3 (doinker grab 2)) end at mid
+        if (sideColor == red){
+            elim_2_pos_red();
+        } else if (sideColor == blue){
+            elim_2_pos_blue();
+        }
+    } else if (AUTON_SLOT == 3) { // old non-awp (mogo of 1 + mogo of 2) end at mid
+        if (sideColor == red){
+            elim_3_pos_red();
+        } else if (sideColor == blue){
+            elim_3_pos_blue();
+        }
+    } else if (AUTON_SLOT == 4) { // awp neg (allience stake + mogo of 3 (doinker grab 2)) end at mid
+        if (sideColor == red){
+            elim_1_neg_red();
+        } else if (sideColor == blue){
+            elim_1_neg_blue();
+        }
+    } 
+    */
 
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 }
@@ -98,5 +149,5 @@ void opcontrol() {
 	pros::Task intake_task(intake);
     pros::Task topmech_task(topmech);
     pros::Task piston_task(piston);
-    ledsetup();
+    // ledsetup();
 }

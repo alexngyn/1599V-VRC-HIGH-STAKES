@@ -52,7 +52,7 @@ void Arm::init() {
 
                 //std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, error);
                 //std::printf("Arm: %f | %f | %f \n", this->getAngle(), this->targetAngle, vel);
-                // pros::screen::print(pros::E_TEXT_MEDIUM, 4, "Arm: act pos %.1f | tgt pos %.1f | vel %.1f \n", this->getAngle(), this->targetAngle, vel);
+                pros::screen::print(pros::E_TEXT_MEDIUM, 4, "Arm: act pos %.1f | tgt pos %.1f | vel %.1f \n", this->getAngle(), this->targetAngle, vel);
 
                 this->motors->move(vel);
             } // soft limits
@@ -113,7 +113,7 @@ void Arm::waitUntilDone(int timeout) {
 
 double Arm::angleStringToAngle() {
     switch (this->targetPosition) {
-        case position::RETRACT: return -340;
+        case position::RETRACT: return -330;
         case position::INTAKE: return -308;//08
         case position::UP: return -220;
         case position::SCORE_NEUTRAL: return -182;//190

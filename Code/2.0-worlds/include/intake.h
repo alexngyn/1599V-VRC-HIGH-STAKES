@@ -68,8 +68,8 @@ class Intake {
                 if ((this->arm.getTargetPosition() == Arm::position::UP || this->arm.getTargetPosition() == Arm::position::SCORE_NEUTRAL ||
                     this->arm.getTargetPosition() == Arm::position::SCORE_ALLIANCE) && prevArmState == Arm::position::INTAKE) {
                     
-                    this->motor.move_velocity(-600);
-                    pros::delay(150);
+                    this->motor.move_voltage(-12000);
+                    pros::delay(80);
                     this->motor.move_velocity(0);
                 }
                 prevArmState = this->arm.getTargetPosition();
