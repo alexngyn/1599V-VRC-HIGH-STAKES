@@ -782,7 +782,7 @@ lemlib::Pose skills_25 = {46, 8, 0};
 lemlib::Pose skills_23b = offsetPose({30, -47.244-3, 90},0);
 lemlib::Pose skills_26 = offsetPose({23.622, 47.244-2, 330},0);
 lemlib::Pose skills_26a = offsetPose({47.244, 59.055, 330},-4);
-lemlib::Pose skills_27 = offsetPoint({49, 64, 225},skills_26,0);
+lemlib::Pose skills_27 = offsetPoint({60, 60, 225},skills_26,0);
 
 lemlib::Pose skills_28 = {59.055, 47.244, 210};
 lemlib::Pose skills_29 = {38, 14, 215};
@@ -935,19 +935,18 @@ void skills() {
     chassis.moveToPose(skills_23.x, skills_23.y, skills_23.theta, 2000, {.forwards=true, .maxSpeed=96}, false);
     chassis.moveToPoint(skills_23a.x, skills_23a.y, 2000, {.forwards=true, .maxSpeed=64}, false);
     chassis.moveToPoint(skills_23.x, skills_23.y, 2000, {.forwards=false, .maxSpeed=64}, false);
-    chassis.moveToPoint(skills_24.x, skills_24.y, 2000, {.forwards=true, .maxSpeed=64}, false);
-    chassis.moveToPoint(skills_23b.x, skills_23.y, 2000, {.forwards=false, .maxSpeed=64}, false);
+    // chassis.moveToPoint(skills_24.x, skills_24.y, 2000, {.forwards=true, .maxSpeed=64}, false);
+    // chassis.moveToPoint(skills_23b.x, skills_23.y, 2000, {.forwards=false, .maxSpeed=64}, false);
 
     chassis.moveToPoint(skills_25.x, skills_25.y, 3000, {.forwards=true,.maxSpeed=96}, false);
     chassis.moveToPoint(skills_26.x, skills_26.y, 2000, {.forwards=true, .maxSpeed=64}, false);
 
     // doinker_solenoid.toggle();
 
-    chassis.moveToPoint(skills_26a.x, skills_26a.y, 2000, {.forwards=true, .maxSpeed=96}, false);
-    intake_controller.hold();
+    // chassis.moveToPoint(skills_26a.x, skills_26a.y, 2000, {.forwards=true, .maxSpeed=96}, false);
     
     chassis.turnToPoint(skills_27.x, skills_27.y, 1000, {.forwards=false, .direction=lemlib::AngularDirection::CCW_COUNTERCLOCKWISE}, false);
-    chassis.moveToPoint(skills_27.x, skills_27.y, 2000, {.forwards=false, .maxSpeed=96}, false);
+    chassis.moveToPoint(skills_27.x, skills_27.y, 2000, {.forwards=false, .maxSpeed=64}, false);
     clamp_solenoid.extend();
     // doinker_solenoid.toggle();
 
@@ -981,13 +980,11 @@ void skills() {
 
     // //climb
     arm_controller.moveTo(Arm::position::SCORE_NEUTRAL, true);
-    chassis.moveToPose(skills_33.x, skills_33.y, skills_33.theta, 10000, {.forwards=false, .maxSpeed=127}, false);
+    chassis.moveToPose(skills_33.x, skills_33.y, skills_33.theta, 10000, {.forwards=false, .maxSpeed=96}, false);
     // //chassis.turnToPoint(skills_33.x, skills_33.y, 1000, {.forwards=false}, false);
-     /*
-    dt_left.move(127);
-    dt_right.move(127);
-    pros::delay(500);
+    dt_left.move(100);
+    dt_right.move(100);
+    pros::delay(1000);
     dt_left.move(0);
     dt_right.move(0);
-    */
 }
