@@ -982,8 +982,8 @@ void skills() {
     arm_controller.moveTo(Arm::position::SCORE_NEUTRAL, true);
     chassis.moveToPose(skills_33.x, skills_33.y, skills_33.theta, 10000, {.forwards=false, .maxSpeed=96}, false);
     // //chassis.turnToPoint(skills_33.x, skills_33.y, 1000, {.forwards=false}, false);
-    dt_left.move(100);
-    dt_right.move(100);
+    dt_left.move(-100);
+    dt_right.move(-100);
     pros::delay(1000);
     dt_left.move(0);
     dt_right.move(0);

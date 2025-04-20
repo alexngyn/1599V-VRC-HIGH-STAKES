@@ -9,6 +9,7 @@ VBF Robotics
 */
 
 #include "main.h" 
+#include "pros/rtos.hpp"
 #include "setup.h"
 
 #define AUTON_SLOT 6
@@ -140,6 +141,12 @@ void opcontrol() {
     if (arm_controller.getTargetPosition() != Arm::position::CUSTOM) {// only if not not touching laddder at end of match
         arm_controller.moveTo(Arm::position::RETRACT, true);
     }
+
+    doinker_solenoid.extend(); 
+    pros::delay(20);
+    doinker_solenoid.retract();
+    
+    
     master.clear();
     
     //partner.print(0, 0, "op start"); // 0-2 0-14

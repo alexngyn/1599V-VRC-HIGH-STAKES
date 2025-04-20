@@ -80,26 +80,26 @@ void Intake::ejectRingDown(){
 void Intake::colorSort(){ // private function
     // pros::c::optical_rgb_s_t rgb_value;
     // rgb_value = this->sortSensor.get_rgb();
-    if (this->sortSensor.get_proximity() > 100) { ejectRingUp();
-    // if (this->sort == SortState::RED){
-    //     if (this->sortSensor.get_hue()>100 && this->sortSensor.get_hue()<300) {  
-    //         if (this->arm.getTargetPosition() == Arm::position::INTAKE){
-    //             this->arm.moveTo(Arm::position::RETRACT);
-    //             ejectRingDown();
-    //             this->arm.moveTo(Arm::position::INTAKE);
-    //         } else { ejectRingUp(); }
-    //     }
+    // if (this->sortSensor.get_proximity() > 100) { ejectRingUp();
+    // // if (this->sort == SortState::RED){
+    // //     if (this->sortSensor.get_hue()>100 && this->sortSensor.get_hue()<300) {  
+    // //         if (this->arm.getTargetPosition() == Arm::position::INTAKE){
+    // //             this->arm.moveTo(Arm::position::RETRACT);
+    // //             ejectRingDown();
+    // //             this->arm.moveTo(Arm::position::INTAKE);
+    // //         } else { ejectRingUp(); }
+    // //     }
+    // // }
+    // // else if (this->sort == SortState::BLUE){
+    // //     if (this->sortSensor.get_hue()<40 || this->sortSensor.get_hue()>=320) { 
+    // //         if (this->arm.getTargetPosition() == Arm::position::INTAKE){
+    // //             this->arm.moveTo(Arm::position::RETRACT);
+    // //             ejectRingDown();
+    // //             this->arm.moveTo(Arm::position::INTAKE);
+    // //         } else { ejectRingUp(); }
+    // //     }
+    // // }
     // }
-    // else if (this->sort == SortState::BLUE){
-    //     if (this->sortSensor.get_hue()<40 || this->sortSensor.get_hue()>=320) { 
-    //         if (this->arm.getTargetPosition() == Arm::position::INTAKE){
-    //             this->arm.moveTo(Arm::position::RETRACT);
-    //             ejectRingDown();
-    //             this->arm.moveTo(Arm::position::INTAKE);
-    //         } else { ejectRingUp(); }
-    //     }
-    // }
-    }
 }
 
 void Intake::hold(bool async, int timeout){
