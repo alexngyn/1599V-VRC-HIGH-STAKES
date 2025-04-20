@@ -415,36 +415,38 @@ lemlib::Pose skills_1b = {NAN,NAN, 60};
 lemlib::Pose skills_2 = {-23.622, -23.622, 135};
 lemlib::Pose skills_3 = {-23.622, -47.24-4, 200};
 lemlib::Pose skills_4 = offsetPose({23.622+0, -47.244-4, 90},0);
-lemlib::Pose skills_5 = offsetPose({0, -62, 180},0);//1
-lemlib::Pose skills_5a = offsetPose({0, -70, 180},0);//1
-lemlib::Pose skills_5b = offsetPose({0, -64, 180},0);//1
-lemlib::Pose skills_5c = offsetPose({0, -57, 180},0);//1
+lemlib::Pose skills_5 = offsetPose({-0, -62, 180},0);//1
+lemlib::Pose skills_5a = offsetPose({-0, -70, 180},0);//1
+lemlib::Pose skills_5b = offsetPose({-0, -65, 180},0);//1
+lemlib::Pose skills_5c = offsetPose({-0, -57, 180},0);//1
 lemlib::Pose skills_6 = offsetPose({-47.244, -47.244-6, 270},0); 
-lemlib::Pose skills_7 = offsetPose({-56.055-3, -47.244-6, 270},0);
+lemlib::Pose skills_7 = offsetPose({-56.055-6, -47.244-6, 270},0);
 lemlib::Pose skills_8 = offsetPoint({-47.244, -59.055+0, 135},skills_7,4);
-lemlib::Pose skills_9 = offsetPoint({-58, -67, 45},skills_8,2);
+lemlib::Pose skills_9 = offsetPoint({-61, -63, 45},skills_8,2);
 
-lemlib::Pose skills_10 = offsetPoint({-47-0, -47, 45},skills_9,0);
+lemlib::Pose skills_10 = offsetPoint({-47-3, -47, 45},skills_9,0);
 //lemlib::Pose skills_10 = offsetPoint({0, 0, 45},skills_9,0);
 //lemlib::Pose skills_11a = {-38,23.5,NAN};
-lemlib::Pose skills_11 = offsetPose({-47.244-0, 23.622-4, 180},0);
+lemlib::Pose skills_11 = offsetPose({-47.244-3, 23.622-2, 180},0);
 lemlib::Pose skills_11a = offsetPose({NAN,NAN,120},0);
-lemlib::Pose skills_12 = {-23.622+0, 23.622, 17.5};
-lemlib::Pose skills_13 = {-23.622+0, 47.244, 310};
-lemlib::Pose skills_14 = offsetPose({-59.055-6, 47.244-3, 270},0);
-lemlib::Pose skills_15 = offsetPoint({-47.244, 59.055, 45},skills_14,0);
-lemlib::Pose skills_16 = offsetPoint({-58, 64, 135},skills_15,2);
+lemlib::Pose skills_12 = {-23.622-0, 23.622-2, 17.5};
+lemlib::Pose skills_13 = {-23.622+0, 47.244-4, 310};
+lemlib::Pose skills_14 = offsetPose({-59.055-3, 47.244-5, 270},0);
+lemlib::Pose skills_15 = offsetPoint({-47.244-0, 59.055-0, 45},skills_14,0);
+lemlib::Pose skills_16 = offsetPoint({-59, 60, 135},skills_15,2);
+lemlib::Pose skills_16a = {50, 50, 135};
 
-lemlib::Pose skills_17 = offsetPoint({1, 60, 180},skills_16,0);
-lemlib::Pose skills_17a = offsetPoint({1, 70, 180},skills_17,0);
-lemlib::Pose skills_17b = offsetPoint({1, 64, 180},skills_17,0);
-lemlib::Pose skills_17c = offsetPoint({1, 53, 180},skills_17,0);
+lemlib::Pose skills_17 = offsetPoint({-5, 55, 180},skills_16,0);
+lemlib::Pose skills_17a = offsetPoint({-5, 70, 180},skills_17,0);
+lemlib::Pose skills_17b = offsetPoint({-5, 60, 180},skills_17,0);
+lemlib::Pose skills_17c = offsetPoint({-5, 53, 180},skills_17,0);
 // lemlib::Pose skills_18 = offsetPoint({23.622, 47.244, 110},skills_17,2);
-//lemlib::Pose skills_19a = offsetPose({0, 59.055, 0},2);
+//lemlib::Pose  skills_19a = offsetPose({0, 59.055, 0},2);
 //lemlib::Pose skills_19 = offsetPose({0, 70, 0},10);
 lemlib::Pose skills_20 = {23.622, 23.622, 140};
 
-lemlib::Pose skills_21 = offsetPose({47.035, -5, 0},-2);
+
+lemlib::Pose skills_21 = offsetPose({47.035, 0, 300},8);
 lemlib::Pose skills_22 = offsetPose({23.622, -23.622, 200},2);
 lemlib::Pose skills_23 = offsetPose({30, -47.244-3, 90},0);
 lemlib::Pose skills_23a = offsetPose({42, -47.244-3, 90},0);
@@ -481,12 +483,8 @@ void skills() {
     chassis.moveToPoint(skills_1a.x, skills_1a.y, 2000, {.forwards=true, .maxSpeed=96}, true);
     intake_controller.set(Intake::IntakeState::OUTTAKE);
     chassis.moveToPose(skills_1.x, skills_1.y, skills_1.theta, 2000, {.forwards=false, .maxSpeed=96}, false);
-    // //chassis.moveToPoint(skills_1.x, skills_1.y, 1000, {.forwards=false, .maxSpeed=64}, true);
-    // arm_controller.moveTo(Arm::position::RETRACT);
 
     //pros::delay(100);
-
-    
 
     clamp_solenoid.retract();
 
@@ -496,6 +494,8 @@ void skills() {
     chassis.moveToPose(skills_2.x, skills_2.y, skills_2.theta, 2000, {.forwards=true, .maxSpeed=96, .minSpeed=36}, false);
     chassis.moveToPoint(skills_3.x, skills_3.y, 2000, {.forwards=true, .maxSpeed=96}, false);
 
+    
+
     chassis.turnToHeading(skills_4.theta, 1000);
     chassis.moveToPoint(skills_4.x, skills_4.y, 2000, {.forwards=true, .maxSpeed=96}, false);
 
@@ -504,21 +504,22 @@ void skills() {
 
 
     arm_controller.moveTo(Arm::position::INTAKE, true);
-    pros::delay(1000);
+    pros::delay(1500);
     //intake_controller.holdldb(true,1000);
     chassis.turnToPoint(skills_5a.x, skills_5a.y, 1000, {.forwards=true}, false);
     // arm_controller.moveTo(Arm::position::INTAKE, true);
     chassis.moveToPoint(skills_5b.x, skills_5b.y, 1000, {.forwards=true, .maxSpeed=96}, false);
     arm_controller.moveTo(Arm::position::SCORE_NEUTRAL, true, 1000);
     intake_controller.set(Intake::IntakeState::STOPPED);
-    pros::delay(1000);
+    pros::delay(600);
+    
     chassis.moveToPoint(skills_5c.x, skills_5c.y, 2000, {.forwards=false, .maxSpeed=96}, true);
     pros::delay(100);
     arm_controller.moveTo(Arm::position::RETRACT);
 
     intake_controller.set(Intake::IntakeState::INTAKING);
 
-    chassis.moveToPose(skills_6.x , skills_6.y, skills_6.theta, 3000, {.forwards=true,.minSpeed=48}, true);
+    chassis.moveToPose(skills_6.x , skills_6.y, skills_6.theta, 3000, {.forwards=true, .maxSpeed=96,.minSpeed=48}, true);
     // pros::delay(1000);
     chassis.moveToPoint(skills_7.x, skills_7.y, 2000, {.forwards=true, .maxSpeed=96}, false);
     chassis.moveToPoint(skills_8.x, skills_8.y, 2000, {.forwards=true, .maxSpeed=96}, false);
@@ -529,15 +530,14 @@ void skills() {
     pros::delay(300);
     intake_controller.set(Intake::IntakeState::STOPPED);
 
-
+    
 
     // //goal 2 quadrent 2 + left wall stake
     chassis.moveToPoint(skills_10.x, skills_10.y, 3000, {.forwards=true, .maxSpeed=96}, true);
     // chassis.waitUntil(5);
     // intake_controller.hold(true,1000);
 
-    // chassis.turnToPoint(skills_11.x, skills_11.y, 1000, {.forwards=false, .maxSpeed=64}, false);
-    // chassis.moveToPoint(skills_11a.x, skills_11a.y, 2000, {.forwards=false, .maxSpeed=64}, false);
+    // chassis.moveToPoint(skills_11.x, skills_11.y, 3000, {.forwards=true, .maxSpeed=96, .minSpeed=48, .earlyExitRange=24}, true);
     chassis.moveToPose(skills_11.x, skills_11.y, skills_11.theta, 3000, {.forwards=false, .maxSpeed=64}, false);
     clamp_solenoid.retract();
     pros::delay(200);
@@ -555,7 +555,10 @@ void skills() {
     intake_controller.set(Intake::IntakeState::OUTTAKE);
     clamp_solenoid.extend();
     pros::delay(300);
+
+    chassis.moveToPoint(skills_16a.x, skills_16a.y, 100, {.forwards=true,.maxSpeed=96}, false);
     intake_controller.set(Intake::IntakeState::INTAKING);
+    
 
     // left wall stake
     chassis.moveToPoint(skills_17.x, skills_17.y, 3000, {.forwards=true, .maxSpeed=96}, true);
@@ -566,6 +569,7 @@ void skills() {
     arm_controller.moveTo(Arm::position::SCORE_NEUTRAL, true);
     intake_controller.set(Intake::IntakeState::STOPPED);
     pros::delay(1000);
+    
 
     chassis.moveToPoint(skills_17c.x, skills_17c.y, 1000, {.forwards=false, .maxSpeed=96}, false);
 
@@ -591,11 +595,13 @@ void skills() {
 
     chassis.moveToPoint(skills_20.x, skills_20.y, 2000, {.forwards=true, .maxSpeed=96}, true);
     arm_controller.moveTo(Arm::position::RETRACT);
-    pros::delay(500);
+    pros::delay(300);
     intake_controller.hold();
     chassis.moveToPose(skills_21.x, skills_21.y, skills_21.theta, 3000, {.forwards=false, .maxSpeed=96}, false);
     clamp_solenoid.retract();
     intake_controller.set(Intake::IntakeState::INTAKING);
+
+    /*
 
     chassis.moveToPoint(skills_22.x, skills_22.y, 3000, {.forwards=true,.maxSpeed=96}, false);
 
@@ -655,4 +661,5 @@ void skills() {
     // pros::delay(500);
     // dt_left.move(0);
     // dt_right.move(0);
+    */
 }

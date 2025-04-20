@@ -69,7 +69,7 @@ class Intake {
                     this->arm.getTargetPosition() == Arm::position::SCORE_ALLIANCE) && prevArmState == Arm::position::INTAKE) {
                     
                     this->motor.move_velocity(-600);
-                    pros::delay(200);
+                    pros::delay(150);
                     this->motor.move_velocity(0);
                 }
                 prevArmState = this->arm.getTargetPosition();

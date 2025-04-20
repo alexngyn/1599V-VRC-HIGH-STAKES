@@ -102,6 +102,10 @@ void controllerTelemetry() {
     }
 }
 
+static pros::Task* screenTelemetryTask = nullptr;
+
+/*
+
 LV_IMG_DECLARE(lf);
 LV_IMG_DECLARE(sc);
 // LV_IMG_DECLARE(typ);
@@ -113,11 +117,11 @@ LV_IMG_DECLARE(ssis);
 // Map image names to LVGL image descriptors
 std::map<std::string, const lv_img_dsc_t*> imageMap = {
     {"sc", &sc},
-    {"lf", &lf},
+    // {"lf", &lf},
     // {"typ", &typ},
-    {"abt", &abt},
-    {"ssis", &ssis},
-    {"banana", &banana},
+    // {"abt", &abt},
+    // {"ssis", &ssis},
+    // {"banana", &banana},
     // {"allience", &allience}
 
 };
@@ -137,7 +141,6 @@ void printImage(const char* img_name) {
 
 static int imgIndex = 0;
 static std::vector<const char*> imgNames;
-static pros::Task* screenTelemetryTask = nullptr;
 
 // void switchImage() {
 //     if (imgNames.empty()) {
@@ -173,13 +176,14 @@ void switchScreen() {
 void screenImage() {
     printImage("sc");
     // screenTelemetryTask->suspend();
-    // pros::screen::touch_callback(switchScreen, pros::E_TOUCH_PRESSED);
+    pros::screen::touch_callback(switchScreen, pros::E_TOUCH_PRESSED);
 }
 
+*/
 
 void telemetryInit() {
-    screenTelemetryTask = new pros::Task(screenTelemetry);
-    screenImage();
+    screenTelemetryTask = new pros::Task(screenTelemetry); // screenTelemetryTask->suspend();
+    // screenImage();
     pros::Task controllerScreenTask(controllerTelemetry);
     pros::Task sdTask(sdTelemetry);
 }

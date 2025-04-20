@@ -11,14 +11,12 @@ VBF Robotics
 #include "main.h" 
 #include "setup.h"
 
-#define AUTON_TYPE 1 // 0 for skills, 1 for qual rush, 2 for quali safe, 3 for elims, 4 for not auton
+#define AUTON_TYPE 0 // 0 for skills, 1 for qual rush, 2 for quali safe, 3 for elims, 4 for not auton
 
 static pros::Task* init_task = nullptr;
 
 void initialize() {
-    telemetryInit();
-
-    // chassis.calibrate(); // calibrate the chassis
+    chassis.calibrate(); // calibrate the chassis
     arm_rotational_sensor.reset(); // reset the arm sensor
 
     for (int port : {dt_left.get_port(0), dt_left.get_port(1), dt_left.get_port(2), 
@@ -36,7 +34,7 @@ void initialize() {
 
     arm_controller.init();
 
-    if (init_task == nullptr) { init_task = new pros::Task([&]() {
+    init_task = new pros::Task([&]() {
         while (pros::competition::is_disabled()) {
             if (selector.get_value() < 100) {
                 sideColor = color::blue;
@@ -47,11 +45,12 @@ void initialize() {
                 intake_controller.setState(Intake::SortState::RED);
                 indicator.set_value(false);
             }
-            if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) { initialize(); }
             
             pros::delay(100);
         }
-    });}
+    });
+
+    telemetryInit();
 
     pros::delay(500);
 }
@@ -72,7 +71,7 @@ void autonomous() {
             qual_rush_pos_red();
         } else if (sideColor == blue){
             qual_rush_pos_blue();
-        }
+        } 
     } else if (AUTON_TYPE == 2) { // quali safe
         qual_safe_pos_blue();
     } else if (AUTON_TYPE == 3) { // elims rush
