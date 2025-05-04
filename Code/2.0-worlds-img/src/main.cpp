@@ -9,9 +9,21 @@ VBF Robotics
 */
 
 #include "main.h" 
+#include "pros/rtos.hpp"
 #include "setup.h"
 
-#define AUTON_TYPE 1 // 0 for skills, 1 for qual rush, 2 for quali safe, 3 for elims, 4 for not auton
+#define AUTON_SLOT 6
+
+/* -------- ROBOT PROGRAMS --------
+1 - (test auton) awp pos (allience stake + mogo of 3 (doinker grab 2))
+2 - (cat) awp neg (mogo of 1 + mogo of 3 (doinker grab 2))
+3 - old non-awp pos (mogo of 1 + mogo of 2)
+4 - 
+5 - 
+6 - skills
+7 - 
+8 - doom :)
+*/
 
 static pros::Task* init_task = nullptr;
 
@@ -34,9 +46,7 @@ void initialize() {
 
     arm_controller.init();
 
-    // telemetryInit();
-
-    if (init_task == nullptr) { init_task = new pros::Task([&]() {
+    init_task = new pros::Task([&]() {
         while (pros::competition::is_disabled()) {
             if (selector.get_value() < 100) {
                 sideColor = color::blue;
@@ -47,11 +57,12 @@ void initialize() {
                 intake_controller.setState(Intake::SortState::RED);
                 indicator.set_value(false);
             }
-            // if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) { initialize(); }
             
             pros::delay(100);
         }
-    });}
+    });
+
+    telemetryInit();
 
     pros::delay(500);
 }
@@ -65,23 +76,62 @@ void autonomous() {
 
     // pidtune();
 
-    if (AUTON_TYPE == 0) {
-        skills();
-    } else if (AUTON_TYPE == 1) { // quali rush
+    // relase aligners
+    doinker_solenoid.extend(); 
+    pros::delay(20);
+    doinker_solenoid.retract();
+
+    if (AUTON_SLOT == 6) { skills(); }  
+
+    // qualis
+    if (AUTON_SLOT == 1) { // (test auton) awp pos (allience stake + mogo of 3 (doinker grab 2)) end at ladder
         if (sideColor == red){
-            qual_rush_pos_red();
+            qual_1_pos_red();
         } else if (sideColor == blue){
-            qual_rush_pos_blue();
-        }
-    } else if (AUTON_TYPE == 2) { // quali safe
-        qual_safe_pos_blue();
-    } else if (AUTON_TYPE == 3) { // elims rush
+            qual_1_pos_blue();
+        } 
+    } else if (AUTON_SLOT == 2) { // (cat) awp neg (mogo of 1 + mogo of 3 (doinker grab 2)) end at ladder
         if (sideColor == red){
-            elims_rush_pos_red();
+            qual_2_neg_red();
         } else if (sideColor == blue){
-            elims_rush_pos_blue();
+            qual_2_neg_blue();
         }
-    }
+    } else if (AUTON_SLOT == 3) { // old non-awp (mogo of 1 + mogo of 2) end at ladder
+        if (sideColor == red){
+            qual_3_pos_red();
+        } else if (sideColor == blue){
+            qual_3_pos_blue();
+        }
+    } 
+
+    // elims
+    /*
+    if (AUTON_SLOT == 1) { // awp (allience stake + mogo of 3 (doinker grab 2)) end at mid
+        if (sideColor == red){
+            elim_1_pos_red();
+        } else if (sideColor == blue){
+            elim_1_pos_blue();
+        }
+    } else if (AUTON_SLOT == 2) { // new non-awp (mogo of 1 + mogo of 3 (doinker grab 2)) end at mid
+        if (sideColor == red){
+            elim_2_pos_red();
+        } else if (sideColor == blue){
+            elim_2_pos_blue();
+        }
+    } else if (AUTON_SLOT == 3) { // old non-awp (mogo of 1 + mogo of 2) end at mid
+        if (sideColor == red){
+            elim_3_pos_red();
+        } else if (sideColor == blue){
+            elim_3_pos_blue();
+        }
+    } else if (AUTON_SLOT == 4) { // awp neg (allience stake + mogo of 3 (doinker grab 2)) end at mid
+        if (sideColor == red){
+            elim_1_neg_red();
+        } else if (sideColor == blue){
+            elim_1_neg_blue();
+        }
+    } 
+    */
 
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 }
@@ -90,6 +140,7 @@ void opcontrol() {
     if (arm_controller.getTargetPosition() != Arm::position::CUSTOM) {// only if not not touching laddder at end of match
         arm_controller.moveTo(Arm::position::RETRACT, true);
     }
+    
     master.clear();
     
     //partner.print(0, 0, "op start"); // 0-2 0-14

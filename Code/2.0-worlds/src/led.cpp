@@ -76,7 +76,7 @@ void ledsetup() {
 
     // pros::delay(50);
 
-	while (pros::millis() - start_time < 75000) { // 1:30
+	while (pros::millis() - start_time < 70000) { // 1:25
 		std::rotate(ledbuffer_v.begin(), ledbuffer_v.begin() + 1, ledbuffer_v.end());
 		std::copy(ledbuffer_v.begin(), ledbuffer_v.end(), ledbuffer);
 		pros::c::adi_led_set(led, ledbuffer, LED_1_LENGTH);
@@ -109,7 +109,7 @@ void ledsetup() {
         pros::delay(25);
     }
 
-    while (pros::millis() - start_time < 85000) {pros::delay(100); } // 1:20
+    while (pros::millis() - start_time < 90000) {pros::delay(100); } // 1:45
 
     for (int i=0; i<10; i++) {
         std::copy(ledbuffer_v.begin(), ledbuffer_v.end(), ledbuffer);
@@ -127,7 +127,7 @@ void ledsetup() {
     pros::delay(50);
     pros::c::adi_led_set_all(led2, ledbuffer, LED_2_LENGTH, 0xFF4D00);
 
-    while (pros::millis() - start_time < 102000) {pros::delay(100); } // 1:42
+    while (pros::millis() - start_time < 102000) {pros::delay(100); } // 1:52
     while (true) {
         pros::c::adi_led_set_all(led, ledbuffer, LED_1_LENGTH, 0xFF4D00);
         pros::delay(50);

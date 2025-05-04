@@ -15,10 +15,10 @@ VBF Robotics
 #define AUTON_SLOT 6
 
 /* -------- ROBOT PROGRAMS --------
-1 - awp pos (allience stake + mogo of 3 (doinker grab 2))
-2 - new non-awp pos (mogo of 1 + mogo of 3 (doinker grab 2))
+1 - (test auton) awp pos (allience stake + mogo of 3 (doinker grab 2))
+2 - (cat) awp neg (mogo of 1 + mogo of 3 (doinker grab 2))
 3 - old non-awp pos (mogo of 1 + mogo of 2)
-4 - awp neg (allience stake + mogo of 3 (doinker grab 2))
+4 - 
 5 - 
 6 - skills
 7 - 
@@ -31,13 +31,13 @@ void initialize() {
     chassis.calibrate(); // calibrate the chassis
     arm_rotational_sensor.reset(); // reset the arm sensor
 
-    // for (int port : {dt_left.get_port(0), dt_left.get_port(1), dt_left.get_port(2), 
-    //                  dt_right.get_port(0), dt_right.get_port(1), dt_right.get_port(2), 
-    //                  intake_motor.get_port(), arm_motors.get_port(0), arm_motors.get_port(1)}) {
-    //     if (pros::v5::Device::get_plugged_type(port) == pros::v5::DeviceType::none || pros::v5::Device::get_plugged_type(port) == pros::v5::DeviceType::undefined) { 
-    //         master.rumble("---"); 
-    //     }
-    // }
+    for (int port : {dt_left.get_port(0), dt_left.get_port(1), dt_left.get_port(2), 
+                     dt_right.get_port(0), dt_right.get_port(1), dt_right.get_port(2), 
+                     intake_motor.get_port(), arm_motors.get_port(0), arm_motors.get_port(1)}) {
+        if (pros::v5::Device::get_plugged_type(port) == pros::v5::DeviceType::none || pros::v5::Device::get_plugged_type(port) == pros::v5::DeviceType::undefined) { 
+            master.rumble("---"); 
+        }
+    }
     
     chassis.setPose(0, 0, 0); // X: 0, Y: 0, Heading: 0
 
@@ -76,32 +76,31 @@ void autonomous() {
 
     // pidtune();
 
+    // relase aligners
+    doinker_solenoid.extend(); 
+    pros::delay(20);
+    doinker_solenoid.retract();
+
     if (AUTON_SLOT == 6) { skills(); }  
 
     // qualis
-    if (AUTON_SLOT == 1) { // awp (allience stake + mogo of 3 (doinker grab 2)) end at ladder
+    if (AUTON_SLOT == 1) { // (test auton) awp pos (allience stake + mogo of 3 (doinker grab 2)) end at ladder
         if (sideColor == red){
             qual_1_pos_red();
         } else if (sideColor == blue){
             qual_1_pos_blue();
         } 
-    } else if (AUTON_SLOT == 2) { // new non-awp (mogo of 1 + mogo of 3 (doinker grab 2)) end at ladder
+    } else if (AUTON_SLOT == 2) { // (cat) awp neg (mogo of 1 + mogo of 3 (doinker grab 2)) end at ladder
         if (sideColor == red){
-            qual_2_pos_red();
+            qual_2_neg_red();
         } else if (sideColor == blue){
-            qual_2_pos_blue();
+            qual_2_neg_blue();
         }
     } else if (AUTON_SLOT == 3) { // old non-awp (mogo of 1 + mogo of 2) end at ladder
         if (sideColor == red){
             qual_3_pos_red();
         } else if (sideColor == blue){
             qual_3_pos_blue();
-        }
-    } else if (AUTON_SLOT == 4) { // awp neg (allience stake + mogo of 3 (doinker grab 2)) end at ladder
-        if (sideColor == red){
-            qual_1_neg_red();
-        } else if (sideColor == blue){
-            qual_1_neg_blue();
         }
     } 
 
@@ -141,11 +140,6 @@ void opcontrol() {
     if (arm_controller.getTargetPosition() != Arm::position::CUSTOM) {// only if not not touching laddder at end of match
         arm_controller.moveTo(Arm::position::RETRACT, true);
     }
-
-    doinker_solenoid.extend(); 
-    pros::delay(20);
-    doinker_solenoid.retract();
-    
     
     master.clear();
     
@@ -156,5 +150,5 @@ void opcontrol() {
 	pros::Task intake_task(intake);
     pros::Task topmech_task(topmech);
     pros::Task piston_task(piston);
-    // ledsetup();
+    ledsetup();
 }
