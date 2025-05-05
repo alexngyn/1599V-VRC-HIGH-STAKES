@@ -31,13 +31,13 @@ void initialize() {
     chassis.calibrate(); // calibrate the chassis
     arm_rotational_sensor.reset(); // reset the arm sensor
 
-    for (int port : {dt_left.get_port(0), dt_left.get_port(1), dt_left.get_port(2), 
-                     dt_right.get_port(0), dt_right.get_port(1), dt_right.get_port(2), 
-                     intake_motor.get_port(), arm_motors.get_port(0), arm_motors.get_port(1)}) {
-        if (pros::v5::Device::get_plugged_type(port) == pros::v5::DeviceType::none || pros::v5::Device::get_plugged_type(port) == pros::v5::DeviceType::undefined) { 
-            master.rumble("---"); 
-        }
-    }
+    // for (int port : {dt_left.get_port(0), dt_left.get_port(1), dt_left.get_port(2), 
+    //                  dt_right.get_port(0), dt_right.get_port(1), dt_right.get_port(2), 
+    //                  intake_motor.get_port(), arm_motors.get_port(0), arm_motors.get_port(1)}) {
+    //     if (pros::v5::Device::get_plugged_type(port) == pros::v5::DeviceType::none || pros::v5::Device::get_plugged_type(port) == pros::v5::DeviceType::undefined) { 
+    //         master.rumble("---"); 
+    //     }
+    // }
     
     chassis.setPose(0, 0, 0); // X: 0, Y: 0, Heading: 0
 
