@@ -21,4 +21,4 @@
 - Nationals: 7-2 WL | Quarter & Finalists & Innovate Award  
 - Worlds: 4-6 WL | Create Award
 
-see use next year at [pinkpegasus.org](pinkpegasus.org)!
+see use next year at [pink pegasus](https://pinkpegasus.org/)!
