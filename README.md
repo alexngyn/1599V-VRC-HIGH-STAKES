@@ -9,7 +9,7 @@ NON LA ALLIANCE | BROKEN INTAKE ALLIANCE
 <img src="./media/v1/robo.JPG" width="300" alt="v1 photo">
 
 - SSIS Scrimage: 3-1 WL | Quarter Finalists  
-- Southern Reigonal Qualifiers: 6-4 WL | Finalists  
+- Southern Regional Qualifiers: 6-4 WL | Finalists  
 - Formosa (Taipei): 9-3 WL | Semi Finalists & Amaze Award  
 
 ## v2:
